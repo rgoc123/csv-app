@@ -5,12 +5,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="app">
-        <h1>The Shows!</h1>
-
-        <Route exact path="/testform" component={TestForm} />
-        <Route exact path="/shows" component={ShowsIndex} />
-        <Route exact path="/createShow" component={ShowFormContainer} />
-        <Route exact path="/shows/:id" component={ShowFormContainer} />
+        <h1>CSV App!</h1>
       </div>
     );
   }
