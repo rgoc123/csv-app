@@ -4,20 +4,44 @@ import CSVReader from "react-csv-reader";
 
 class CSVTable extends React.Component {
 
-  render() {
-
-    function handleForce(data) {
-      console.log(data);
+  constructor() {
+    super();
+    this.state = {
+      rows: []
     };
+    this.handleForce = this.handleForce.bind(this);
+  }
 
+  createTestLines() {
+    if (this.state.rows.length === 0) {
+      return null;
+    } else {
+      let i = 0;
+      return this.state.rows.map(row => {
+        i += 1;
+        return (<li key={i}>{row}</li>);
+      });
+    }
+  }
+
+  handleForce(data) {
+    this.setState({
+      rows: data
+    });
+  };
+
+  render() {
     return (
       <div>
         <h1>CSV Table</h1>
         <CSVReader
           cssClass="react-csv-input"
           label="Choose a CSV file to upload"
-          onFileLoaded={handleForce}
+          onFileLoaded={this.handleForce}
         />
+        <div>
+          {this.createTestLines()}
+        </div>
       </div>
     );
   }

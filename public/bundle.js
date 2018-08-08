@@ -20441,17 +20441,42 @@ var CSVTable = function (_React$Component) {
   function CSVTable() {
     _classCallCheck(this, CSVTable);
 
-    return _possibleConstructorReturn(this, (CSVTable.__proto__ || Object.getPrototypeOf(CSVTable)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (CSVTable.__proto__ || Object.getPrototypeOf(CSVTable)).call(this));
+
+    _this.state = {
+      rows: []
+    };
+    _this.handleForce = _this.handleForce.bind(_this);
+    return _this;
   }
 
   _createClass(CSVTable, [{
+    key: 'createTestLines',
+    value: function createTestLines() {
+      if (this.state.rows.length === 0) {
+        return null;
+      } else {
+        var i = 0;
+        return this.state.rows.map(function (row) {
+          i += 1;
+          return _react2.default.createElement(
+            'li',
+            { key: i },
+            row
+          );
+        });
+      }
+    }
+  }, {
+    key: 'handleForce',
+    value: function handleForce(data) {
+      this.setState({
+        rows: data
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
-
-      function handleForce(data) {
-        console.log(data);
-      };
-
       return _react2.default.createElement(
         'div',
         null,
@@ -20463,8 +20488,13 @@ var CSVTable = function (_React$Component) {
         _react2.default.createElement(_reactCsvReader2.default, {
           cssClass: 'react-csv-input',
           label: 'Choose a CSV file to upload',
-          onFileLoaded: handleForce
-        })
+          onFileLoaded: this.handleForce
+        }),
+        _react2.default.createElement(
+          'div',
+          null,
+          this.createTestLines()
+        )
       );
     }
   }]);
