@@ -29494,6 +29494,74 @@ var CSVTable = function (_React$Component) {
       this.setState(newState);
     }
   }, {
+    key: 'reverseSortColumn',
+    value: function reverseSortColumn(columnNum) {
+      var columnsToAddToState = {};
+      var columnCount = this.props.rows[0].length;
+      for (var j = 0; j < columnCount; j++) {
+        columnsToAddToState[j] = [];
+      }
+      for (var k = 1; k < this.props.rows.length; k++) {
+        for (var l = 0; l < columnCount; l++) {
+          var parsedCell = parseInt(this.props.rows[k][l]);
+          var cellIndex = this.props.rows[k][this.props.rows[k].length - 1];
+          if (isNaN(parsedCell) === false) {
+            columnsToAddToState[l].push([parsedCell, cellIndex]);
+          } else {
+            columnsToAddToState[l].push([this.props.rows[k][l], cellIndex]);
+          }
+        }
+      }
+
+      var colDataType = parseInt(this.props.rows[1][columnNum]);
+      var sortedColumn = void 0;
+
+      if (isNaN(colDataType) === true) {
+        sortedColumn = columnsToAddToState[columnNum].slice(0).sort();
+        sortedColumn = sortedColumn.reverse();
+      } else {
+        sortedColumn = columnsToAddToState[columnNum].slice(0).sort(function (a, b) {
+          return a[0] - b[0];
+        });
+        sortedColumn = sortedColumn.reverse();
+      }
+
+      columnsToAddToState[columnNum] = sortedColumn;
+
+      var newState = Object.assign({}, this.state);
+
+      for (var i = 0; i < Object.keys(columnsToAddToState).length; i++) {
+        newState[i] = columnsToAddToState[i];
+      }
+
+      newState.rows = this.props.rows;
+      var sortingHash = {};
+      for (var _i3 = 1; _i3 < this.props.rows.length; _i3++) {
+        newState.rows[_i3][columnNum] = newState[columnNum][_i3 - 1][0];
+        sortingHash[newState[columnNum][_i3 - 1][newState[columnNum][_i3 - 1].length - 1]] = _i3;
+      }
+
+      for (var _i4 = 0; _i4 < columnCount; _i4++) {
+        if (_i4 !== columnNum) {
+          var newColumn = [];
+          for (var _j2 = 1; _j2 < this.props.rows.length; _j2++) {
+            var cell = columnsToAddToState[_i4][_j2 - 1];
+            var index = cell[1];
+            var value = cell[0];
+            newColumn[sortingHash[index] - 1] = cell;
+            newState.rows[sortingHash[index]][_i4] = value;
+            newState.rows[sortingHash[index]][columnCount] = index;
+          }
+          // for (let k = 0; k < newColumn.length; k++) {
+          //   newState.rows[i] = newColumn[k];
+          // }
+          newState[_i4] = newColumn;
+        }
+      }
+
+      this.setState(newState);
+    }
+  }, {
     key: 'createTestLines',
     value: function createTestLines() {
       var _this2 = this;
