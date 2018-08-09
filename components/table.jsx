@@ -158,42 +158,51 @@ class CSVTable extends React.Component {
       return null;
     } else {
       // Have new rows
+      let columnCount = this.props.rows[0].length;
+
+      let headers = [];
+      for (let j = 0; j < columnCount; j++) {
+        headers.push(
+          <span>{this.props.rows[0][j]}
+            <div className="sort-buttons-div">
+              <div
+                className="sort-button"
+                onClick={() => this.sortColumn(j)}
+                >Sort</div>
+              <div
+                className="sort-button"
+                onClick={() => this.reverseSortColumn(j)}
+                >Reverse</div>
+            </div>
+          </span>
+        );
+      }
+
+      // let rows = [];
+      // for (let k = 0; k < columnCount; k++) {
+      //   rows.push(<span>{row[0]}</span>);
+      // }
+      function createRow(i) {
+        let row = [];
+        for (let k = 0; k < columnCount; k++) {
+          row.push(<span>{this.props.rows[i][k]}</span>);
+        }
+        return row;
+      }
+      createRow = createRow.bind(this);
+
       let i = -1;
       return this.props.rows.map(row => {
         i += 1;
         if (i === 0) {
           return (
             <li key={i}>
-              <span>{row[0]}
-                <div className="sort-buttons-div">
-                  <div
-                    className="sort-button"
-                    onClick={() => this.sortColumn(0)}
-                    >Sort</div>
-                  <div
-                    className="sort-button"
-                    onClick={() => this.reverseSortColumn(0)}
-                    >Reverse</div>
-                </div>
-              </span>
-              <span>{row[1]}
-                <div className="sort-buttons-div">
-                  <div
-                    className="sort-button"
-                    onClick={() => this.sortColumn(1)}
-                    >Sort</div>
-                  <div
-                    className="sort-button"
-                    onClick={() => this.reverseSortColumn(1)}
-                    >Reverse</div>
-                </div>
-              </span>
+              {headers}
             </li>);
         } else {
           return (
             <li key={i}>
-              <span>{row[0]}</span>
-              <span>{row[1]}</span>
+              {createRow(i)}
             </li>);
         }
       });

@@ -9,13 +9,13 @@ a {
 
 li {
   list-style: none;
-  width: 500px;
+  width: 1000px;
   display: flex;
 }
 
 span {
   border: 1px solid black;
-  width: 49%;
+  width: 24%;
   display: flex;
   position: relative;
 }

@@ -29576,7 +29576,65 @@ var CSVTable = function (_React$Component) {
       if (this.props.rows.length === 0) {
         return null;
       } else {
+
+        // let rows = [];
+        // for (let k = 0; k < columnCount; k++) {
+        //   rows.push(<span>{row[0]}</span>);
+        // }
+        var createRow = function createRow(i) {
+          var row = [];
+          for (var k = 0; k < columnCount; k++) {
+            row.push(_react2.default.createElement(
+              'span',
+              null,
+              this.props.rows[i][k]
+            ));
+          }
+          return row;
+        };
+
         // Have new rows
+        var columnCount = this.props.rows[0].length;
+
+        var headers = [];
+
+        var _loop = function _loop(j) {
+          headers.push(_react2.default.createElement(
+            'span',
+            null,
+            _this2.props.rows[0][j],
+            _react2.default.createElement(
+              'div',
+              { className: 'sort-buttons-div' },
+              _react2.default.createElement(
+                'div',
+                {
+                  className: 'sort-button',
+                  onClick: function onClick() {
+                    return _this2.sortColumn(j);
+                  }
+                },
+                'Sort'
+              ),
+              _react2.default.createElement(
+                'div',
+                {
+                  className: 'sort-button',
+                  onClick: function onClick() {
+                    return _this2.reverseSortColumn(j);
+                  }
+                },
+                'Reverse'
+              )
+            )
+          ));
+        };
+
+        for (var j = 0; j < columnCount; j++) {
+          _loop(j);
+        }
+        createRow = createRow.bind(this);
+
         var i = -1;
         return this.props.rows.map(function (row) {
           i += 1;
@@ -29584,79 +29642,13 @@ var CSVTable = function (_React$Component) {
             return _react2.default.createElement(
               'li',
               { key: i },
-              _react2.default.createElement(
-                'span',
-                null,
-                row[0],
-                _react2.default.createElement(
-                  'div',
-                  { className: 'sort-buttons-div' },
-                  _react2.default.createElement(
-                    'div',
-                    {
-                      className: 'sort-button',
-                      onClick: function onClick() {
-                        return _this2.sortColumn(0);
-                      }
-                    },
-                    'Sort'
-                  ),
-                  _react2.default.createElement(
-                    'div',
-                    {
-                      className: 'sort-button',
-                      onClick: function onClick() {
-                        return _this2.reverseSortColumn(0);
-                      }
-                    },
-                    'Reverse'
-                  )
-                )
-              ),
-              _react2.default.createElement(
-                'span',
-                null,
-                row[1],
-                _react2.default.createElement(
-                  'div',
-                  { className: 'sort-buttons-div' },
-                  _react2.default.createElement(
-                    'div',
-                    {
-                      className: 'sort-button',
-                      onClick: function onClick() {
-                        return _this2.sortColumn(1);
-                      }
-                    },
-                    'Sort'
-                  ),
-                  _react2.default.createElement(
-                    'div',
-                    {
-                      className: 'sort-button',
-                      onClick: function onClick() {
-                        return _this2.reverseSortColumn(1);
-                      }
-                    },
-                    'Reverse'
-                  )
-                )
-              )
+              headers
             );
           } else {
             return _react2.default.createElement(
               'li',
               { key: i },
-              _react2.default.createElement(
-                'span',
-                null,
-                row[0]
-              ),
-              _react2.default.createElement(
-                'span',
-                null,
-                row[1]
-              )
+              createRow(i)
             );
           }
         });
