@@ -29418,7 +29418,9 @@ var CSVTable = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (CSVTable.__proto__ || Object.getPrototypeOf(CSVTable)).call(this, props));
 
     _this.state = {
-      rows: _this.props.rows
+      rows: _this.props.rows,
+      filterDisplay: "none",
+      filterItems: []
     };
     return _this;
   }
@@ -29562,6 +29564,59 @@ var CSVTable = function (_React$Component) {
       this.setState(newState);
     }
   }, {
+    key: 'createFilterList',
+    value: function createFilterList(columnNum) {
+      this.setState({
+        rows: this.props.rows
+      });
+      if (this.state.filterDisplay === "none") {
+        this.setState({
+          filterDisplay: "block"
+        });
+      } else {
+        this.setState({
+          filterDisplay: "none"
+        });
+      }
+      var filterHash = {};
+      for (var i = 1; i < this.props.rows.length - 1; i++) {
+        var val = this.state[columnNum][i];
+        var actualVal = val[0];
+        console.log(val);
+        filterHash[actualVal] = true;
+      }
+
+      this.setState({
+        filterItems: Object.keys(filterHash)
+      });
+    }
+  }, {
+    key: 'createFilter',
+    value: function createFilter() {
+      if (this.state.filterDisplay === "none") {
+        return null;
+      } else {
+        var checkboxes = this.state.filterItems.map(function (item) {
+          return _react2.default.createElement(
+            'div',
+            { className: 'checkbox-container' },
+            _react2.default.createElement('input', { className: 'checkbox', type: 'checkbox', value: item
+            }),
+            _react2.default.createElement(
+              'label',
+              null,
+              item
+            )
+          );
+        });
+        return _react2.default.createElement(
+          'div',
+          null,
+          checkboxes
+        );
+      }
+    }
+  }, {
     key: 'createTestLines',
     value: function createTestLines() {
       var _this2 = this;
@@ -29606,6 +29661,16 @@ var CSVTable = function (_React$Component) {
             _react2.default.createElement(
               'div',
               { className: 'sort-buttons-div' },
+              _react2.default.createElement(
+                'div',
+                {
+                  className: 'sort-button',
+                  onClick: function onClick() {
+                    return _this2.createFilterList(j);
+                  }
+                },
+                'Filter'
+              ),
               _react2.default.createElement(
                 'div',
                 {
@@ -29666,6 +29731,11 @@ var CSVTable = function (_React$Component) {
           'div',
           null,
           'The Table'
+        ),
+        _react2.default.createElement(
+          'div',
+          null,
+          this.createFilter()
         ),
         _react2.default.createElement(
           'ul',

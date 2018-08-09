@@ -6,7 +6,9 @@ class CSVTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      rows: this.props.rows
+      rows: this.props.rows,
+      filterDisplay: "none",
+      filterItems: []
     };
   }
 
@@ -146,6 +148,53 @@ class CSVTable extends React.Component {
     this.setState(newState);
   }
 
+  createFilterList(columnNum) {
+    this.setState({
+      rows: this.props.rows
+    });
+    if (this.state.filterDisplay === "none") {
+      this.setState({
+        filterDisplay: "block"
+      });
+    } else {
+      this.setState({
+        filterDisplay: "none"
+      });
+    }
+    let filterHash = {};
+    for (let i = 1; i < this.props.rows.length-1; i++) {
+      let val = (this.state[columnNum][i]);
+      let actualVal = val[0];
+      console.log(val);
+      filterHash[ actualVal ] = true;
+    }
+
+    this.setState({
+      filterItems: Object.keys(filterHash)
+    });
+  }
+
+  createFilter() {
+    if (this.state.filterDisplay === "none") {
+      return null;
+    } else {
+      let checkboxes = this.state.filterItems.map(item => {
+        return (
+          <div className="checkbox-container">
+            <input className="checkbox" type="checkbox" value={item}
+            />
+          <label>{item}</label>
+          </div>
+        )
+      })
+      return (
+        <div>
+          {checkboxes}
+        </div>
+      );
+    }
+  }
+
   createTestLines() {
     // GOING TO NEED SOMETHING TO KNOW HOW MANY SPANS
     // TO CREATE FOR EACH COLUMN
@@ -165,6 +214,10 @@ class CSVTable extends React.Component {
         headers.push(
           <span>{this.props.rows[0][j]}
             <div className="sort-buttons-div">
+              <div
+                className="sort-button"
+                onClick={() => this.createFilterList(j)}
+                >Filter</div>
               <div
                 className="sort-button"
                 onClick={() => this.sortColumn(j)}
@@ -215,6 +268,7 @@ class CSVTable extends React.Component {
     return (
       <div>
         <div>The Table</div>
+        <div>{this.createFilter()}</div>
         <ul>
           {this.createTestLines()}
         </ul>
