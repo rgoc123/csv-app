@@ -97,14 +97,30 @@ class CSVTable extends React.Component {
         if (i === 0) {
           return (
             <li key={i}>
-              <span>{row[0]}<div
-                className="sort-button"
-                onClick={() => this.sortColumn(0)}
-                >Sort</div></span>
-              <span>{row[1]}<div
-                className="sort-button"
-                onClick={() => this.sortColumn(1)}
-                >Sort</div></span>
+              <span>{row[0]}
+                <div className="sort-buttons-div">
+                  <div
+                    className="sort-button"
+                    onClick={() => this.sortColumn(0)}
+                    >Sort</div>
+                  <div
+                    className="sort-button"
+                    onClick={() => this.reverseSortColumn(0)}
+                    >Reverse</div>
+                </div>
+              </span>
+              <span>{row[1]}
+                <div className="sort-buttons-div">
+                  <div
+                    className="sort-button"
+                    onClick={() => this.sortColumn(1)}
+                    >Sort</div>
+                  <div
+                    className="sort-button"
+                    onClick={() => this.reverseSortColumn(1)}
+                    >Reverse</div>
+                </div>
+              </span>
             </li>);
         } else {
           return (

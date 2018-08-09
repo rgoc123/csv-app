@@ -29522,13 +29522,27 @@ var CSVTable = function (_React$Component) {
                 row[0],
                 _react2.default.createElement(
                   'div',
-                  {
-                    className: 'sort-button',
-                    onClick: function onClick() {
-                      return _this2.sortColumn(0);
-                    }
-                  },
-                  'Sort'
+                  { className: 'sort-buttons-div' },
+                  _react2.default.createElement(
+                    'div',
+                    {
+                      className: 'sort-button',
+                      onClick: function onClick() {
+                        return _this2.sortColumn(0);
+                      }
+                    },
+                    'Sort'
+                  ),
+                  _react2.default.createElement(
+                    'div',
+                    {
+                      className: 'sort-button',
+                      onClick: function onClick() {
+                        return _this2.reverseSortColumn(0);
+                      }
+                    },
+                    'Reverse'
+                  )
                 )
               ),
               _react2.default.createElement(
@@ -29537,13 +29551,27 @@ var CSVTable = function (_React$Component) {
                 row[1],
                 _react2.default.createElement(
                   'div',
-                  {
-                    className: 'sort-button',
-                    onClick: function onClick() {
-                      return _this2.sortColumn(1);
-                    }
-                  },
-                  'Sort'
+                  { className: 'sort-buttons-div' },
+                  _react2.default.createElement(
+                    'div',
+                    {
+                      className: 'sort-button',
+                      onClick: function onClick() {
+                        return _this2.sortColumn(1);
+                      }
+                    },
+                    'Sort'
+                  ),
+                  _react2.default.createElement(
+                    'div',
+                    {
+                      className: 'sort-button',
+                      onClick: function onClick() {
+                        return _this2.reverseSortColumn(1);
+                      }
+                    },
+                    'Reverse'
+                  )
                 )
               )
             );

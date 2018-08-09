@@ -9,7 +9,7 @@ a {
 
 li {
   list-style: none;
-  width: 300px;
+  width: 500px;
   display: flex;
 }
 
@@ -20,7 +20,12 @@ span {
   position: relative;
 }
 
-.sort-button {
+.sort-buttons-div {
   right: 0;
   position: absolute;
+  display: flex;
+}
+
+.sort-button {
+
 }
