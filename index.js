@@ -2,14 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 // Components
-import CSVTable from './components/table.jsx';
+import CSVTableParent from './components/tableParent.jsx';
 
 class App extends React.Component {
   render() {
     return (
       <div className="app">
         <h1>CSV App!</h1>
-        <CSVTable />
+        <CSVTableParent />
       </div>
     );
   }

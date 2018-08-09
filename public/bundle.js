@@ -9914,9 +9914,9 @@ var _reactDom = __webpack_require__(134);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _table = __webpack_require__(353);
+var _tableParent = __webpack_require__(358);
 
-var _table2 = _interopRequireDefault(_table);
+var _tableParent2 = _interopRequireDefault(_tableParent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -9949,7 +9949,7 @@ var App = function (_React$Component) {
           null,
           'CSV App!'
         ),
-        _react2.default.createElement(_table2.default, null)
+        _react2.default.createElement(_tableParent2.default, null)
       );
     }
   }]);
@@ -29391,8 +29391,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(50);
@@ -29403,13 +29401,7 @@ var _reactDom = __webpack_require__(134);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _reactCsvReader = __webpack_require__(354);
-
-var _reactCsvReader2 = _interopRequireDefault(_reactCsvReader);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -29420,111 +29412,59 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var CSVTable = function (_React$Component) {
   _inherits(CSVTable, _React$Component);
 
-  function CSVTable() {
+  function CSVTable(props) {
     _classCallCheck(this, CSVTable);
 
-    var _this = _possibleConstructorReturn(this, (CSVTable.__proto__ || Object.getPrototypeOf(CSVTable)).call(this));
+    var _this = _possibleConstructorReturn(this, (CSVTable.__proto__ || Object.getPrototypeOf(CSVTable)).call(this, props));
 
     _this.state = {
-      rows: [],
-      newCol: []
+      rows: _this.props.rows
     };
-    _this.handleForce = _this.handleForce.bind(_this);
-    _this.sortColumn = _this.sortColumn.bind(_this);
-
     return _this;
   }
-
-  // Possibly include column num as parameter
-
 
   _createClass(CSVTable, [{
     key: 'sortColumn',
     value: function sortColumn(columnNum) {
-      var setSortedColumn = function () {
-        var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(num) {
-          var sortedColumn, newState;
-          return regeneratorRuntime.wrap(function _callee$(_context) {
-            while (1) {
-              switch (_context.prev = _context.next) {
-                case 0:
-                  _context.next = 2;
-                  return sortTheColumn(num);
-
-                case 2:
-                  sortedColumn = _context.sent;
-                  _context.next = 5;
-                  return this.state;
-
-                case 5:
-                  newState = _context.sent;
-                  _context.next = 8;
-                  return sortedColumn;
-
-                case 8:
-                  newState[num] = _context.sent;
-
-                  this.state[num] = sortedColumn;
-                  _context.next = 12;
-                  return this.setState(newState);
-
-                case 12:
-                case 'end':
-                  return _context.stop();
-              }
-            }
-          }, _callee, this);
-        }));
-
-        return function setSortedColumn(_x) {
-          return _ref.apply(this, arguments);
-        };
-      }();
-
-      // sort column
-      // create hash
-      // sort other columns
-
-      var num = parseInt(columnNum);
-      function sortTheColumn(num) {
-        var colDataType = _typeof(this.state[num][0][0]);
-        var sortedColumn = void 0;
-
-        if (colDataType === 'string') {
-          sortedColumn = this.state[num].slice(0).sort();
-        } else {
-          sortedColumn = this.state[num].slice(0).sort(function (a, b) {
-            return a[0] - b[0];
-          });
+      var columnsToAddToState = {};
+      var columnCount = this.props.rows[0].length;
+      for (var j = 0; j < columnCount; j++) {
+        columnsToAddToState[j] = [];
+      }
+      for (var k = 1; k < this.props.rows.length; k++) {
+        for (var l = 0; l < columnCount; l++) {
+          var parsedCell = parseInt(this.props.rows[k][l]);
+          if (isNaN(parsedCell) === false) {
+            columnsToAddToState[l].push(parsedCell);
+          } else {
+            columnsToAddToState[l].push(this.props.rows[k][l]);
+          }
         }
-        return sortedColumn;
       }
 
-      sortTheColumn = sortTheColumn.bind(this);
+      var colDataType = parseInt(this.props.rows[1][columnNum]);
+      var sortedColumn = void 0;
 
-      setSortedColumn = setSortedColumn.bind(this);
-      setSortedColumn(num);
+      if (isNaN(colDataType) === true) {
+        sortedColumn = columnsToAddToState[columnNum].slice(0).sort();
+      } else {
+        sortedColumn = columnsToAddToState[columnNum].slice(0).sort(function (a, b) {
+          return a - b;
+        });
+      }
 
-      // // this.setState({
-      // //   'test': sortedColumn
-      // // });
-      // this.state[num] = sortedColumn;
+      columnsToAddToState[columnNum] = sortedColumn;
+      console.log(columnsToAddToState);
+
+      var newState = Object.assign({}, this.state);
+
+      for (var i = 0; i < Object.keys(columnsToAddToState).length; i++) {
+        newState[i] = columnsToAddToState[i];
+      }
+
+      newState.rows = this.props.rows;
+      this.setState(newState);
     }
-
-    // setSortedColumn(num) {
-    //   let sortedColumn = await this.sortColumn(num);
-    //   this.setState({
-    //     [num]: sortedColumn
-    //   });
-    // }
-
-  }, {
-    key: 'reverseSortColumn',
-    value: function reverseSortColumn(columnNum) {}
-    // [[1, 4][2, 5][3, 6]]
-    // have variables that store info for each column
-    // sort a column
-
   }, {
     key: 'createTestLines',
     value: function createTestLines() {
@@ -29537,57 +29477,12 @@ var CSVTable = function (_React$Component) {
       // GENERATES SPAN FOR EACH COUNT, WITH AN I COUNTER
       // FILL IN THE ROW[I], i.e. the array's elements/cell
       // info
-      if (this.state.rows.length === 0) {
+      if (this.props.rows.length === 0) {
         return null;
       } else {
-        var columnCount = this.state.rows[0].length;
-        for (var j = 0; j < columnCount; j++) {
-          this.state[j] = [];
-        }
-
-        // put each element in columns before creating line
-        // then put each set of column1[i], column2[i] into rows?
-
-        for (var k = 1; k < this.state.rows.length; k++) {
-          for (var l = 0; l < columnCount; l++) {
-            var parsedInt = parseInt(this.state.rows[k][l]);
-            var cellVal = void 0;
-
-            if (isNaN(parsedInt) === false) {
-              this.state.rows[k][l] = parseInt(this.state.rows[k][l]);
-            } else {
-              this.state.rows[k][l] = this.state.rows[k][l];
-            }
-
-            this.state[l].push([this.state.rows[k][l], this.state.rows[k][columnCount]]);
-          }
-        }
-
-        // Is there some kind of way to keep a tracker (like a key)
-        // on a line so that when a sort on one column is run it
-        // can find the other cells with the same key and put them
-        // in the same index in this.state.rows
-
-        // If I sort names, it's going to sort them alphabetically
-        // Can I than find cells in other columns with same key, and
-        // then put them in the new index of the sorted cell?
-        // Will possibly need a hash for fast lookups
-        // I.e. The hash keeps track of key and new index, so
-        // look at other columns key, hash[key] will have the new index
-        // then put the cell at that index
-
-        // Need to figure out how to give each cell a key
-        // or maybe columns should be hashes (but probably not)
-        // because if columns have multiple values it will get
-        // confused
-        // Could add key to row, then have a hash with the key is
-        // the hash key and the hash value is the original row
-        // The hash could keep track of the key's index (i.e. row number). When a column is sorted, it updates the hash with the new index, then the other columns reference the hash with the new index
-
-
         // Have new rows
         var i = -1;
-        return this.state.rows.map(function (row) {
+        return this.props.rows.map(function (row) {
           i += 1;
           if (i === 0) {
             return _react2.default.createElement(
@@ -29644,45 +29539,20 @@ var CSVTable = function (_React$Component) {
       }
     }
   }, {
-    key: 'handleForce',
-    value: function handleForce(data) {
-      console.log("I'm reseting rows");
-      this.setState({
-        rows: data
-      });
-      var newRows = this.state.rows;
-      for (var i = 1; i < newRows.length; i++) {
-        newRows[i].push(i);
-      }
-      this.setState({
-        rows: newRows
-      });
-    }
-  }, {
     key: 'render',
-
-
-    // can create a hash with keys
-    // we can sort a column, and its elements will have keys
-    // we can then sort the other column by the key
-
     value: function render() {
+      console.log(this.props.rows);
       console.log(this.state);
       return _react2.default.createElement(
         'div',
         null,
         _react2.default.createElement(
-          'h1',
-          null,
-          'CSV Table'
-        ),
-        _react2.default.createElement(_reactCsvReader2.default, {
-          cssClass: 'react-csv-input',
-          label: 'Choose a CSV file to upload',
-          onFileLoaded: this.handleForce
-        }),
-        _react2.default.createElement(
           'div',
+          null,
+          'The Table'
+        ),
+        _react2.default.createElement(
+          'ul',
           null,
           this.createTestLines()
         )
@@ -30377,6 +30247,159 @@ module.exports = function() {
   return ReactPropTypes;
 };
 
+
+/***/ }),
+/* 358 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(50);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = __webpack_require__(134);
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _reactCsvReader = __webpack_require__(354);
+
+var _reactCsvReader2 = _interopRequireDefault(_reactCsvReader);
+
+var _table = __webpack_require__(353);
+
+var _table2 = _interopRequireDefault(_table);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+// Components
+
+
+var CSVTableParent = function (_React$Component) {
+  _inherits(CSVTableParent, _React$Component);
+
+  function CSVTableParent() {
+    _classCallCheck(this, CSVTableParent);
+
+    var _this = _possibleConstructorReturn(this, (CSVTableParent.__proto__ || Object.getPrototypeOf(CSVTableParent)).call(this));
+
+    _this.state = {
+      rows: [],
+      newCol: []
+    };
+    _this.handleForce = _this.handleForce.bind(_this);
+    _this.sortColumn = _this.sortColumn.bind(_this);
+    return _this;
+  }
+
+  // Possibly include column num as parameter
+
+
+  _createClass(CSVTableParent, [{
+    key: 'sortColumn',
+    value: function sortColumn(columnNum) {
+      // sort column
+      // create hash
+      // sort other columns
+
+      var num = parseInt(columnNum);
+
+      var colDataType = _typeof(this.state[num][0][0]);
+      var sortedColumn = void 0;
+
+      var newState = Object.assign({}, this.state);
+
+      if (colDataType === 'string') {
+        sortedColumn = this.state[num].slice(0).sort();
+        newState[num] = sortedColumn;
+        this.setState(newState);
+      } else {
+        sortedColumn = this.state[num].slice(0).sort(function (a, b) {
+          return a[0] - b[0];
+        });
+        newState[num] = sortedColumn;
+        this.setState(newState);
+      }
+    }
+
+    // setSortedColumn(num) {
+    //   let sortedColumn = await this.sortColumn(num);
+    //   this.setState({
+    //     [num]: sortedColumn
+    //   });
+    // }
+
+  }, {
+    key: 'reverseSortColumn',
+    value: function reverseSortColumn(columnNum) {}
+    // [[1, 4][2, 5][3, 6]]
+    // have variables that store info for each column
+    // sort a column
+
+  }, {
+    key: 'handleForce',
+    value: function handleForce(data) {
+      this.setState({
+        rows: data
+      });
+      var newRows = this.state.rows;
+      for (var i = 1; i < newRows.length; i++) {
+        newRows[i].push(i);
+      }
+      this.setState({
+        rows: newRows
+      });
+    }
+  }, {
+    key: 'render',
+
+
+    // can create a hash with keys
+    // we can sort a column, and its elements will have keys
+    // we can then sort the other column by the key
+
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          'h1',
+          null,
+          'CSV Table'
+        ),
+        _react2.default.createElement(_reactCsvReader2.default, {
+          cssClass: 'react-csv-input',
+          label: 'Choose a CSV file to upload',
+          onFileLoaded: this.handleForce
+        }),
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(_table2.default, { rows: this.state.rows })
+        )
+      );
+    }
+  }]);
+
+  return CSVTableParent;
+}(_react2.default.Component);
+
+exports.default = CSVTableParent;
 
 /***/ })
 /******/ ]);
