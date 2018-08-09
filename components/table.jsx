@@ -11,6 +11,10 @@ class CSVTable extends React.Component {
   }
 
   sortColumn(columnNum) {
+    // sort column
+    // create hash
+    // sort other columns
+
     let columnsToAddToState = {};
     let columnCount = this.props.rows[0].length;
     for (let j = 0; j < columnCount; j++) {
@@ -48,6 +52,9 @@ class CSVTable extends React.Component {
     }
 
     newState.rows = this.props.rows;
+    for (let i = 1; i < this.props.rows.length; i++) {
+      newState.rows[i][columnNum] = newState[columnNum][i-1];
+    }
     this.setState(newState);
   }
 

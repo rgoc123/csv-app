@@ -14,41 +14,7 @@ class CSVTableParent extends React.Component {
       newCol: []
     };
     this.handleForce = this.handleForce.bind(this);
-    this.sortColumn = this.sortColumn.bind(this);
   }
-
-  // Possibly include column num as parameter
-  sortColumn(columnNum) {
-    // sort column
-    // create hash
-    // sort other columns
-
-    let num = parseInt(columnNum);
-
-    let colDataType = typeof this.state[num][0][0];
-    let sortedColumn;
-
-    let newState = Object.assign({}, this.state);
-
-    if (colDataType === 'string') {
-      sortedColumn = this.state[num].slice(0).sort();
-      newState[num] = sortedColumn;
-      this.setState(newState);
-    } else {
-      sortedColumn = this.state[num].slice(0).sort(function(a,b) {
-        return a[0]-b[0];
-      });
-      newState[num] = sortedColumn;
-      this.setState(newState);
-    }
-  }
-
-  // setSortedColumn(num) {
-  //   let sortedColumn = await this.sortColumn(num);
-  //   this.setState({
-  //     [num]: sortedColumn
-  //   });
-  // }
 
   reverseSortColumn(columnNum) {
 

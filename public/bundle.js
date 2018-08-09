@@ -29426,6 +29426,10 @@ var CSVTable = function (_React$Component) {
   _createClass(CSVTable, [{
     key: 'sortColumn',
     value: function sortColumn(columnNum) {
+      // sort column
+      // create hash
+      // sort other columns
+
       var columnsToAddToState = {};
       var columnCount = this.props.rows[0].length;
       for (var j = 0; j < columnCount; j++) {
@@ -29463,6 +29467,9 @@ var CSVTable = function (_React$Component) {
       }
 
       newState.rows = this.props.rows;
+      for (var _i = 1; _i < this.props.rows.length; _i++) {
+        newState.rows[_i][columnNum] = newState[columnNum][_i - 1];
+      }
       this.setState(newState);
     }
   }, {
@@ -30259,8 +30266,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(50);
@@ -30303,48 +30308,10 @@ var CSVTableParent = function (_React$Component) {
       newCol: []
     };
     _this.handleForce = _this.handleForce.bind(_this);
-    _this.sortColumn = _this.sortColumn.bind(_this);
     return _this;
   }
 
-  // Possibly include column num as parameter
-
-
   _createClass(CSVTableParent, [{
-    key: 'sortColumn',
-    value: function sortColumn(columnNum) {
-      // sort column
-      // create hash
-      // sort other columns
-
-      var num = parseInt(columnNum);
-
-      var colDataType = _typeof(this.state[num][0][0]);
-      var sortedColumn = void 0;
-
-      var newState = Object.assign({}, this.state);
-
-      if (colDataType === 'string') {
-        sortedColumn = this.state[num].slice(0).sort();
-        newState[num] = sortedColumn;
-        this.setState(newState);
-      } else {
-        sortedColumn = this.state[num].slice(0).sort(function (a, b) {
-          return a[0] - b[0];
-        });
-        newState[num] = sortedColumn;
-        this.setState(newState);
-      }
-    }
-
-    // setSortedColumn(num) {
-    //   let sortedColumn = await this.sortColumn(num);
-    //   this.setState({
-    //     [num]: sortedColumn
-    //   });
-    // }
-
-  }, {
     key: 'reverseSortColumn',
     value: function reverseSortColumn(columnNum) {}
     // [[1, 4][2, 5][3, 6]]
