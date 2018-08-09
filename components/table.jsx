@@ -57,7 +57,7 @@ class CSVTable extends React.Component {
       newState.rows[i][columnNum] = newState[columnNum][i-1][0];
       sortingHash[newState[columnNum][i-1][newState[columnNum][i-1].length-1]] = i;
     }
-    
+
     for (let i = 0; i < columnCount; i++) {
       if (i !== columnNum) {
         let newColumn = [];
@@ -67,6 +67,7 @@ class CSVTable extends React.Component {
           let value = cell[0];
           newColumn[sortingHash[index]-1] = cell;
           newState.rows[sortingHash[index]][i] = value;
+          newState.rows[sortingHash[index]][columnCount] = index;
         }
         // for (let k = 0; k < newColumn.length; k++) {
         //   newState.rows[i] = newColumn[k];

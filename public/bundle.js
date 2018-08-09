@@ -29482,6 +29482,7 @@ var CSVTable = function (_React$Component) {
             var value = cell[0];
             newColumn[sortingHash[index] - 1] = cell;
             newState.rows[sortingHash[index]][_i2] = value;
+            newState.rows[sortingHash[index]][columnCount] = index;
           }
           // for (let k = 0; k < newColumn.length; k++) {
           //   newState.rows[i] = newColumn[k];
