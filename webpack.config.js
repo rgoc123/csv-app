@@ -22,7 +22,7 @@ plugins = plugins.concat(
 );
 
 module.exports = {
-  entry: './index.js',
+  entry: ['babel-polyfill', './index.js'],
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'public')

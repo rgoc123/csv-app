@@ -9,4 +9,18 @@ a {
 
 li {
   list-style: none;
+  width: 300px;
+  display: flex;
+}
+
+span {
+  border: 1px solid black;
+  width: 49%;
+  display: flex;
+  position: relative;
+}
+
+.sort-button {
+  right: 0;
+  position: absolute;
 }
