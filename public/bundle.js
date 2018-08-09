@@ -29438,10 +29438,11 @@ var CSVTable = function (_React$Component) {
       for (var k = 1; k < this.props.rows.length; k++) {
         for (var l = 0; l < columnCount; l++) {
           var parsedCell = parseInt(this.props.rows[k][l]);
+          var cellIndex = this.props.rows[k][this.props.rows[k].length - 1];
           if (isNaN(parsedCell) === false) {
-            columnsToAddToState[l].push(parsedCell);
+            columnsToAddToState[l].push([parsedCell, cellIndex]);
           } else {
-            columnsToAddToState[l].push(this.props.rows[k][l]);
+            columnsToAddToState[l].push([this.props.rows[k][l], cellIndex]);
           }
         }
       }
@@ -29453,12 +29454,11 @@ var CSVTable = function (_React$Component) {
         sortedColumn = columnsToAddToState[columnNum].slice(0).sort();
       } else {
         sortedColumn = columnsToAddToState[columnNum].slice(0).sort(function (a, b) {
-          return a - b;
+          return a[0] - b[0];
         });
       }
 
       columnsToAddToState[columnNum] = sortedColumn;
-      console.log(columnsToAddToState);
 
       var newState = Object.assign({}, this.state);
 
@@ -29467,9 +29467,29 @@ var CSVTable = function (_React$Component) {
       }
 
       newState.rows = this.props.rows;
+      var sortingHash = {};
       for (var _i = 1; _i < this.props.rows.length; _i++) {
-        newState.rows[_i][columnNum] = newState[columnNum][_i - 1];
+        newState.rows[_i][columnNum] = newState[columnNum][_i - 1][0];
+        sortingHash[newState[columnNum][_i - 1][newState[columnNum][_i - 1].length - 1]] = _i;
       }
+
+      for (var _i2 = 0; _i2 < columnCount; _i2++) {
+        if (_i2 !== columnNum) {
+          var newColumn = [];
+          for (var _j = 1; _j < this.props.rows.length; _j++) {
+            var cell = columnsToAddToState[_i2][_j - 1];
+            var index = cell[1];
+            var value = cell[0];
+            newColumn[sortingHash[index] - 1] = cell;
+            newState.rows[sortingHash[index]][_i2] = value;
+          }
+          // for (let k = 0; k < newColumn.length; k++) {
+          //   newState.rows[i] = newColumn[k];
+          // }
+          newState[_i2] = newColumn;
+        }
+      }
+
       this.setState(newState);
     }
   }, {
