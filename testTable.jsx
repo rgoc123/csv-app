@@ -9,7 +9,6 @@ class CSVTable extends React.Component {
       rows: this.props.rows,
       filterDisplay: "none",
       filterColumn: null,
-      columnsToFilter: [],
       filterItems: {},
       filterList: [],
       filteredRows: []
@@ -178,12 +177,8 @@ class CSVTable extends React.Component {
       filterHash[ actualVal ] = false;
     }
 
-    let newColumnsToFilter = this.state.columnsToFilter.slice(0);
-    newColumnsToFilter.push(columnNum);
-
     this.setState({
       filterColumn: columnNum,
-      columnsToFilter: newColumnsToFilter,
       filterList: Object.keys(filterHash),
       filterItems: filterHash
     });
@@ -193,7 +188,6 @@ class CSVTable extends React.Component {
     if (this.state.filterDisplay === "none") {
       return null;
     } else {
-      // can change below line to this.state.filterList[colNum].map
       let checkboxes = this.state.filterList.map(item => {
         return (
           <div className="checkbox-container">
@@ -236,33 +230,44 @@ class CSVTable extends React.Component {
   }
 
   applyFilter() {
-    let columnsToFilter = this.state.columnsToFilter.slice(0);
+    let columnToFilterNum = this.state.filterColumn;
+    let columnToFilter = this.state[columnToFilterNum].slice(0);
+    let oldColumn = columnToFilter;
+    let newColumn = columnToFilter.filter(item => this.state.filterItems[item[0]] === true);
+    console.log(newColumn);
 
-    let filterIDs;
-    for (let i = 0; i < columnsToFilter.length; i++) {
-      let columnToFilter = this.state[columnsToFilter[i]].slice(0);
-      let oldColumn = columnToFilter;
-      let newColumn = columnToFilter.filter(item => this.state.filterItems[item[0]] === true);
-      filterIDs = newColumn.map(item => item[1]);
-    }
+    let filterIDs = newColumn.map(item => item[1]);
+    console.log(filterIDs);
+    // above could be something in state to track filtered IDs
+    let columnCount = this.props.rows[0].length;
 
     let newState = this.state;
+    // newState[columnToFilterNum] = newColumn;
 
-    let oldRows;
-    if (this.state.filteredRows.length !== 0) {
-      oldRows = this.state.filteredRows
-    } else {
-      oldRows = newState.rows.slice(0);
-    }
-
+    // change rows to only have rows that have id of element in new col
+    // change new state rows[]
+    let oldRows = newState.rows.slice(0);
     let newRows = oldRows.slice(0,1);
-
     for (let i = 1; i < oldRows.length; i++) {
       // CHANGE TO HASH FOR FASTER LOOKUP
       if (filterIDs.includes(oldRows[i][oldRows[i].length-1])) {
         newRows.push(oldRows[i]);
       }
     }
+    // Create state filtered columns here
+    // Add if else statement for creating column to filter based on
+    // whether state filtered column exists
+
+    // if (!this.state.filteredRows)
+      // for each old column
+        // have new column empty
+        // filter rows from old column into new column that have id
+        // create newState[newColumn] = newColumn
+    // else
+      // for each filtered column
+        // have new column empty
+        // filter rows
+        // set newState [newColumn] = newColumn
 
     newState["filteredRows"] = newRows;
     newState["filterDisplay"] = "none";

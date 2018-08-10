@@ -30217,8 +30217,10 @@ var CSVTable = function (_React$Component) {
       rows: _this.props.rows,
       filterDisplay: "none",
       filterColumn: null,
+      columnsToFilter: [],
       filterItems: {},
-      filterList: []
+      filterList: [],
+      filteredRows: []
     };
     _this.changeFilterItemValue = _this.changeFilterItemValue.bind(_this);
     _this.applyFilter = _this.applyFilter.bind(_this);
@@ -30391,8 +30393,12 @@ var CSVTable = function (_React$Component) {
         filterHash[actualVal] = false;
       }
 
+      var newColumnsToFilter = this.state.columnsToFilter.slice(0);
+      newColumnsToFilter.push(columnNum);
+
       this.setState({
         filterColumn: columnNum,
+        columnsToFilter: newColumnsToFilter,
         filterList: Object.keys(filterHash),
         filterItems: filterHash
       });
@@ -30405,6 +30411,7 @@ var CSVTable = function (_React$Component) {
       if (this.state.filterDisplay === "none") {
         return null;
       } else {
+        // can change below line to this.state.filterList[colNum].map
         var checkboxes = this.state.filterList.map(function (item) {
           return _react2.default.createElement(
             'div',
@@ -30464,35 +30471,39 @@ var CSVTable = function (_React$Component) {
     value: function applyFilter() {
       var _this3 = this;
 
-      var columnToFilterNum = this.state.filterColumn;
-      var columnToFilter = this.state[columnToFilterNum];
-      var oldColumn = columnToFilter;
-      var newColumn = columnToFilter.filter(function (item) {
-        return _this3.state.filterItems[item[0]] === true;
-      });
-      console.log(newColumn);
+      var columnsToFilter = this.state.columnsToFilter.slice(0);
 
-      var filterIDs = newColumn.map(function (item) {
-        return item[1];
-      });
-      console.log(filterIDs);
-      // above could be something in state to track filtered IDs
-      var columnCount = this.props.rows[0].length;
+      var filterIDs = void 0;
+      for (var i = 0; i < columnsToFilter.length; i++) {
+        var columnToFilter = this.state[columnsToFilter[i]].slice(0);
+        var oldColumn = columnToFilter;
+        var newColumn = columnToFilter.filter(function (item) {
+          return _this3.state.filterItems[item[0]] === true;
+        });
+        filterIDs = newColumn.map(function (item) {
+          return item[1];
+        });
+      }
 
       var newState = this.state;
-      newState[columnToFilterNum] = newColumn;
 
-      // change rows to only have rows that have id of element in new col
-      // change new state rows[]
-      var oldRows = newState.rows.slice(0);
+      var oldRows = void 0;
+      if (this.state.filteredRows.length !== 0) {
+        oldRows = this.state.filteredRows;
+      } else {
+        oldRows = newState.rows.slice(0);
+      }
+
       var newRows = oldRows.slice(0, 1);
-      for (var i = 1; i < oldRows.length; i++) {
-        if (filterIDs.includes(oldRows[i][oldRows[i].length - 1])) {
-          newRows.push(oldRows[i]);
+
+      for (var _i5 = 1; _i5 < oldRows.length; _i5++) {
+        // CHANGE TO HASH FOR FASTER LOOKUP
+        if (filterIDs.includes(oldRows[_i5][oldRows[_i5].length - 1])) {
+          newRows.push(oldRows[_i5]);
         }
       }
 
-      newState["rows"] = newRows;
+      newState["filteredRows"] = newRows;
       newState["filterDisplay"] = "none";
 
       this.setState(newState);
@@ -30534,7 +30545,12 @@ var CSVTable = function (_React$Component) {
 
         // Have new rows
         var rows = void 0;
-        if (this.state.rows.length !== 0) {
+        // Maybe here the first if-else statement needs to be
+        // if this.state.filteredRows.length !== 0 for keeping
+        // separation between original rows and filtered ones
+        if (this.state.filteredRows.length !== 0) {
+          rows = this.state.filteredRows;
+        } else if (this.state.rows.length !== 0) {
           rows = this.state.rows;
         } else {
           rows = this.props.rows;
