@@ -12,6 +12,7 @@ class CSVTable extends React.Component {
       columnsToFilter: [],
       filterItems: {},
       filterList: [],
+      currentlyAppliedFilters: {},
       filteredRows: []
     };
     this.changeFilterItemValue = this.changeFilterItemValue.bind(this);
@@ -195,18 +196,40 @@ class CSVTable extends React.Component {
       return null;
     } else {
       // can change below line to this.state.filterList[colNum].map
-      let checkboxes = this.state.filterList.map(item => {
-        return (
-          <div className="checkbox-container">
-            <input className="checkbox"
-              type="checkbox"
-              value={item}
-              onChange={this.changeFilterItemValue}
-            />
-            <label>{item}</label>
-          </div>
-        )
-      })
+      let newState = this.state;
+
+      function createCheckbox(item) {
+        if (this.state.currentlyAppliedFilters[this.state.filterColumn][item] === true) {
+          return (
+            <div className="checkbox-container">
+              <input id={item}
+                className="checkbox"
+                type="checkbox"
+                value={item}
+                onChange={this.changeFilterItemValue}
+                checked
+              />
+              <label>{item}</label>
+            </div>
+          );
+        } else {
+          return (
+            <div className="checkbox-container">
+              <input id={item}
+                className="checkbox"
+                type="checkbox"
+                value={item}
+                onChange={this.changeFilterItemValue}
+              />
+              <label>{item}</label>
+            </div>
+          );
+        }
+      }
+      createCheckbox = createCheckbox.bind(this);
+
+      let checkboxes = this.state.filterList.map(item => createCheckbox(item));
+
       return (
         <div>
           {checkboxes}
@@ -230,10 +253,21 @@ class CSVTable extends React.Component {
   changeFilterItemValue(e) {
     let filterItem = e.target.value;
     let filterItems = this.state.filterItems;
+    let filterColumn = this.state.filterColumn
+    let currentlyAppliedFiltersCol = this.state.currentlyAppliedFilters[filterColumn];
     if (filterItems[filterItem] === true) {
       filterItems[filterItem] = false;
-    } else {filterItems[filterItem] = true}
-    this.setState({filterItems: filterItems});
+      delete currentlyAppliedFiltersCol[filterItem];
+    } else {
+      filterItems[filterItem] = true;
+      currentlyAppliedFiltersCol[filterItem] = true;
+    }
+    let currentlyAppliedFilters = this.state.currentlyAppliedFilters;
+    currentlyAppliedFilters[filterColumn] = currentlyAppliedFiltersCol;
+    this.setState({
+      filterItems: filterItems,
+      currentlyAppliedFilters: currentlyAppliedFilters
+    });
   }
 
   applyFilter() {
@@ -292,7 +326,7 @@ class CSVTable extends React.Component {
     } else if (this.state.rows.length === 0) {
       let newState = this.state;
       // let columnsToAddToState = {};
-      
+
       let columnCount = this.props.rows[0].length;
       for (let j = 0; j < columnCount; j++) {
         newState[j] = [];
@@ -306,6 +340,9 @@ class CSVTable extends React.Component {
           } else {
             newState[l].push([this.props.rows[k][l], cellIndex]);
           }
+          let currentlyAppliedFilters = newState["currentlyAppliedFilters"]
+          currentlyAppliedFilters[l] = {};
+          newState["currentlyAppliedFilters"] = currentlyAppliedFilters
         }
       }
       newState["rows"] = this.props.rows;

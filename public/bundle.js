@@ -30220,6 +30220,7 @@ var CSVTable = function (_React$Component) {
       columnsToFilter: [],
       filterItems: {},
       filterList: [],
+      currentlyAppliedFilters: {},
       filteredRows: []
     };
     _this.changeFilterItemValue = _this.changeFilterItemValue.bind(_this);
@@ -30412,23 +30413,52 @@ var CSVTable = function (_React$Component) {
       if (this.state.filterDisplay === "none") {
         return null;
       } else {
+        var createCheckbox = function createCheckbox(item) {
+          if (this.state.currentlyAppliedFilters[this.state.filterColumn][item] === true) {
+            return _react2.default.createElement(
+              'div',
+              { className: 'checkbox-container' },
+              _react2.default.createElement('input', { id: item,
+                className: 'checkbox',
+                type: 'checkbox',
+                value: item,
+                onChange: this.changeFilterItemValue,
+                checked: true
+              }),
+              _react2.default.createElement(
+                'label',
+                null,
+                item
+              )
+            );
+          } else {
+            return _react2.default.createElement(
+              'div',
+              { className: 'checkbox-container' },
+              _react2.default.createElement('input', { id: item,
+                className: 'checkbox',
+                type: 'checkbox',
+                value: item,
+                onChange: this.changeFilterItemValue
+              }),
+              _react2.default.createElement(
+                'label',
+                null,
+                item
+              )
+            );
+          }
+        };
+
         // can change below line to this.state.filterList[colNum].map
+        var newState = this.state;
+
+        createCheckbox = createCheckbox.bind(this);
+
         var checkboxes = this.state.filterList.map(function (item) {
-          return _react2.default.createElement(
-            'div',
-            { className: 'checkbox-container' },
-            _react2.default.createElement('input', { className: 'checkbox',
-              type: 'checkbox',
-              value: item,
-              onChange: _this2.changeFilterItemValue
-            }),
-            _react2.default.createElement(
-              'label',
-              null,
-              item
-            )
-          );
+          return createCheckbox(item);
         });
+
         return _react2.default.createElement(
           'div',
           null,
@@ -30460,12 +30490,21 @@ var CSVTable = function (_React$Component) {
     value: function changeFilterItemValue(e) {
       var filterItem = e.target.value;
       var filterItems = this.state.filterItems;
+      var filterColumn = this.state.filterColumn;
+      var currentlyAppliedFiltersCol = this.state.currentlyAppliedFilters[filterColumn];
       if (filterItems[filterItem] === true) {
         filterItems[filterItem] = false;
+        delete currentlyAppliedFiltersCol[filterItem];
       } else {
         filterItems[filterItem] = true;
+        currentlyAppliedFiltersCol[filterItem] = true;
       }
-      this.setState({ filterItems: filterItems });
+      var currentlyAppliedFilters = this.state.currentlyAppliedFilters;
+      currentlyAppliedFilters[filterColumn] = currentlyAppliedFiltersCol;
+      this.setState({
+        filterItems: filterItems,
+        currentlyAppliedFilters: currentlyAppliedFilters
+      });
     }
   }, {
     key: 'applyFilter',
@@ -30548,6 +30587,9 @@ var CSVTable = function (_React$Component) {
             } else {
               newState[l].push([this.props.rows[k][l], cellIndex]);
             }
+            var currentlyAppliedFilters = newState["currentlyAppliedFilters"];
+            currentlyAppliedFilters[l] = {};
+            newState["currentlyAppliedFilters"] = currentlyAppliedFilters;
           }
         }
         newState["rows"] = this.props.rows;
