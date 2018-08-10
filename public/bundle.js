@@ -30392,7 +30392,11 @@ var CSVTable = function (_React$Component) {
       for (var i = 1; i < this.props.rows.length - 1; i++) {
         var val = this.state[columnNum][i];
         var actualVal = val[0];
-        filterHash[actualVal] = false;
+        if (this.state.currentlyAppliedFilters[columnNum][actualVal] === true) {
+          filterHash[actualVal] = true;
+        } else {
+          filterHash[actualVal] = false;
+        }
       }
 
       var newColumnsToFilter = this.state.columnsToFilter.slice(0);
@@ -30698,6 +30702,10 @@ var CSVTable = function (_React$Component) {
       var newState = this.state;
       newState["columnsToFilter"] = [];
       newState["filteredRows"] = [];
+      var columnCount = Object.keys(newState["currentlyAppliedFilters"]).length;
+      for (var i = 0; i < columnCount; i++) {
+        newState["currentlyAppliedFilters"][i] = {};
+      }
       this.setState(newState);
     }
   }, {

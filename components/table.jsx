@@ -177,7 +177,9 @@ class CSVTable extends React.Component {
     for (let i = 1; i < this.props.rows.length-1; i++) {
       let val = (this.state[columnNum][i]);
       let actualVal = val[0];
-      filterHash[ actualVal ] = false;
+      if (this.state.currentlyAppliedFilters[columnNum][actualVal] === true) {
+        filterHash[ actualVal ] = true;
+      } else {filterHash[ actualVal ] = false;}
     }
 
     let newColumnsToFilter = this.state.columnsToFilter.slice(0);
@@ -417,6 +419,10 @@ class CSVTable extends React.Component {
     let newState = this.state;
     newState["columnsToFilter"] = [];
     newState["filteredRows"] = [];
+    let columnCount = Object.keys(newState["currentlyAppliedFilters"]).length;
+    for (let i=0; i < columnCount; i++) {
+      newState["currentlyAppliedFilters"][i] = {};
+    }
     this.setState(newState);
   }
 
