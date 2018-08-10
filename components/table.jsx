@@ -353,12 +353,20 @@ class CSVTable extends React.Component {
     }
   }
 
+  clearFilters() {
+    let newState = this.state;
+    newState["columnsToFilter"] = [];
+    newState["filteredRows"] = [];
+    this.setState(newState);
+  }
+
   render() {
     console.log(this.props.rows);
     console.log(this.state);
     return (
       <div>
         <div>The Table</div>
+        <button onClick={() => this.clearFilters()}>Clear Filters</button>
         <div>{this.createFilter()}</div>
         <ul>
           {this.createTestLines()}

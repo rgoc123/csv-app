@@ -30628,8 +30628,18 @@ var CSVTable = function (_React$Component) {
       }
     }
   }, {
+    key: 'clearFilters',
+    value: function clearFilters() {
+      var newState = this.state;
+      newState["columnsToFilter"] = [];
+      newState["filteredRows"] = [];
+      this.setState(newState);
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _this5 = this;
+
       console.log(this.props.rows);
       console.log(this.state);
       return _react2.default.createElement(
@@ -30639,6 +30649,13 @@ var CSVTable = function (_React$Component) {
           'div',
           null,
           'The Table'
+        ),
+        _react2.default.createElement(
+          'button',
+          { onClick: function onClick() {
+              return _this5.clearFilters();
+            } },
+          'Clear Filters'
         ),
         _react2.default.createElement(
           'div',
