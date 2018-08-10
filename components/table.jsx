@@ -242,7 +242,6 @@ class CSVTable extends React.Component {
 
     let newState = this.state;
     newState[columnToFilterNum] = newColumn;
-    this.setState(newState);
 
     // change rows to only have rows that have id of element in new col
     // change new state rows[]
@@ -253,9 +252,11 @@ class CSVTable extends React.Component {
         newRows.push(oldRows[i]);
       }
     }
-    // POSSIBLE PROBLEM AREA
+
     newState["rows"] = newRows;
-    // this.setState(newState);
+    newState["filterDisplay"] = "none";
+
+    this.setState(newState);
 
   }
   // filterItems in state might need to have more content, i.e. a row for each column already
