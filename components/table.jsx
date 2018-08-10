@@ -6,7 +6,7 @@ class CSVTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      rows: this.props.rows,
+      rows: [],
       filterDisplay: "none",
       filterColumn: null,
       columnsToFilter: [],
@@ -24,6 +24,7 @@ class CSVTable extends React.Component {
     // sort other columns
 
     let columnsToAddToState = {};
+
     let columnCount = this.props.rows[0].length;
     for (let j = 0; j < columnCount; j++) {
       columnsToAddToState[j] = [];
@@ -288,6 +289,28 @@ class CSVTable extends React.Component {
     // info
     if (this.props.rows.length === 0) {
       return null;
+    } else if (this.state.rows.length === 0) {
+      let newState = this.state;
+      // let columnsToAddToState = {};
+      
+      let columnCount = this.props.rows[0].length;
+      for (let j = 0; j < columnCount; j++) {
+        newState[j] = [];
+      }
+      for (let k = 1; k < this.props.rows.length; k++) {
+        for (let l = 0; l < columnCount; l++) {
+          let parsedCell = parseInt(this.props.rows[k][l]);
+          let cellIndex = k;
+          if (isNaN(parsedCell) === false) {
+            newState[l].push([parsedCell, cellIndex]);
+          } else {
+            newState[l].push([this.props.rows[k][l], cellIndex]);
+          }
+        }
+      }
+      newState["rows"] = this.props.rows;
+
+      this.setState(newState);
     } else {
       // Have new rows
       let rows;

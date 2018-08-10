@@ -30214,7 +30214,7 @@ var CSVTable = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (CSVTable.__proto__ || Object.getPrototypeOf(CSVTable)).call(this, props));
 
     _this.state = {
-      rows: _this.props.rows,
+      rows: [],
       filterDisplay: "none",
       filterColumn: null,
       columnsToFilter: [],
@@ -30235,6 +30235,7 @@ var CSVTable = function (_React$Component) {
       // sort other columns
 
       var columnsToAddToState = {};
+
       var columnCount = this.props.rows[0].length;
       for (var j = 0; j < columnCount; j++) {
         columnsToAddToState[j] = [];
@@ -30530,14 +30531,36 @@ var CSVTable = function (_React$Component) {
       // info
       if (this.props.rows.length === 0) {
         return null;
+      } else if (this.state.rows.length === 0) {
+        var newState = this.state;
+        // let columnsToAddToState = {};
+
+        var columnCount = this.props.rows[0].length;
+        for (var j = 0; j < columnCount; j++) {
+          newState[j] = [];
+        }
+        for (var k = 1; k < this.props.rows.length; k++) {
+          for (var l = 0; l < columnCount; l++) {
+            var parsedCell = parseInt(this.props.rows[k][l]);
+            var cellIndex = k;
+            if (isNaN(parsedCell) === false) {
+              newState[l].push([parsedCell, cellIndex]);
+            } else {
+              newState[l].push([this.props.rows[k][l], cellIndex]);
+            }
+          }
+        }
+        newState["rows"] = this.props.rows;
+
+        this.setState(newState);
       } else {
         var createRow = function createRow(i) {
           var row = [];
-          for (var k = 0; k < columnCount; k++) {
+          for (var _k = 0; _k < _columnCount; _k++) {
             row.push(_react2.default.createElement(
               'span',
               null,
-              rows[i][k]
+              rows[i][_k]
             ));
           }
           return row;
@@ -30556,15 +30579,15 @@ var CSVTable = function (_React$Component) {
           rows = this.props.rows;
         }
 
-        var columnCount = rows[0].length;
+        var _columnCount = rows[0].length;
 
         var headers = [];
 
-        var _loop = function _loop(j) {
+        var _loop = function _loop(_j3) {
           headers.push(_react2.default.createElement(
             'span',
             null,
-            rows[0][j],
+            rows[0][_j3],
             _react2.default.createElement(
               'div',
               { className: 'sort-buttons-div' },
@@ -30573,7 +30596,7 @@ var CSVTable = function (_React$Component) {
                 {
                   className: 'sort-button',
                   onClick: function onClick() {
-                    return _this4.createFilterList(j);
+                    return _this4.createFilterList(_j3);
                   }
                 },
                 'Filter'
@@ -30583,7 +30606,7 @@ var CSVTable = function (_React$Component) {
                 {
                   className: 'sort-button',
                   onClick: function onClick() {
-                    return _this4.sortColumn(j);
+                    return _this4.sortColumn(_j3);
                   }
                 },
                 'Sort'
@@ -30593,7 +30616,7 @@ var CSVTable = function (_React$Component) {
                 {
                   className: 'sort-button',
                   onClick: function onClick() {
-                    return _this4.reverseSortColumn(j);
+                    return _this4.reverseSortColumn(_j3);
                   }
                 },
                 'Reverse'
@@ -30602,8 +30625,8 @@ var CSVTable = function (_React$Component) {
           ));
         };
 
-        for (var j = 0; j < columnCount; j++) {
-          _loop(j);
+        for (var _j3 = 0; _j3 < _columnCount; _j3++) {
+          _loop(_j3);
         }
 
         createRow = createRow.bind(this);
