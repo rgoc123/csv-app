@@ -8,8 +8,12 @@ class CSVTable extends React.Component {
     this.state = {
       rows: this.props.rows,
       filterDisplay: "none",
-      filterItems: []
+      filterColumn: null,
+      filterItems: {},
+      filterList: []
     };
+    this.changeFilterItemValue = this.changeFilterItemValue.bind(this);
+    this.applyFilter = this.applyFilter.bind(this);
   }
 
   sortColumn(columnNum) {
@@ -71,9 +75,6 @@ class CSVTable extends React.Component {
           newState.rows[sortingHash[index]][i] = value;
           newState.rows[sortingHash[index]][columnCount] = index;
         }
-        // for (let k = 0; k < newColumn.length; k++) {
-        //   newState.rows[i] = newColumn[k];
-        // }
         newState[i] = newColumn;
       }
     }
@@ -148,6 +149,11 @@ class CSVTable extends React.Component {
     this.setState(newState);
   }
 
+  // May need to separate functions out and have a parent function
+    // Open modal
+    // Create list
+    // Change state
+    // Apply-close or close-clear modal
   createFilterList(columnNum) {
     this.setState({
       rows: this.props.rows
@@ -160,17 +166,20 @@ class CSVTable extends React.Component {
       this.setState({
         filterDisplay: "none"
       });
+      // Add clear filter function here
     }
+
     let filterHash = {};
     for (let i = 1; i < this.props.rows.length-1; i++) {
       let val = (this.state[columnNum][i]);
       let actualVal = val[0];
-      console.log(val);
-      filterHash[ actualVal ] = true;
+      filterHash[ actualVal ] = false;
     }
 
     this.setState({
-      filterItems: Object.keys(filterHash)
+      filterColumn: columnNum,
+      filterList: Object.keys(filterHash),
+      filterItems: filterHash
     });
   }
 
@@ -178,22 +187,84 @@ class CSVTable extends React.Component {
     if (this.state.filterDisplay === "none") {
       return null;
     } else {
-      let checkboxes = this.state.filterItems.map(item => {
+      let checkboxes = this.state.filterList.map(item => {
         return (
           <div className="checkbox-container">
-            <input className="checkbox" type="checkbox" value={item}
+            <input className="checkbox"
+              type="checkbox"
+              value={item}
+              onChange={this.changeFilterItemValue}
             />
-          <label>{item}</label>
+            <label>{item}</label>
           </div>
         )
       })
       return (
         <div>
           {checkboxes}
+          <div onClick={() => this.applyFilter()}>Apply</div>
         </div>
       );
     }
   }
+
+  // (Complete) Have filter hash in state with values being true or false
+  // (Complete) Checking a checkbox makes filter value true, unchecking makes it false
+  // (Complete) Have a function that on change take e.target.value or something and changes
+    // filter hash in state
+  // (Complete) When apply is clicked it runs the function that goes through the column looking
+    // for values in the filter hash that have true
+    // Have a blank "column/columns" that we push values into, then set main columns with new
+    // columns
+    // Maybe preserve original
+  //
+
+  changeFilterItemValue(e) {
+    let filterItem = e.target.value;
+    let filterItems = this.state.filterItems;
+    if (filterItems[filterItem] === true) {
+      filterItems[filterItem] = false;
+    } else {filterItems[filterItem] = true}
+    this.setState({filterItems: filterItems});
+  }
+
+  applyFilter() {
+    let columnToFilterNum = this.state.filterColumn;
+    let columnToFilter = this.state[columnToFilterNum];
+    let oldColumn = columnToFilter;
+    let newColumn = columnToFilter.filter(item => this.state.filterItems[item[0]] === true);
+    console.log(newColumn);
+
+    let filterIDs = newColumn.map(item => item[1]);
+    console.log(filterIDs);
+    // above could be something in state to track filtered IDs
+    let columnCount = this.props.rows[0].length;
+
+    let newState = this.state;
+    newState[columnToFilterNum] = newColumn;
+    this.setState(newState);
+
+    // change rows to only have rows that have id of element in new col
+    // change new state rows[]
+    let oldRows = newState.rows.slice(0);
+    let newRows = [];
+    for (let i = 1; i < oldRows.length; i++) {
+      if (filterIDs.includes(oldRows[i][oldRows[i].length-1])) {
+        newRows.push(oldRows[i]);
+      }
+    }
+    // POSSIBLE PROBLEM AREA
+    newState["rows"] = newRows;
+    this.setState(newState);
+
+  }
+  // filterItems in state might need to have more content, i.e. a row for each column already
+  // so that as filters are removed the apply filter function can look at remaining filters and
+  // keep those in place
+    // might need to reference an array of which filters are in place, i.e. that thought I had
+    // of having this.state.filterColumn be an array
+    // applyFilter would push column into array, removeFilter would remove it
+
 
   createTestLines() {
     // GOING TO NEED SOMETHING TO KNOW HOW MANY SPANS
@@ -207,6 +278,7 @@ class CSVTable extends React.Component {
       return null;
     } else {
       // Have new rows
+
       let columnCount = this.props.rows[0].length;
 
       let headers = [];
@@ -231,10 +303,6 @@ class CSVTable extends React.Component {
         );
       }
 
-      // let rows = [];
-      // for (let k = 0; k < columnCount; k++) {
-      //   rows.push(<span>{row[0]}</span>);
-      // }
       function createRow(i) {
         let row = [];
         for (let k = 0; k < columnCount; k++) {
