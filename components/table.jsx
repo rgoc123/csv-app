@@ -247,7 +247,7 @@ class CSVTable extends React.Component {
     // change rows to only have rows that have id of element in new col
     // change new state rows[]
     let oldRows = newState.rows.slice(0);
-    let newRows = [];
+    let newRows = oldRows.slice(0,1);
     for (let i = 1; i < oldRows.length; i++) {
       if (filterIDs.includes(oldRows[i][oldRows[i].length-1])) {
         newRows.push(oldRows[i]);
@@ -255,7 +255,7 @@ class CSVTable extends React.Component {
     }
     // POSSIBLE PROBLEM AREA
     newState["rows"] = newRows;
-    this.setState(newState);
+    // this.setState(newState);
 
   }
   // filterItems in state might need to have more content, i.e. a row for each column already
@@ -278,13 +278,19 @@ class CSVTable extends React.Component {
       return null;
     } else {
       // Have new rows
+      let rows;
+      if (this.state.rows.length !== 0) {
+        rows = this.state.rows;
+      } else {
+        rows = this.props.rows;
+      }
 
-      let columnCount = this.props.rows[0].length;
+      let columnCount = rows[0].length;
 
       let headers = [];
       for (let j = 0; j < columnCount; j++) {
         headers.push(
-          <span>{this.props.rows[0][j]}
+          <span>{rows[0][j]}
             <div className="sort-buttons-div">
               <div
                 className="sort-button"
@@ -306,14 +312,14 @@ class CSVTable extends React.Component {
       function createRow(i) {
         let row = [];
         for (let k = 0; k < columnCount; k++) {
-          row.push(<span>{this.props.rows[i][k]}</span>);
+          row.push(<span>{rows[i][k]}</span>);
         }
         return row;
       }
       createRow = createRow.bind(this);
 
       let i = -1;
-      return this.props.rows.map(row => {
+      return rows.map(row => {
         i += 1;
         if (i === 0) {
           return (

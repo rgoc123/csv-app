@@ -30486,7 +30486,7 @@ var CSVTable = function (_React$Component) {
       // change rows to only have rows that have id of element in new col
       // change new state rows[]
       var oldRows = newState.rows.slice(0);
-      var newRows = [];
+      var newRows = oldRows.slice(0, 1);
       for (var i = 1; i < oldRows.length; i++) {
         if (filterIDs.includes(oldRows[i][oldRows[i].length - 1])) {
           newRows.push(oldRows[i]);
@@ -30494,7 +30494,7 @@ var CSVTable = function (_React$Component) {
       }
       // POSSIBLE PROBLEM AREA
       newState["rows"] = newRows;
-      this.setState(newState);
+      // this.setState(newState);
     }
     // filterItems in state might need to have more content, i.e. a row for each column already
     // so that as filters are removed the apply filter function can look at remaining filters and
@@ -30525,15 +30525,21 @@ var CSVTable = function (_React$Component) {
             row.push(_react2.default.createElement(
               'span',
               null,
-              this.props.rows[i][k]
+              rows[i][k]
             ));
           }
           return row;
         };
 
         // Have new rows
+        var rows = void 0;
+        if (this.state.rows.length !== 0) {
+          rows = this.state.rows;
+        } else {
+          rows = this.props.rows;
+        }
 
-        var columnCount = this.props.rows[0].length;
+        var columnCount = rows[0].length;
 
         var headers = [];
 
@@ -30541,7 +30547,7 @@ var CSVTable = function (_React$Component) {
           headers.push(_react2.default.createElement(
             'span',
             null,
-            _this4.props.rows[0][j],
+            rows[0][j],
             _react2.default.createElement(
               'div',
               { className: 'sort-buttons-div' },
@@ -30586,7 +30592,7 @@ var CSVTable = function (_React$Component) {
         createRow = createRow.bind(this);
 
         var i = -1;
-        return this.props.rows.map(function (row) {
+        return rows.map(function (row) {
           i += 1;
           if (i === 0) {
             return _react2.default.createElement(
