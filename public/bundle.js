@@ -30691,9 +30691,9 @@ var CSVTable = function (_React$Component) {
         var _columnCount = rows[0].length;
 
         var headers = [];
-        var colStats = [];
 
         var _loop = function _loop(_j3) {
+          var colStats = [];
           var parsedType = parseFloat(rows[1][_j3]);
           var parsedTypeLength = parsedType.toString().length;
           var columnInfo = [];
@@ -30745,7 +30745,7 @@ var CSVTable = function (_React$Component) {
             ));
           } else {
             columnInfo = {
-              "count": _this4.props.rows.length - 1
+              "count": rows.length - 1
             };
           }
 

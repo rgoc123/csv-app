@@ -424,8 +424,8 @@ class CSVTable extends React.Component {
       let columnCount = rows[0].length;
 
       let headers = [];
-      let colStats = [];
       for (let j = 0; j < columnCount; j++) {
+        let colStats = [];
         let parsedType = parseFloat(rows[1][j]);
         let parsedTypeLength = parsedType.toString().length;
         let columnInfo = []
@@ -457,7 +457,7 @@ class CSVTable extends React.Component {
           colStats.push(<span>Mean: {columnInfo["mean"]}</span>);
         } else {
           columnInfo = {
-            "count": this.props.rows.length-1,
+            "count": rows.length-1,
           }
         }
 
