@@ -182,11 +182,25 @@ class CSVTable extends React.Component {
       });
       // Add clear filter function here
     }
+    let columnToCreateListFrom = [];
+    if (this.state.filteredRows.length === 0) {
+      columnToCreateListFrom = this.state[columnNum];
+    } else {
+      for (let i = 1; i < this.state.filteredRows.length; i++) {
+        columnToCreateListFrom.push(this.state.filteredRows[i][columnNum]);
+      }
+    }
 
     let filterHash = {};
-    for (let i = 1; i < this.props.rows.length-1; i++) {
-      let val = (this.state[columnNum][i]);
-      let actualVal = val[0];
+    for (let i = 0; i < columnToCreateListFrom.length; i++) {
+      let val;
+      let actualVal;
+      if (this.state.filteredRows.length > 0) {
+        actualVal = columnToCreateListFrom[i];
+      } else {
+        val = (columnToCreateListFrom[i]);
+        actualVal = val[0];
+      }
       if (this.state.currentlyAppliedFilters[columnNum][actualVal] === true) {
         filterHash[ actualVal ] = true;
       } else {filterHash[ actualVal ] = false;}

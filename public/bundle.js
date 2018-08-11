@@ -30397,11 +30397,25 @@ var CSVTable = function (_React$Component) {
         });
         // Add clear filter function here
       }
+      var columnToCreateListFrom = [];
+      if (this.state.filteredRows.length === 0) {
+        columnToCreateListFrom = this.state[columnNum];
+      } else {
+        for (var i = 1; i < this.state.filteredRows.length; i++) {
+          columnToCreateListFrom.push(this.state.filteredRows[i][columnNum]);
+        }
+      }
 
       var filterHash = {};
-      for (var i = 1; i < this.props.rows.length - 1; i++) {
-        var val = this.state[columnNum][i];
-        var actualVal = val[0];
+      for (var _i5 = 0; _i5 < columnToCreateListFrom.length; _i5++) {
+        var val = void 0;
+        var actualVal = void 0;
+        if (this.state.filteredRows.length > 0) {
+          actualVal = columnToCreateListFrom[_i5];
+        } else {
+          val = columnToCreateListFrom[_i5];
+          actualVal = val[0];
+        }
         if (this.state.currentlyAppliedFilters[columnNum][actualVal] === true) {
           filterHash[actualVal] = true;
         } else {
