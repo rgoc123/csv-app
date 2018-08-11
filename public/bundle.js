@@ -30631,6 +30631,16 @@ var CSVTable = function (_React$Component) {
       this.setState(newState);
     }
   }, {
+    key: 'toggleShowStats',
+    value: function toggleShowStats(colNum) {
+      var colStatsDisplay = document.getElementById('colStats' + colNum.toString()).style.display;
+      if (colStatsDisplay === "") {
+        document.getElementById('colStats' + colNum.toString()).style.display = "block";
+      } else {
+        document.getElementById('colStats' + colNum.toString()).style.display = "";
+      }
+    }
+  }, {
     key: 'createRows',
     value: function createRows() {
       var _this4 = this;
@@ -30760,6 +30770,15 @@ var CSVTable = function (_React$Component) {
               { className: 'sort-buttons-div' },
               _react2.default.createElement(
                 'div',
+                { className: 'sort-button',
+                  onClick: function onClick() {
+                    return _this4.toggleShowStats(_j3);
+                  }
+                },
+                'Stats'
+              ),
+              _react2.default.createElement(
+                'div',
                 {
                   className: 'sort-button',
                   onClick: function onClick() {
@@ -30790,7 +30809,7 @@ var CSVTable = function (_React$Component) {
               ),
               _react2.default.createElement(
                 'div',
-                { className: 'column-stats' },
+                { id: "colStats" + _j3.toString(), className: 'column-stats' },
                 _react2.default.createElement(
                   'span',
                   null,

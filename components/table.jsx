@@ -379,6 +379,15 @@ class CSVTable extends React.Component {
     this.setState(newState);
   }
 
+  toggleShowStats(colNum) {
+    let colStatsDisplay = document.getElementById('colStats' + colNum.toString()).style.display;
+    if (colStatsDisplay === "") {
+      document.getElementById('colStats' + colNum.toString()).style.display = "block";
+    } else {
+      document.getElementById('colStats' + colNum.toString()).style.display = "";
+    }
+  }
+
   createRows() {
     if (this.props.rows.length === 0) {
       return null;
@@ -466,6 +475,9 @@ class CSVTable extends React.Component {
         headers.push(
           <span>{rows[0][j]}
             <div className="sort-buttons-div">
+              <div className="sort-button"
+                onClick={() => this.toggleShowStats(j)}
+                >Stats</div>
               <div
                 className="sort-button"
                 onClick={() => this.createFilterList(j)}
@@ -478,7 +490,7 @@ class CSVTable extends React.Component {
                 className="sort-button"
                 onClick={() => this.reverseSortColumn(j)}
                 >Reverse</div>
-              <div className="column-stats">
+              <div id={"colStats" + j.toString()} className="column-stats">
                 <span>Column Stats</span>
                 <span>Rows: {columnInfo["count"]}</span>
                 <span>Non Empty Rows: {columnInfo["nonBlankRows"]}</span>
