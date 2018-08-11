@@ -30400,7 +30400,7 @@ var CSVTable = function (_React$Component) {
       }
 
       var newColumnsToFilter = this.state.columnsToFilter.slice(0);
-      newColumnsToFilter.push(columnNum);
+      if (!newColumnsToFilter.includes(columnNum)) newColumnsToFilter.push(columnNum);
 
       this.setState({
         filterColumn: columnNum,
@@ -30516,39 +30516,59 @@ var CSVTable = function (_React$Component) {
       var _this3 = this;
 
       var columnsToFilter = this.state.columnsToFilter.slice(0);
+      if (Object.keys(this.state.currentlyAppliedFilters[this.state.filterColumn]).length === 0) {
+        // remove column number from columnsToFilter
+        columnsToFilter = columnsToFilter.filter(function (col) {
+          return col !== _this3.state.filterColumn;
+        });
+      }
 
       var filterIDs = void 0;
-      for (var i = 0; i < columnsToFilter.length; i++) {
-        var columnToFilter = this.state[columnsToFilter[i]].slice(0);
-        var oldColumn = columnToFilter;
-        var newColumn = columnToFilter.filter(function (item) {
-          return _this3.state.filterItems[item[0]] === true;
-        });
-        filterIDs = newColumn.map(function (item) {
-          return item[1];
-        });
-      }
-
       var newState = this.state;
 
-      var oldRows = void 0;
-      if (this.state.filteredRows.length !== 0) {
-        oldRows = this.state.filteredRows;
-      } else {
-        oldRows = newState.rows.slice(0);
+      var filteredColumnCount = columnsToFilter.length;
+      var newFilterIds = [];
+      for (var k = 0; k < filteredColumnCount; k++) {
+        var columnNum = columnsToFilter[k];
+        var column = this.state[columnNum].slice(0);
+
+        if (k === 0) {
+          for (var p = 0; p < column.length; p++) {
+            if (this.state.currentlyAppliedFilters[columnNum][column[p][0]]) {
+              newFilterIds.push(column[p][1]);
+            }
+          }
+        } else {
+          var tempFilterIds = [];
+          for (var _p = 0; _p < column.length; _p++) {
+            if (this.state.currentlyAppliedFilters[columnNum][column[_p][0]] && newFilterIds.includes(column[_p][1])) {
+              tempFilterIds.push(column[_p][1]);
+            }
+          }
+          newFilterIds = tempFilterIds;
+        }
+        console.log(newFilterIds);
       }
+
+      var oldRows = void 0;
+      // if (this.state.filteredRows.length !== 0) {
+      //   oldRows = this.state.filteredRows
+      // } else {
+      oldRows = newState.rows.slice(0);
+      // }
 
       var newRows = oldRows.slice(0, 1);
 
-      for (var _i5 = 1; _i5 < oldRows.length; _i5++) {
+      for (var i = 1; i < oldRows.length; i++) {
         // CHANGE TO HASH FOR FASTER LOOKUP
-        if (filterIDs.includes(oldRows[_i5][oldRows[_i5].length - 1])) {
-          newRows.push(oldRows[_i5]);
+        if (newFilterIds.includes(oldRows[i][oldRows[i].length - 1])) {
+          newRows.push(oldRows[i]);
         }
       }
 
       newState["filteredRows"] = newRows;
       newState["filterDisplay"] = "none";
+      newState["columnsToFilter"] = columnsToFilter;
 
       this.setState(newState);
     }
