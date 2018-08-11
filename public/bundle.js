@@ -30696,7 +30696,14 @@ var CSVTable = function (_React$Component) {
           var colStats = [];
           var parsedType = parseFloat(rows[1][_j3]);
           var parsedTypeLength = parsedType.toString().length;
-          var columnInfo = { "count": rows.length - 1, "nonBlankRows": 0 };
+          var columnInfo = {
+            "count": rows.length - 1,
+            "nonBlankRows": 0,
+            "min": 0,
+            "max": 0,
+            "mean": 0,
+            "sum": 0
+          };
           var lengthToCheck = rows[1][_j3].toString().length;
 
           var columnNonBlankRowCount = 0;
@@ -30706,12 +30713,6 @@ var CSVTable = function (_React$Component) {
           columnInfo["nonBlankRows"] = columnNonBlankRowCount;
 
           if (isNaN(parsedType) === false && parsedTypeLength === rows[1][_j3].toString().length) {
-            columnInfo = {
-              "min": 0,
-              "max": 0,
-              "mean": 0,
-              "sum": 0
-            };
 
             for (var p = 1; p < rows.length; p++) {
               if (parseFloat(rows[p][_j3]) < columnInfo["min"]) columnInfo["min"] = parseFloat(rows[p][_j3]);

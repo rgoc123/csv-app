@@ -428,7 +428,14 @@ class CSVTable extends React.Component {
         let colStats = [];
         let parsedType = parseFloat(rows[1][j]);
         let parsedTypeLength = parsedType.toString().length;
-        let columnInfo = {"count": rows.length-1, "nonBlankRows": 0};
+        let columnInfo = {
+          "count": rows.length-1,
+          "nonBlankRows": 0,
+          "min": 0,
+          "max": 0,
+          "mean": 0,
+          "sum": 0
+        };
         let lengthToCheck = rows[1][j].toString().length;
 
         let columnNonBlankRowCount = 0;
@@ -438,12 +445,6 @@ class CSVTable extends React.Component {
         columnInfo["nonBlankRows"] = columnNonBlankRowCount;
 
         if (isNaN(parsedType) === false && parsedTypeLength === rows[1][j].toString().length) {
-          columnInfo = {
-            "min": 0,
-            "max": 0,
-            "mean": 0,
-            "sum": 0
-          }
 
           for (let p = 1; p < rows.length; p++) {
             if (parseFloat(rows[p][j]) < columnInfo["min"]) columnInfo["min"] = parseFloat(rows[p][j])
