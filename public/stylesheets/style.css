@@ -26,6 +26,7 @@ span {
   display: flex;
 }
 
-.sort-button {
-
+.column-stats {
+  position: absolute;
+  bottom: 21px;
 }

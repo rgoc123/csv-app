@@ -368,15 +368,18 @@ class CSVTable extends React.Component {
     // of having this.state.filterColumn be an array
     // applyFilter would push column into array, removeFilter would remove it
 
+  clearFilters() {
+    let newState = this.state;
+    newState["columnsToFilter"] = [];
+    newState["filteredRows"] = [];
+    let columnCount = Object.keys(newState["currentlyAppliedFilters"]).length;
+    for (let i=0; i < columnCount; i++) {
+      newState["currentlyAppliedFilters"][i] = {};
+    }
+    this.setState(newState);
+  }
 
-  createTestLines() {
-    // GOING TO NEED SOMETHING TO KNOW HOW MANY SPANS
-    // TO CREATE FOR EACH COLUMN
-    // LIKE HAVE A COLUMNSCOUNT VARIABLE THAT COUNTS THE
-    // LENGTH OF ANY ROW, AND THEN HAVE A FUNCTION THAT
-    // GENERATES SPAN FOR EACH COUNT, WITH AN I COUNTER
-    // FILL IN THE ROW[I], i.e. the array's elements/cell
-    // info
+  createRows() {
     if (this.props.rows.length === 0) {
       return null;
     } else if (this.state.rows.length === 0) {
@@ -421,7 +424,43 @@ class CSVTable extends React.Component {
       let columnCount = rows[0].length;
 
       let headers = [];
+      let colStats = [];
       for (let j = 0; j < columnCount; j++) {
+        let parsedType = parseFloat(rows[1][j]);
+        let parsedTypeLength = parsedType.toString().length;
+        let columnInfo = []
+        let lengthToCheck = rows[1][j].toString().length;
+
+        if (isNaN(parsedType) === false && parsedTypeLength === rows[1][j].toString().length) {
+          columnInfo = {
+            "count": 0,
+            "min": 0,
+            "max": 0,
+            "mean": 0,
+            "sum": 0
+          }
+          columnInfo["count"] = rows.length-1;
+          for (let p = 1; p < rows.length; p++) {
+            if (parseFloat(rows[p][j]) < columnInfo["min"]) columnInfo["min"] = parseFloat(rows[p][j])
+            if (parseFloat(rows[p][j]) > columnInfo["max"]) columnInfo["max"] = parseFloat(rows[p][j])
+            columnInfo["sum"] += parseFloat(rows[p][j]);
+          }
+          columnInfo["mean"] = (columnInfo["sum"] / columnInfo["count"]);
+
+          columnInfo["sum"] = columnInfo["sum"].toFixed(2);
+          columnInfo["min"] = columnInfo["min"].toFixed(2);
+          columnInfo["max"] = columnInfo["max"].toFixed(2);
+          columnInfo["mean"] = columnInfo["mean"].toFixed(2);
+          colStats.push(<span>Min: {columnInfo["min"]}</span>);
+          colStats.push(<span>Max: {columnInfo["max"]}</span>);
+          colStats.push(<span>Sum: {columnInfo["sum"]}</span>);
+          colStats.push(<span>Mean: {columnInfo["mean"]}</span>);
+        } else {
+          columnInfo = {
+            "count": this.props.rows.length-1,
+          }
+        }
+
         headers.push(
           <span>{rows[0][j]}
             <div className="sort-buttons-div">
@@ -437,6 +476,11 @@ class CSVTable extends React.Component {
                 className="sort-button"
                 onClick={() => this.reverseSortColumn(j)}
                 >Reverse</div>
+              <div className="column-stats">
+                <span>Column Stats</span>
+                <span>Count: {columnInfo["count"]}</span>
+                {colStats}
+              </div>
             </div>
           </span>
         );
@@ -469,17 +513,6 @@ class CSVTable extends React.Component {
     }
   }
 
-  clearFilters() {
-    let newState = this.state;
-    newState["columnsToFilter"] = [];
-    newState["filteredRows"] = [];
-    let columnCount = Object.keys(newState["currentlyAppliedFilters"]).length;
-    for (let i=0; i < columnCount; i++) {
-      newState["currentlyAppliedFilters"][i] = {};
-    }
-    this.setState(newState);
-  }
-
   render() {
     console.log(this.props.rows);
     console.log(this.state);
@@ -489,7 +522,7 @@ class CSVTable extends React.Component {
         <button onClick={() => this.clearFilters()}>Clear Filters</button>
         <div>{this.createFilter()}</div>
         <ul>
-          {this.createTestLines()}
+          {this.createRows()}
         </ul>
       </div>
     );

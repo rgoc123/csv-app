@@ -30618,19 +30618,23 @@ var CSVTable = function (_React$Component) {
     // of having this.state.filterColumn be an array
     // applyFilter would push column into array, removeFilter would remove it
 
-
   }, {
-    key: 'createTestLines',
-    value: function createTestLines() {
+    key: 'clearFilters',
+    value: function clearFilters() {
+      var newState = this.state;
+      newState["columnsToFilter"] = [];
+      newState["filteredRows"] = [];
+      var columnCount = Object.keys(newState["currentlyAppliedFilters"]).length;
+      for (var i = 0; i < columnCount; i++) {
+        newState["currentlyAppliedFilters"][i] = {};
+      }
+      this.setState(newState);
+    }
+  }, {
+    key: 'createRows',
+    value: function createRows() {
       var _this4 = this;
 
-      // GOING TO NEED SOMETHING TO KNOW HOW MANY SPANS
-      // TO CREATE FOR EACH COLUMN
-      // LIKE HAVE A COLUMNSCOUNT VARIABLE THAT COUNTS THE
-      // LENGTH OF ANY ROW, AND THEN HAVE A FUNCTION THAT
-      // GENERATES SPAN FOR EACH COUNT, WITH AN I COUNTER
-      // FILL IN THE ROW[I], i.e. the array's elements/cell
-      // info
       if (this.props.rows.length === 0) {
         return null;
       } else if (this.state.rows.length === 0) {
@@ -30687,8 +30691,64 @@ var CSVTable = function (_React$Component) {
         var _columnCount = rows[0].length;
 
         var headers = [];
+        var colStats = [];
 
         var _loop = function _loop(_j3) {
+          var parsedType = parseFloat(rows[1][_j3]);
+          var parsedTypeLength = parsedType.toString().length;
+          var columnInfo = [];
+          var lengthToCheck = rows[1][_j3].toString().length;
+
+          if (isNaN(parsedType) === false && parsedTypeLength === rows[1][_j3].toString().length) {
+            columnInfo = {
+              "count": 0,
+              "min": 0,
+              "max": 0,
+              "mean": 0,
+              "sum": 0
+            };
+            columnInfo["count"] = rows.length - 1;
+            for (var p = 1; p < rows.length; p++) {
+              if (parseFloat(rows[p][_j3]) < columnInfo["min"]) columnInfo["min"] = parseFloat(rows[p][_j3]);
+              if (parseFloat(rows[p][_j3]) > columnInfo["max"]) columnInfo["max"] = parseFloat(rows[p][_j3]);
+              columnInfo["sum"] += parseFloat(rows[p][_j3]);
+            }
+            columnInfo["mean"] = columnInfo["sum"] / columnInfo["count"];
+
+            columnInfo["sum"] = columnInfo["sum"].toFixed(2);
+            columnInfo["min"] = columnInfo["min"].toFixed(2);
+            columnInfo["max"] = columnInfo["max"].toFixed(2);
+            columnInfo["mean"] = columnInfo["mean"].toFixed(2);
+            colStats.push(_react2.default.createElement(
+              'span',
+              null,
+              'Min: ',
+              columnInfo["min"]
+            ));
+            colStats.push(_react2.default.createElement(
+              'span',
+              null,
+              'Max: ',
+              columnInfo["max"]
+            ));
+            colStats.push(_react2.default.createElement(
+              'span',
+              null,
+              'Sum: ',
+              columnInfo["sum"]
+            ));
+            colStats.push(_react2.default.createElement(
+              'span',
+              null,
+              'Mean: ',
+              columnInfo["mean"]
+            ));
+          } else {
+            columnInfo = {
+              "count": _this4.props.rows.length - 1
+            };
+          }
+
           headers.push(_react2.default.createElement(
             'span',
             null,
@@ -30725,6 +30785,22 @@ var CSVTable = function (_React$Component) {
                   }
                 },
                 'Reverse'
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'column-stats' },
+                _react2.default.createElement(
+                  'span',
+                  null,
+                  'Column Stats'
+                ),
+                _react2.default.createElement(
+                  'span',
+                  null,
+                  'Count: ',
+                  columnInfo["count"]
+                ),
+                colStats
               )
             )
           ));
@@ -30756,18 +30832,6 @@ var CSVTable = function (_React$Component) {
       }
     }
   }, {
-    key: 'clearFilters',
-    value: function clearFilters() {
-      var newState = this.state;
-      newState["columnsToFilter"] = [];
-      newState["filteredRows"] = [];
-      var columnCount = Object.keys(newState["currentlyAppliedFilters"]).length;
-      for (var i = 0; i < columnCount; i++) {
-        newState["currentlyAppliedFilters"][i] = {};
-      }
-      this.setState(newState);
-    }
-  }, {
     key: 'render',
     value: function render() {
       var _this5 = this;
@@ -30797,7 +30861,7 @@ var CSVTable = function (_React$Component) {
         _react2.default.createElement(
           'ul',
           null,
-          this.createTestLines()
+          this.createRows()
         )
       );
     }
