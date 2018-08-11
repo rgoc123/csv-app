@@ -407,6 +407,14 @@ class CSVTable extends React.Component {
     }
   }
 
+  showColDataType(colNum) {
+    document.getElementById('col-header-' + colNum.toString()).style.display = "block";
+  }
+
+  hideColDataType(colNum) {
+    document.getElementById('col-header-' + colNum.toString()).style.display = "";
+  }
+
   createRows() {
     if (this.props.rows.length === 0) {
       return null;
@@ -458,10 +466,12 @@ class CSVTable extends React.Component {
 
       // Might have to come after rows are updated with key
       let headers = [];
+      let parsedType;
+      let parsedTypeLength;
       for (let j = 0; j < columnCount; j++) {
         let colStats = [];
-        let parsedType = parseFloat(rows[1][j]);
-        let parsedTypeLength = parsedType.toString().length;
+        parsedType = parseFloat(rows[1][j]);
+        parsedTypeLength = parsedType.toString().length;
         // Poss -1 change
         let columnInfo = {
           "count": rows.length-1,
@@ -498,9 +508,20 @@ class CSVTable extends React.Component {
           colStats.push(<span>Mean: {columnInfo["mean"]}</span>);
         }
 
+        let colHeaderDataType;
+        if (isNaN(parsedType) === false && parsedTypeLength === rows[1][j].toString().length) {
+          colHeaderDataType = "Number";
+        } else {
+          colHeaderDataType = "String";
+        }
+
         // Create column header span with filter and sort buttons
         headers.push(
-          <span>{rows[0][j]}
+          <span onMouseOver={() => this.showColDataType(j)}
+          onMouseLeave={() => this.hideColDataType(j)}>{rows[0][j]}
+            <span className="col-data-type"
+              id={"col-header-" + j.toString()}
+              >Column Data Type: {colHeaderDataType}</span>
             <div className="sort-buttons-div">
               <div className="sort-button"
                 onClick={() => this.toggleShowStats(j)}

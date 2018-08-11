@@ -30662,6 +30662,16 @@ var CSVTable = function (_React$Component) {
       }
     }
   }, {
+    key: 'showColDataType',
+    value: function showColDataType(colNum) {
+      document.getElementById('col-header-' + colNum.toString()).style.display = "block";
+    }
+  }, {
+    key: 'hideColDataType',
+    value: function hideColDataType(colNum) {
+      document.getElementById('col-header-' + colNum.toString()).style.display = "";
+    }
+  }, {
     key: 'createRows',
     value: function createRows() {
       var _this5 = this;
@@ -30745,11 +30755,13 @@ var CSVTable = function (_React$Component) {
 
         // Might have to come after rows are updated with key
         var headers = [];
+        var parsedType = void 0;
+        var parsedTypeLength = void 0;
 
         var _loop = function _loop(_j3) {
           var colStats = [];
-          var parsedType = parseFloat(rows[1][_j3]);
-          var parsedTypeLength = parsedType.toString().length;
+          parsedType = parseFloat(rows[1][_j3]);
+          parsedTypeLength = parsedType.toString().length;
           // Poss -1 change
           var columnInfo = {
             "count": rows.length - 1,
@@ -30806,11 +30818,31 @@ var CSVTable = function (_React$Component) {
             ));
           }
 
+          var colHeaderDataType = void 0;
+          if (isNaN(parsedType) === false && parsedTypeLength === rows[1][_j3].toString().length) {
+            colHeaderDataType = "Number";
+          } else {
+            colHeaderDataType = "String";
+          }
+
           // Create column header span with filter and sort buttons
           headers.push(_react2.default.createElement(
             'span',
-            null,
+            { onMouseOver: function onMouseOver() {
+                return _this5.showColDataType(_j3);
+              },
+              onMouseLeave: function onMouseLeave() {
+                return _this5.hideColDataType(_j3);
+              } },
             rows[0][_j3],
+            _react2.default.createElement(
+              'span',
+              { className: 'col-data-type',
+                id: "col-header-" + _j3.toString()
+              },
+              'Column Data Type: ',
+              colHeaderDataType
+            ),
             _react2.default.createElement(
               'div',
               { className: 'sort-buttons-div' },
