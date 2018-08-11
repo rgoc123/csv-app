@@ -428,18 +428,23 @@ class CSVTable extends React.Component {
         let colStats = [];
         let parsedType = parseFloat(rows[1][j]);
         let parsedTypeLength = parsedType.toString().length;
-        let columnInfo = []
+        let columnInfo = {"count": rows.length-1, "nonBlankRows": 0};
         let lengthToCheck = rows[1][j].toString().length;
+
+        let columnNonBlankRowCount = 0;
+        for (let q = 1; q < rows.length; q++) {
+          if (rows[q][j] !== "") columnNonBlankRowCount += 1;
+        }
+        columnInfo["nonBlankRows"] = columnNonBlankRowCount;
 
         if (isNaN(parsedType) === false && parsedTypeLength === rows[1][j].toString().length) {
           columnInfo = {
-            "count": 0,
             "min": 0,
             "max": 0,
             "mean": 0,
             "sum": 0
           }
-          columnInfo["count"] = rows.length-1;
+
           for (let p = 1; p < rows.length; p++) {
             if (parseFloat(rows[p][j]) < columnInfo["min"]) columnInfo["min"] = parseFloat(rows[p][j])
             if (parseFloat(rows[p][j]) > columnInfo["max"]) columnInfo["max"] = parseFloat(rows[p][j])
@@ -455,10 +460,6 @@ class CSVTable extends React.Component {
           colStats.push(<span>Max: {columnInfo["max"]}</span>);
           colStats.push(<span>Sum: {columnInfo["sum"]}</span>);
           colStats.push(<span>Mean: {columnInfo["mean"]}</span>);
-        } else {
-          columnInfo = {
-            "count": rows.length-1,
-          }
         }
 
         headers.push(
@@ -478,7 +479,8 @@ class CSVTable extends React.Component {
                 >Reverse</div>
               <div className="column-stats">
                 <span>Column Stats</span>
-                <span>Count: {columnInfo["count"]}</span>
+                <span>Rows: {columnInfo["count"]}</span>
+                <span>Non Empty Rows: {columnInfo["nonBlankRows"]}</span>
                 {colStats}
               </div>
             </div>

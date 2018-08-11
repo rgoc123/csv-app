@@ -30696,18 +30696,23 @@ var CSVTable = function (_React$Component) {
           var colStats = [];
           var parsedType = parseFloat(rows[1][_j3]);
           var parsedTypeLength = parsedType.toString().length;
-          var columnInfo = [];
+          var columnInfo = { "count": rows.length - 1, "nonBlankRows": 0 };
           var lengthToCheck = rows[1][_j3].toString().length;
+
+          var columnNonBlankRowCount = 0;
+          for (var q = 1; q < rows.length; q++) {
+            if (rows[q][_j3] !== "") columnNonBlankRowCount += 1;
+          }
+          columnInfo["nonBlankRows"] = columnNonBlankRowCount;
 
           if (isNaN(parsedType) === false && parsedTypeLength === rows[1][_j3].toString().length) {
             columnInfo = {
-              "count": 0,
               "min": 0,
               "max": 0,
               "mean": 0,
               "sum": 0
             };
-            columnInfo["count"] = rows.length - 1;
+
             for (var p = 1; p < rows.length; p++) {
               if (parseFloat(rows[p][_j3]) < columnInfo["min"]) columnInfo["min"] = parseFloat(rows[p][_j3]);
               if (parseFloat(rows[p][_j3]) > columnInfo["max"]) columnInfo["max"] = parseFloat(rows[p][_j3]);
@@ -30743,10 +30748,6 @@ var CSVTable = function (_React$Component) {
               'Mean: ',
               columnInfo["mean"]
             ));
-          } else {
-            columnInfo = {
-              "count": rows.length - 1
-            };
           }
 
           headers.push(_react2.default.createElement(
@@ -30797,8 +30798,14 @@ var CSVTable = function (_React$Component) {
                 _react2.default.createElement(
                   'span',
                   null,
-                  'Count: ',
+                  'Rows: ',
                   columnInfo["count"]
+                ),
+                _react2.default.createElement(
+                  'span',
+                  null,
+                  'Non Empty Rows: ',
+                  columnInfo["nonBlankRows"]
                 ),
                 colStats
               )
