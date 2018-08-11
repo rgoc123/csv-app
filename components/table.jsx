@@ -256,10 +256,18 @@ class CSVTable extends React.Component {
 
       let checkboxes = this.state.filterList.map(item => createCheckbox(item));
 
+      function cancelFilter() {
+        this.setState({
+          filterDisplay: "none"
+        });
+      }
+      cancelFilter = cancelFilter.bind(this);
+
       return (
         <div>
-          {checkboxes}
           <div onClick={() => this.applyFilter()}>Apply</div>
+          <div onClick={() => cancelFilter()}>Cancel</div>
+          {checkboxes}
         </div>
       );
     }

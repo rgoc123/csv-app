@@ -30478,6 +30478,12 @@ var CSVTable = function (_React$Component) {
           }
         };
 
+        var cancelFilter = function cancelFilter() {
+          this.setState({
+            filterDisplay: "none"
+          });
+        };
+
         // can change below line to this.state.filterList[colNum].map
         var newState = this.state;
 
@@ -30487,17 +30493,26 @@ var CSVTable = function (_React$Component) {
           return createCheckbox(item);
         });
 
+        cancelFilter = cancelFilter.bind(this);
+
         return _react2.default.createElement(
           'div',
           null,
-          checkboxes,
           _react2.default.createElement(
             'div',
             { onClick: function onClick() {
                 return _this2.applyFilter();
               } },
             'Apply'
-          )
+          ),
+          _react2.default.createElement(
+            'div',
+            { onClick: function onClick() {
+                return cancelFilter();
+              } },
+            'Cancel'
+          ),
+          checkboxes
         );
       }
     }
