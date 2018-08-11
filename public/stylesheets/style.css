@@ -38,3 +38,7 @@ span {
 .column-stats span {
   width: 198px;
 }
+
+.row-num {
+  display: none;
+}

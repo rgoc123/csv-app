@@ -13,7 +13,8 @@ class CSVTable extends React.Component {
       filterItems: {},
       filterList: [],
       currentlyAppliedFilters: {},
-      filteredRows: []
+      filteredRows: [],
+      sortingHash: {}
     };
     this.changeFilterItemValue = this.changeFilterItemValue.bind(this);
     this.applyFilter = this.applyFilter.bind(this);
@@ -75,6 +76,7 @@ class CSVTable extends React.Component {
       // Poss -1 change
       sortingHash[newState[columnNum][i-1][newState[columnNum][i-1].length-1]] = i;
     }
+    newState["sortingHash"] = sortingHash;
 
     for (let i = 0; i < columnCount; i++) {
       if (i !== columnNum) {
@@ -346,7 +348,7 @@ class CSVTable extends React.Component {
     // if (this.state.filteredRows.length !== 0) {
     //   oldRows = this.state.filteredRows
     // } else {
-      oldRows = newState.rows.slice(0);
+    oldRows = newState.rows.slice(0);
     // }
 
     let newRows = oldRows.slice(0,1);
@@ -393,6 +395,18 @@ class CSVTable extends React.Component {
     }
   }
 
+  showRow(rowNum, rowCol) {
+    if (this.state.sortingHash !== {}) {
+      document.getElementById(rowNum.toString() + rowCol.toString()).style.display = "block";
+    }
+  }
+
+  hideRow(rowNum, rowCol) {
+    if (this.state.sortingHash !== {}) {
+      document.getElementById(rowNum.toString() + rowCol.toString()).style.display = "";
+    }
+  }
+
   createRows() {
     if (this.props.rows.length === 0) {
       return null;
@@ -423,7 +437,6 @@ class CSVTable extends React.Component {
       for (let t = 1; t < this.props.rows.length; t++) {
         newState["rows"][t].unshift(t);
       }
-      debugger
       this.setState(newState);
     } else {
       // Have new rows
@@ -438,7 +451,6 @@ class CSVTable extends React.Component {
       } else {
         rows = this.props.rows;
       }
-      debugger
       if (rows[0][0] !== "Row") rows[0].unshift("Row");
       if (!rows[1]) rows[1].unshift(1);
 
@@ -519,7 +531,12 @@ class CSVTable extends React.Component {
       function createRow(i) {
         let row = [];
         for (let k = 0; k < columnCount; k++) {
-          row.push(<span>{rows[i][k]}</span>);
+          row.push(
+            <span onMouseOver={() => this.showRow(i, k)}
+              onMouseLeave={() => this.hideRow(i, k)}>{rows[i][k]}
+              <span className="row-num" id={i.toString() + k.toString()}>{i}</span>
+            </span>
+          );
         }
         return row;
       }

@@ -30221,7 +30221,8 @@ var CSVTable = function (_React$Component) {
       filterItems: {},
       filterList: [],
       currentlyAppliedFilters: {},
-      filteredRows: []
+      filteredRows: [],
+      sortingHash: {}
     };
     _this.changeFilterItemValue = _this.changeFilterItemValue.bind(_this);
     _this.applyFilter = _this.applyFilter.bind(_this);
@@ -30286,6 +30287,7 @@ var CSVTable = function (_React$Component) {
         // Poss -1 change
         sortingHash[newState[columnNum][_i - 1][newState[columnNum][_i - 1].length - 1]] = _i;
       }
+      newState["sortingHash"] = sortingHash;
 
       for (var _i2 = 0; _i2 < columnCount; _i2++) {
         if (_i2 !== columnNum) {
@@ -30646,9 +30648,23 @@ var CSVTable = function (_React$Component) {
       }
     }
   }, {
+    key: 'showRow',
+    value: function showRow(rowNum, rowCol) {
+      if (this.state.sortingHash !== {}) {
+        document.getElementById(rowNum.toString() + rowCol.toString()).style.display = "block";
+      }
+    }
+  }, {
+    key: 'hideRow',
+    value: function hideRow(rowNum, rowCol) {
+      if (this.state.sortingHash !== {}) {
+        document.getElementById(rowNum.toString() + rowCol.toString()).style.display = "";
+      }
+    }
+  }, {
     key: 'createRows',
     value: function createRows() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this.props.rows.length === 0) {
         return null;
@@ -30679,17 +30695,33 @@ var CSVTable = function (_React$Component) {
         for (var t = 1; t < this.props.rows.length; t++) {
           newState["rows"][t].unshift(t);
         }
-        debugger;
         this.setState(newState);
       } else {
         var createRow = function createRow(i) {
+          var _this4 = this;
+
           var row = [];
-          for (var _k = 0; _k < _columnCount; _k++) {
+
+          var _loop2 = function _loop2(_k) {
             row.push(_react2.default.createElement(
               'span',
-              null,
-              rows[i][_k]
+              { onMouseOver: function onMouseOver() {
+                  return _this4.showRow(i, _k);
+                },
+                onMouseLeave: function onMouseLeave() {
+                  return _this4.hideRow(i, _k);
+                } },
+              rows[i][_k],
+              _react2.default.createElement(
+                'span',
+                { className: 'row-num', id: i.toString() + _k.toString() },
+                i
+              )
             ));
+          };
+
+          for (var _k = 0; _k < _columnCount; _k++) {
+            _loop2(_k);
           }
           return row;
         };
@@ -30706,7 +30738,6 @@ var CSVTable = function (_React$Component) {
         } else {
           rows = this.props.rows;
         }
-        debugger;
         if (rows[0][0] !== "Row") rows[0].unshift("Row");
         if (!rows[1]) rows[1].unshift(1);
 
@@ -30787,7 +30818,7 @@ var CSVTable = function (_React$Component) {
                 'div',
                 { className: 'sort-button',
                   onClick: function onClick() {
-                    return _this4.toggleShowStats(_j3);
+                    return _this5.toggleShowStats(_j3);
                   }
                 },
                 'Stats'
@@ -30797,7 +30828,7 @@ var CSVTable = function (_React$Component) {
                 {
                   className: 'sort-button',
                   onClick: function onClick() {
-                    return _this4.createFilterList(_j3);
+                    return _this5.createFilterList(_j3);
                   }
                 },
                 'Filter'
@@ -30807,7 +30838,7 @@ var CSVTable = function (_React$Component) {
                 {
                   className: 'sort-button',
                   onClick: function onClick() {
-                    return _this4.sortColumn(_j3);
+                    return _this5.sortColumn(_j3);
                   }
                 },
                 'Sort'
@@ -30817,7 +30848,7 @@ var CSVTable = function (_React$Component) {
                 {
                   className: 'sort-button',
                   onClick: function onClick() {
-                    return _this4.reverseSortColumn(_j3);
+                    return _this5.reverseSortColumn(_j3);
                   }
                 },
                 'Reverse'
@@ -30876,7 +30907,7 @@ var CSVTable = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this5 = this;
+      var _this6 = this;
 
       console.log(this.props.rows);
       console.log(this.state);
@@ -30891,7 +30922,7 @@ var CSVTable = function (_React$Component) {
         _react2.default.createElement(
           'button',
           { onClick: function onClick() {
-              return _this5.clearFilters();
+              return _this6.clearFilters();
             } },
           'Clear Filters'
         ),
