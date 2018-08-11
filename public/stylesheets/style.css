@@ -29,4 +29,9 @@ span {
 .column-stats {
   position: absolute;
   bottom: 21px;
+  right: -1px;
+}
+
+.column-stats span {
+  width: 198px;
 }
