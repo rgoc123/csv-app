@@ -40,6 +40,7 @@ class CSVTable extends React.Component {
     for (let k = 1; k < rowsToSort.length; k++) {
       for (let l = 0; l < columnCount; l++) {
         let parsedCell = parseInt(rowsToSort[k][l]);
+        // Poss -1 change
         let cellIndex = rowsToSort[k][rowsToSort[k].length-1];
         if (isNaN(parsedCell) === false) {
           columnsToAddToState[l].push([parsedCell, cellIndex]);
@@ -71,6 +72,7 @@ class CSVTable extends React.Component {
     let sortingHash = {};
     for (let i = 1; i < rowsToSort.length; i++) {
       rowsToSort[i][columnNum] = newState[columnNum][i-1][0];
+      // Poss -1 change
       sortingHash[newState[columnNum][i-1][newState[columnNum][i-1].length-1]] = i;
     }
 
@@ -109,6 +111,7 @@ class CSVTable extends React.Component {
     for (let k = 1; k < rowsToSort.length; k++) {
       for (let l = 0; l < columnCount; l++) {
         let parsedCell = parseInt(rowsToSort[k][l]);
+        // Poss -1 change
         let cellIndex = rowsToSort[k][rowsToSort[k].length-1];
         if (isNaN(parsedCell) === false) {
           columnsToAddToState[l].push([parsedCell, cellIndex]);
@@ -142,6 +145,7 @@ class CSVTable extends React.Component {
     let sortingHash = {};
     for (let i = 1; i < rowsToSort.length; i++) {
       rowsToSort[i][columnNum] = newState[columnNum][i-1][0];
+      // Poss -1 change
       sortingHash[newState[columnNum][i-1][newState[columnNum][i-1].length-1]] = i;
     }
 
@@ -349,6 +353,7 @@ class CSVTable extends React.Component {
 
     for (let i = 1; i < oldRows.length; i++) {
       // CHANGE TO HASH FOR FASTER LOOKUP
+      // Poss -1 change
       if (newFilterIds.includes(oldRows[i][oldRows[i].length-1])) {
         newRows.push(oldRows[i]);
       }
@@ -414,7 +419,11 @@ class CSVTable extends React.Component {
         }
       }
       newState["rows"] = this.props.rows;
-
+      // Can add keys here
+      for (let t = 1; t < this.props.rows.length; t++) {
+        newState["rows"][t].unshift(t);
+      }
+      debugger
       this.setState(newState);
     } else {
       // Have new rows
@@ -429,14 +438,19 @@ class CSVTable extends React.Component {
       } else {
         rows = this.props.rows;
       }
+      debugger
+      if (rows[0][0] !== "Row") rows[0].unshift("Row");
+      if (!rows[1]) rows[1].unshift(1);
 
       let columnCount = rows[0].length;
 
+      // Might have to come after rows are updated with key
       let headers = [];
       for (let j = 0; j < columnCount; j++) {
         let colStats = [];
         let parsedType = parseFloat(rows[1][j]);
         let parsedTypeLength = parsedType.toString().length;
+        // Poss -1 change
         let columnInfo = {
           "count": rows.length-1,
           "nonBlankRows": 0,
@@ -472,6 +486,7 @@ class CSVTable extends React.Component {
           colStats.push(<span>Mean: {columnInfo["mean"]}</span>);
         }
 
+        // Create column header span with filter and sort buttons
         headers.push(
           <span>{rows[0][j]}
             <div className="sort-buttons-div">

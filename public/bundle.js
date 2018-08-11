@@ -30251,6 +30251,7 @@ var CSVTable = function (_React$Component) {
       for (var k = 1; k < rowsToSort.length; k++) {
         for (var l = 0; l < columnCount; l++) {
           var parsedCell = parseInt(rowsToSort[k][l]);
+          // Poss -1 change
           var cellIndex = rowsToSort[k][rowsToSort[k].length - 1];
           if (isNaN(parsedCell) === false) {
             columnsToAddToState[l].push([parsedCell, cellIndex]);
@@ -30282,6 +30283,7 @@ var CSVTable = function (_React$Component) {
       var sortingHash = {};
       for (var _i = 1; _i < rowsToSort.length; _i++) {
         rowsToSort[_i][columnNum] = newState[columnNum][_i - 1][0];
+        // Poss -1 change
         sortingHash[newState[columnNum][_i - 1][newState[columnNum][_i - 1].length - 1]] = _i;
       }
 
@@ -30321,6 +30323,7 @@ var CSVTable = function (_React$Component) {
       for (var k = 1; k < rowsToSort.length; k++) {
         for (var l = 0; l < columnCount; l++) {
           var parsedCell = parseInt(rowsToSort[k][l]);
+          // Poss -1 change
           var cellIndex = rowsToSort[k][rowsToSort[k].length - 1];
           if (isNaN(parsedCell) === false) {
             columnsToAddToState[l].push([parsedCell, cellIndex]);
@@ -30354,6 +30357,7 @@ var CSVTable = function (_React$Component) {
       var sortingHash = {};
       for (var _i3 = 1; _i3 < rowsToSort.length; _i3++) {
         rowsToSort[_i3][columnNum] = newState[columnNum][_i3 - 1][0];
+        // Poss -1 change
         sortingHash[newState[columnNum][_i3 - 1][newState[columnNum][_i3 - 1].length - 1]] = _i3;
       }
 
@@ -30600,6 +30604,7 @@ var CSVTable = function (_React$Component) {
 
       for (var i = 1; i < oldRows.length; i++) {
         // CHANGE TO HASH FOR FASTER LOOKUP
+        // Poss -1 change
         if (newFilterIds.includes(oldRows[i][oldRows[i].length - 1])) {
           newRows.push(oldRows[i]);
         }
@@ -30670,7 +30675,11 @@ var CSVTable = function (_React$Component) {
           }
         }
         newState["rows"] = this.props.rows;
-
+        // Can add keys here
+        for (var t = 1; t < this.props.rows.length; t++) {
+          newState["rows"][t].unshift(t);
+        }
+        debugger;
         this.setState(newState);
       } else {
         var createRow = function createRow(i) {
@@ -30697,15 +30706,20 @@ var CSVTable = function (_React$Component) {
         } else {
           rows = this.props.rows;
         }
+        debugger;
+        if (rows[0][0] !== "Row") rows[0].unshift("Row");
+        if (!rows[1]) rows[1].unshift(1);
 
         var _columnCount = rows[0].length;
 
+        // Might have to come after rows are updated with key
         var headers = [];
 
         var _loop = function _loop(_j3) {
           var colStats = [];
           var parsedType = parseFloat(rows[1][_j3]);
           var parsedTypeLength = parsedType.toString().length;
+          // Poss -1 change
           var columnInfo = {
             "count": rows.length - 1,
             "nonBlankRows": 0,
@@ -30761,6 +30775,7 @@ var CSVTable = function (_React$Component) {
             ));
           }
 
+          // Create column header span with filter and sort buttons
           headers.push(_react2.default.createElement(
             'span',
             null,
