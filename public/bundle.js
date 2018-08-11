@@ -30237,23 +30237,30 @@ var CSVTable = function (_React$Component) {
 
       var columnsToAddToState = {};
 
+      var rowsToSort = void 0;
+      if (this.state.filteredRows.length > 0) {
+        rowsToSort = this.state.filteredRows;
+      } else {
+        rowsToSort = this.props.rows;
+      }
+
       var columnCount = this.props.rows[0].length;
       for (var j = 0; j < columnCount; j++) {
         columnsToAddToState[j] = [];
       }
-      for (var k = 1; k < this.props.rows.length; k++) {
+      for (var k = 1; k < rowsToSort.length; k++) {
         for (var l = 0; l < columnCount; l++) {
-          var parsedCell = parseInt(this.props.rows[k][l]);
-          var cellIndex = this.props.rows[k][this.props.rows[k].length - 1];
+          var parsedCell = parseInt(rowsToSort[k][l]);
+          var cellIndex = rowsToSort[k][rowsToSort[k].length - 1];
           if (isNaN(parsedCell) === false) {
             columnsToAddToState[l].push([parsedCell, cellIndex]);
           } else {
-            columnsToAddToState[l].push([this.props.rows[k][l], cellIndex]);
+            columnsToAddToState[l].push([rowsToSort[k][l], cellIndex]);
           }
         }
       }
 
-      var colDataType = parseInt(this.props.rows[1][columnNum]);
+      var colDataType = parseInt(rowsToSort[1][columnNum]);
       var sortedColumn = void 0;
 
       if (isNaN(colDataType) === true) {
@@ -30272,23 +30279,22 @@ var CSVTable = function (_React$Component) {
         newState[i] = columnsToAddToState[i];
       }
 
-      newState.rows = this.props.rows;
       var sortingHash = {};
-      for (var _i = 1; _i < this.props.rows.length; _i++) {
-        newState.rows[_i][columnNum] = newState[columnNum][_i - 1][0];
+      for (var _i = 1; _i < rowsToSort.length; _i++) {
+        rowsToSort[_i][columnNum] = newState[columnNum][_i - 1][0];
         sortingHash[newState[columnNum][_i - 1][newState[columnNum][_i - 1].length - 1]] = _i;
       }
 
       for (var _i2 = 0; _i2 < columnCount; _i2++) {
         if (_i2 !== columnNum) {
           var newColumn = [];
-          for (var _j = 1; _j < this.props.rows.length; _j++) {
+          for (var _j = 1; _j < rowsToSort.length; _j++) {
             var cell = columnsToAddToState[_i2][_j - 1];
             var index = cell[1];
             var value = cell[0];
             newColumn[sortingHash[index] - 1] = cell;
-            newState.rows[sortingHash[index]][_i2] = value;
-            newState.rows[sortingHash[index]][columnCount] = index;
+            rowsToSort[sortingHash[index]][_i2] = value;
+            rowsToSort[sortingHash[index]][columnCount] = index;
           }
           newState[_i2] = newColumn;
         }
@@ -30300,23 +30306,31 @@ var CSVTable = function (_React$Component) {
     key: 'reverseSortColumn',
     value: function reverseSortColumn(columnNum) {
       var columnsToAddToState = {};
+
+      var rowsToSort = void 0;
+      if (this.state.filteredRows.length > 0) {
+        rowsToSort = this.state.filteredRows;
+      } else {
+        rowsToSort = this.props.rows;
+      }
+
       var columnCount = this.props.rows[0].length;
       for (var j = 0; j < columnCount; j++) {
         columnsToAddToState[j] = [];
       }
-      for (var k = 1; k < this.props.rows.length; k++) {
+      for (var k = 1; k < rowsToSort.length; k++) {
         for (var l = 0; l < columnCount; l++) {
-          var parsedCell = parseInt(this.props.rows[k][l]);
-          var cellIndex = this.props.rows[k][this.props.rows[k].length - 1];
+          var parsedCell = parseInt(rowsToSort[k][l]);
+          var cellIndex = rowsToSort[k][rowsToSort[k].length - 1];
           if (isNaN(parsedCell) === false) {
             columnsToAddToState[l].push([parsedCell, cellIndex]);
           } else {
-            columnsToAddToState[l].push([this.props.rows[k][l], cellIndex]);
+            columnsToAddToState[l].push([rowsToSort[k][l], cellIndex]);
           }
         }
       }
 
-      var colDataType = parseInt(this.props.rows[1][columnNum]);
+      var colDataType = parseInt(rowsToSort[1][columnNum]);
       var sortedColumn = void 0;
 
       if (isNaN(colDataType) === true) {
@@ -30337,27 +30351,23 @@ var CSVTable = function (_React$Component) {
         newState[i] = columnsToAddToState[i];
       }
 
-      newState.rows = this.props.rows;
       var sortingHash = {};
-      for (var _i3 = 1; _i3 < this.props.rows.length; _i3++) {
-        newState.rows[_i3][columnNum] = newState[columnNum][_i3 - 1][0];
+      for (var _i3 = 1; _i3 < rowsToSort.length; _i3++) {
+        rowsToSort[_i3][columnNum] = newState[columnNum][_i3 - 1][0];
         sortingHash[newState[columnNum][_i3 - 1][newState[columnNum][_i3 - 1].length - 1]] = _i3;
       }
 
       for (var _i4 = 0; _i4 < columnCount; _i4++) {
         if (_i4 !== columnNum) {
           var newColumn = [];
-          for (var _j2 = 1; _j2 < this.props.rows.length; _j2++) {
+          for (var _j2 = 1; _j2 < rowsToSort.length; _j2++) {
             var cell = columnsToAddToState[_i4][_j2 - 1];
             var index = cell[1];
             var value = cell[0];
             newColumn[sortingHash[index] - 1] = cell;
-            newState.rows[sortingHash[index]][_i4] = value;
-            newState.rows[sortingHash[index]][columnCount] = index;
+            rowsToSort[sortingHash[index]][_i4] = value;
+            rowsToSort[sortingHash[index]][columnCount] = index;
           }
-          // for (let k = 0; k < newColumn.length; k++) {
-          //   newState.rows[i] = newColumn[k];
-          // }
           newState[_i4] = newColumn;
         }
       }
