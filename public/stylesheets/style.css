@@ -39,16 +39,21 @@ span {
   width: 198px;
 }
 
+.col-data-type {
+  display: none;
+  position: absolute;
+  top: -36px;
+  right: -1px;
+  width: 107px;
+  background: yellow;
+}
+
 .row-num {
   width: 92px;
   display: none;
   background: yellow;
   position: absolute;
-  top: -33px;
-  right: -92px;
+  top: -35px;
+  left: -1px;
   z-index: 1;
-}
-
-.col-data-type {
-  display: none;
 }
