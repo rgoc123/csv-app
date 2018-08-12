@@ -422,10 +422,24 @@ class CSVTable extends React.Component {
       let newState = this.state;
       // let columnsToAddToState = {};
 
-      let columnCount = this.props.rows[0].length;
+      let rows = this.props.rows.slice(0);
+      rows[0].unshift("Rows");
+      for (let t = 1; t < rows.length; t++) {
+        rows[t].unshift(t);
+      }
+
+      newState["rows"] = rows;
+
+      // Identify columns in CSV data
+      let columnCount = rows[0].length;
+      // Create column arrays in state
       for (let j = 0; j < columnCount; j++) {
         newState[j] = [];
       }
+      // For each row, for each column, add cell data as an element in
+      // the state column's array. cellIndex is the cell's original
+      // row number that is used later for sorting.
+
       for (let k = 1; k < this.props.rows.length; k++) {
         for (let l = 0; l < columnCount; l++) {
           let parsedCell = parseInt(this.props.rows[k][l]);
@@ -440,11 +454,7 @@ class CSVTable extends React.Component {
           newState["currentlyAppliedFilters"] = currentlyAppliedFilters
         }
       }
-      newState["rows"] = this.props.rows;
-      // Can add keys here
-      for (let t = 1; t < this.props.rows.length; t++) {
-        newState["rows"][t].unshift(t);
-      }
+      
       this.setState(newState);
     } else {
       // Have new rows
@@ -459,11 +469,11 @@ class CSVTable extends React.Component {
       } else {
         rows = this.props.rows;
       }
-      if (rows[0][0] !== "Row") rows[0].unshift("Row");
-      if (!rows[1]) rows[1].unshift(1);
+      // if (rows[0][0] !== "Row") rows[0].unshift("Row");
+      // if (!rows[1]) rows[1].unshift(1);
 
       let columnCount = rows[0].length;
-
+      debugger
       // Might have to come after rows are updated with key
       let headers = [];
       let parsedType;

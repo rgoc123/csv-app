@@ -30682,10 +30682,24 @@ var CSVTable = function (_React$Component) {
         var newState = this.state;
         // let columnsToAddToState = {};
 
-        var columnCount = this.props.rows[0].length;
+        var rows = this.props.rows.slice(0);
+        rows[0].unshift("Rows");
+        for (var t = 1; t < rows.length; t++) {
+          rows[t].unshift(t);
+        }
+
+        newState["rows"] = rows;
+
+        // Identify columns in CSV data
+        var columnCount = rows[0].length;
+        // Create column arrays in state
         for (var j = 0; j < columnCount; j++) {
           newState[j] = [];
         }
+        // For each row, for each column, add cell data as an element in
+        // the state column's array. cellIndex is the cell's original
+        // row number that is used later for sorting.
+
         for (var k = 1; k < this.props.rows.length; k++) {
           for (var l = 0; l < columnCount; l++) {
             var parsedCell = parseInt(this.props.rows[k][l]);
@@ -30700,11 +30714,7 @@ var CSVTable = function (_React$Component) {
             newState["currentlyAppliedFilters"] = currentlyAppliedFilters;
           }
         }
-        newState["rows"] = this.props.rows;
-        // Can add keys here
-        for (var t = 1; t < this.props.rows.length; t++) {
-          newState["rows"][t].unshift(t);
-        }
+
         this.setState(newState);
       } else {
         var createRow = function createRow(i) {
@@ -30721,7 +30731,7 @@ var CSVTable = function (_React$Component) {
                 onMouseLeave: function onMouseLeave() {
                   return _this4.hideRow(i, _k);
                 } },
-              rows[i][_k],
+              _rows[i][_k],
               _react2.default.createElement(
                 'span',
                 { className: 'row-num', id: i.toString() + _k.toString() },
@@ -30738,22 +30748,22 @@ var CSVTable = function (_React$Component) {
         };
 
         // Have new rows
-        var rows = void 0;
+        var _rows = void 0;
         // Maybe here the first if-else statement needs to be
         // if this.state.filteredRows.length !== 0 for keeping
         // separation between original rows and filtered ones
         if (this.state.filteredRows.length !== 0) {
-          rows = this.state.filteredRows;
+          _rows = this.state.filteredRows;
         } else if (this.state.rows.length !== 0) {
-          rows = this.state.rows;
+          _rows = this.state.rows;
         } else {
-          rows = this.props.rows;
+          _rows = this.props.rows;
         }
-        if (rows[0][0] !== "Row") rows[0].unshift("Row");
-        if (!rows[1]) rows[1].unshift(1);
+        // if (rows[0][0] !== "Row") rows[0].unshift("Row");
+        // if (!rows[1]) rows[1].unshift(1);
 
-        var _columnCount = rows[0].length;
-
+        var _columnCount = _rows[0].length;
+        debugger;
         // Might have to come after rows are updated with key
         var headers = [];
         var parsedType = void 0;
@@ -30761,31 +30771,31 @@ var CSVTable = function (_React$Component) {
 
         var _loop = function _loop(_j3) {
           var colStats = [];
-          parsedType = parseFloat(rows[1][_j3]);
+          parsedType = parseFloat(_rows[1][_j3]);
           parsedTypeLength = parsedType.toString().length;
           // Poss -1 change
           var columnInfo = {
-            "count": rows.length - 1,
+            "count": _rows.length - 1,
             "nonBlankRows": 0,
             "min": 0,
             "max": 0,
             "mean": 0,
             "sum": 0
           };
-          var lengthToCheck = rows[1][_j3].toString().length;
+          var lengthToCheck = _rows[1][_j3].toString().length;
 
           var columnNonBlankRowCount = 0;
-          for (var q = 1; q < rows.length; q++) {
-            if (rows[q][_j3] !== "") columnNonBlankRowCount += 1;
+          for (var q = 1; q < _rows.length; q++) {
+            if (_rows[q][_j3] !== "") columnNonBlankRowCount += 1;
           }
           columnInfo["nonBlankRows"] = columnNonBlankRowCount;
 
-          if (isNaN(parsedType) === false && parsedTypeLength === rows[1][_j3].toString().length) {
+          if (isNaN(parsedType) === false && parsedTypeLength === _rows[1][_j3].toString().length) {
 
-            for (var p = 1; p < rows.length; p++) {
-              if (parseFloat(rows[p][_j3]) < columnInfo["min"]) columnInfo["min"] = parseFloat(rows[p][_j3]);
-              if (parseFloat(rows[p][_j3]) > columnInfo["max"]) columnInfo["max"] = parseFloat(rows[p][_j3]);
-              columnInfo["sum"] += parseFloat(rows[p][_j3]);
+            for (var p = 1; p < _rows.length; p++) {
+              if (parseFloat(_rows[p][_j3]) < columnInfo["min"]) columnInfo["min"] = parseFloat(_rows[p][_j3]);
+              if (parseFloat(_rows[p][_j3]) > columnInfo["max"]) columnInfo["max"] = parseFloat(_rows[p][_j3]);
+              columnInfo["sum"] += parseFloat(_rows[p][_j3]);
             }
             columnInfo["mean"] = columnInfo["sum"] / columnInfo["count"];
 
@@ -30820,7 +30830,7 @@ var CSVTable = function (_React$Component) {
           }
 
           var colHeaderDataType = void 0;
-          if (isNaN(parsedType) === false && parsedTypeLength === rows[1][_j3].toString().length) {
+          if (isNaN(parsedType) === false && parsedTypeLength === _rows[1][_j3].toString().length) {
             colHeaderDataType = "Number";
           } else {
             colHeaderDataType = "String";
@@ -30835,7 +30845,7 @@ var CSVTable = function (_React$Component) {
               onMouseLeave: function onMouseLeave() {
                 return _this5.hideColDataType(_j3);
               } },
-            rows[0][_j3],
+            _rows[0][_j3],
             _react2.default.createElement(
               'span',
               { className: 'col-data-type',
@@ -30920,7 +30930,7 @@ var CSVTable = function (_React$Component) {
 
         var i = -1;
         var lineWidth = (200 * _columnCount).toString() + "px";
-        return rows.map(function (row) {
+        return _rows.map(function (row) {
           i += 1;
           if (i === 0) {
             return _react2.default.createElement(
