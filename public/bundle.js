@@ -30633,6 +30633,7 @@ var CSVTable = function (_React$Component) {
       newState["filteredRows"] = [];
       newState["filterItems"] = {};
       newState["filterList"] = [];
+      newState["filterDisplay"] = "none";
       var columnCount = Object.keys(newState["currentlyAppliedFilters"]).length;
       for (var i = 0; i < columnCount; i++) {
         newState["currentlyAppliedFilters"][i] = {};

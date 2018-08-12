@@ -381,6 +381,7 @@ class CSVTable extends React.Component {
     newState["filteredRows"] = [];
     newState["filterItems"] = {};
     newState["filterList"] = [];
+    newState["filterDisplay"] = "none";
     let columnCount = Object.keys(newState["currentlyAppliedFilters"]).length;
     for (let i=0; i < columnCount; i++) {
       newState["currentlyAppliedFilters"][i] = {};
