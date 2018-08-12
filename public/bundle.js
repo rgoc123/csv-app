@@ -30249,12 +30249,15 @@ var CSVTable = function (_React$Component) {
       for (var j = 0; j < columnCount; j++) {
         columnsToAddToState[j] = [];
       }
+
       for (var k = 1; k < rowsToSort.length; k++) {
         for (var l = 0; l < columnCount; l++) {
-          var parsedCell = parseInt(rowsToSort[k][l]);
-          // Poss -1 change
+          var parsedCell = parseFloat(rowsToSort[k][l]);
+          var parsedCellLength = parsedCell.toString().length;
+          var actualLength = rowsToSort[k][l].length;
+
           var cellIndex = rowsToSort[k][rowsToSort[k].length - 1];
-          if (isNaN(parsedCell) === false) {
+          if (isNaN(parsedCell) === false && parsedCellLength === actualLength) {
             columnsToAddToState[l].push([parsedCell, cellIndex]);
           } else {
             columnsToAddToState[l].push([rowsToSort[k][l], cellIndex]);
@@ -30322,12 +30325,15 @@ var CSVTable = function (_React$Component) {
       for (var j = 0; j < columnCount; j++) {
         columnsToAddToState[j] = [];
       }
+
       for (var k = 1; k < rowsToSort.length; k++) {
         for (var l = 0; l < columnCount; l++) {
-          var parsedCell = parseInt(rowsToSort[k][l]);
-          // Poss -1 change
+          var parsedCell = parseFloat(rowsToSort[k][l]);
+          var parsedCellLength = parsedCell.toString().length;
+          var actualLength = rowsToSort[k][l].length;
+
           var cellIndex = rowsToSort[k][rowsToSort[k].length - 1];
-          if (isNaN(parsedCell) === false) {
+          if (isNaN(parsedCell) === false && parsedCellLength === actualLength) {
             columnsToAddToState[l].push([parsedCell, cellIndex]);
           } else {
             columnsToAddToState[l].push([rowsToSort[k][l], cellIndex]);

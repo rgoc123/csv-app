@@ -38,12 +38,15 @@ class CSVTable extends React.Component {
     for (let j = 0; j < columnCount; j++) {
       columnsToAddToState[j] = [];
     }
+
     for (let k = 1; k < rowsToSort.length; k++) {
       for (let l = 0; l < columnCount; l++) {
-        let parsedCell = parseInt(rowsToSort[k][l]);
-        // Poss -1 change
+        let parsedCell = parseFloat(rowsToSort[k][l]);
+        let parsedCellLength = parsedCell.toString().length;
+        let actualLength = rowsToSort[k][l].length;
+
         let cellIndex = rowsToSort[k][rowsToSort[k].length-1];
-        if (isNaN(parsedCell) === false) {
+        if (isNaN(parsedCell) === false && parsedCellLength === actualLength) {
           columnsToAddToState[l].push([parsedCell, cellIndex]);
         } else {
           columnsToAddToState[l].push([rowsToSort[k][l], cellIndex]);
@@ -110,12 +113,15 @@ class CSVTable extends React.Component {
     for (let j = 0; j < columnCount; j++) {
       columnsToAddToState[j] = [];
     }
+    
     for (let k = 1; k < rowsToSort.length; k++) {
       for (let l = 0; l < columnCount; l++) {
-        let parsedCell = parseInt(rowsToSort[k][l]);
-        // Poss -1 change
+        let parsedCell = parseFloat(rowsToSort[k][l]);
+        let parsedCellLength = parsedCell.toString().length;
+        let actualLength = rowsToSort[k][l].length;
+
         let cellIndex = rowsToSort[k][rowsToSort[k].length-1];
-        if (isNaN(parsedCell) === false) {
+        if (isNaN(parsedCell) === false && parsedCellLength === actualLength) {
           columnsToAddToState[l].push([parsedCell, cellIndex]);
         } else {
           columnsToAddToState[l].push([rowsToSort[k][l], cellIndex]);
