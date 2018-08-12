@@ -30702,9 +30702,11 @@ var CSVTable = function (_React$Component) {
 
         for (var k = 1; k < this.props.rows.length; k++) {
           for (var l = 0; l < columnCount; l++) {
-            var parsedCell = parseInt(this.props.rows[k][l]);
+            var parsedCell = parseFloat(this.props.rows[k][l]);
+            var parsedCellLength = parsedCell.toString().length;
+            var actualLength = this.props.rows[k][l].length;
             var cellIndex = k;
-            if (isNaN(parsedCell) === false) {
+            if (isNaN(parsedCell) === false && parsedCellLength === actualLength) {
               newState[l].push([parsedCell, cellIndex]);
             } else {
               newState[l].push([this.props.rows[k][l], cellIndex]);

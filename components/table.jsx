@@ -442,9 +442,11 @@ class CSVTable extends React.Component {
 
       for (let k = 1; k < this.props.rows.length; k++) {
         for (let l = 0; l < columnCount; l++) {
-          let parsedCell = parseInt(this.props.rows[k][l]);
+          let parsedCell = parseFloat(this.props.rows[k][l]);
+          let parsedCellLength = parsedCell.toString().length;
+          let actualLength = this.props.rows[k][l].length
           let cellIndex = k;
-          if (isNaN(parsedCell) === false) {
+          if (isNaN(parsedCell) === false && parsedCellLength === actualLength) {
             newState[l].push([parsedCell, cellIndex]);
           } else {
             newState[l].push([this.props.rows[k][l], cellIndex]);
@@ -454,7 +456,7 @@ class CSVTable extends React.Component {
           newState["currentlyAppliedFilters"] = currentlyAppliedFilters
         }
       }
-      
+
       this.setState(newState);
     } else {
       // Have new rows
