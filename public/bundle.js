@@ -30503,7 +30503,7 @@ var CSVTable = function (_React$Component) {
 
         return _react2.default.createElement(
           'div',
-          null,
+          { className: 'filter-div' },
           _react2.default.createElement(
             'div',
             { onClick: function onClick() {
@@ -30946,7 +30946,7 @@ var CSVTable = function (_React$Component) {
       console.log(this.state);
       return _react2.default.createElement(
         'div',
-        null,
+        { className: 'table-div' },
         _react2.default.createElement(
           'div',
           null,

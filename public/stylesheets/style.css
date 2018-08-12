@@ -20,6 +20,22 @@ span {
   position: relative;
 }
 
+.table-div {
+  position: relative;
+}
+
+.filter-div {
+  position: fixed;
+  top: 268px;
+  left: 98px;
+  width: 50%;
+  z-index: 2;
+  background: white;
+  border: 1px solid black;
+  height: 200px;
+  overflow: auto;
+}
+
 .sort-buttons-div {
   right: 0;
   position: absolute;

@@ -270,7 +270,7 @@ class CSVTable extends React.Component {
       cancelFilter = cancelFilter.bind(this);
 
       return (
-        <div>
+        <div className="filter-div">
           <div onClick={() => this.applyFilter()}>Apply</div>
           <div onClick={() => cancelFilter()}>Cancel</div>
           {checkboxes}
@@ -585,7 +585,7 @@ class CSVTable extends React.Component {
     console.log(this.props.rows);
     console.log(this.state);
     return (
-      <div>
+      <div className="table-div">
         <div>The Table</div>
         <button onClick={() => this.clearFilters()}>Clear Filters</button>
         <div>{this.createFilter()}</div>
