@@ -40,7 +40,13 @@ span {
 }
 
 .row-num {
+  width: 92px;
   display: none;
+  background: yellow;
+  position: absolute;
+  top: -33px;
+  right: -92px;
+  z-index: 1;
 }
 
 .col-data-type {

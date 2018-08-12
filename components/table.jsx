@@ -555,7 +555,7 @@ class CSVTable extends React.Component {
           row.push(
             <span onMouseOver={() => this.showRow(i, k)}
               onMouseLeave={() => this.hideRow(i, k)}>{rows[i][k]}
-              <span className="row-num" id={i.toString() + k.toString()}>{i}</span>
+              <span className="row-num" id={i.toString() + k.toString()}>Current Row: {i}</span>
             </span>
           );
         }

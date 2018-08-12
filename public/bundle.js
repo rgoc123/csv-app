@@ -30725,6 +30725,7 @@ var CSVTable = function (_React$Component) {
               _react2.default.createElement(
                 'span',
                 { className: 'row-num', id: i.toString() + _k.toString() },
+                'Current Row: ',
                 i
               )
             ));
