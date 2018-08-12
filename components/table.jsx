@@ -564,16 +564,17 @@ class CSVTable extends React.Component {
       createRow = createRow.bind(this);
 
       let i = -1;
+      let lineWidth = (200 * columnCount).toString() + "px";
       return rows.map(row => {
         i += 1;
         if (i === 0) {
           return (
-            <li key={i}>
+            <li key={i} style={{"width": lineWidth}}>
               {headers}
             </li>);
         } else {
           return (
-            <li key={i}>
+            <li key={i} style={{"width": lineWidth}}>
               {createRow(i)}
             </li>);
         }
@@ -589,7 +590,7 @@ class CSVTable extends React.Component {
         <div>The Table</div>
         <button onClick={() => this.clearFilters()}>Clear Filters</button>
         <div>{this.createFilter()}</div>
-        <ul>
+        <ul className="table-ul">
           {this.createRows()}
         </ul>
       </div>

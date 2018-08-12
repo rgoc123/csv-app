@@ -9,31 +9,40 @@ a {
 
 li {
   list-style: none;
-  width: 1000px;
   display: flex;
+  white-space: normal;
 }
 
 span {
   border: 1px solid black;
-  width: 24%;
+  width: 200px;
   display: flex;
   position: relative;
 }
 
 .table-div {
   position: relative;
+  width: 100%;
 }
 
 .filter-div {
   position: fixed;
-  top: 268px;
-  left: 98px;
+  bottom: 25%;
+  left: 25%;
   width: 50%;
   z-index: 2;
   background: white;
   border: 1px solid black;
   height: 200px;
   overflow: auto;
+}
+
+.table-ul {
+  height: 400px;
+  overflow: auto;
+  white-space: normal;
+  /* width: 1600px; */
+  padding-left: 0;
 }
 
 .sort-buttons-div {

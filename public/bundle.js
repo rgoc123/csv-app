@@ -30919,18 +30919,19 @@ var CSVTable = function (_React$Component) {
         createRow = createRow.bind(this);
 
         var i = -1;
+        var lineWidth = (200 * _columnCount).toString() + "px";
         return rows.map(function (row) {
           i += 1;
           if (i === 0) {
             return _react2.default.createElement(
               'li',
-              { key: i },
+              { key: i, style: { "width": lineWidth } },
               headers
             );
           } else {
             return _react2.default.createElement(
               'li',
-              { key: i },
+              { key: i, style: { "width": lineWidth } },
               createRow(i)
             );
           }
@@ -30966,7 +30967,7 @@ var CSVTable = function (_React$Component) {
         ),
         _react2.default.createElement(
           'ul',
-          null,
+          { className: 'table-ul' },
           this.createRows()
         )
       );
