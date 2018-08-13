@@ -30239,11 +30239,12 @@ var CSVTable = function (_React$Component) {
       var columnsToAddToState = {};
 
       var rowsToSort = void 0;
-      if (this.state.filteredRows.length > 0) {
+      if (this.state.filteredRows.length > 0 && this.state.columnsToFilter.length !== 0) {
         rowsToSort = this.state.filteredRows;
       } else {
         rowsToSort = this.props.rows;
       }
+      debugger;
 
       var columnCount = this.props.rows[0].length;
       for (var j = 0; j < columnCount; j++) {
@@ -30684,17 +30685,13 @@ var CSVTable = function (_React$Component) {
 
         var _columnCount = this.state.rows[0].length;
 
-        // let cAF = this.state.currentlyAppliedFilters;
-        // let columnsWithAppliedFilter = Object.keys(cAF);
-        // let areAppliedFiltersEmpty = true;
-        // for (let i = 0; i < columnsWithAppliedFilter.length; i++) {
-        //   if (JSON.stringify(cAF[i]) !== {}) areAppliedFiltersEmpty = false;
-        // }
-        // if (areAppliedFiltersEmpty === true) rows = this.state.rows;
+        // This check is required when removing filters manually. If all
+        // filters are removed manually, this changes "rows" from filteredRows
+        // back to this.state.rows, which has all of the original rows.
         if (this.state.columnsToFilter.length === 0) {
           _rows = this.state.rows;
         }
-        debugger;
+
         var headers = [];
         var parsedType = void 0;
         var parsedTypeLength = void 0;
