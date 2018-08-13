@@ -30523,16 +30523,17 @@ var CSVTable = function (_React$Component) {
 
       // Creates a new array of rows with only those who have an ID
       // in the filterIDs array
-      var newRows = oldRows.slice(0, 1);
-      for (var i = 1; i < oldRows.length; i++) {
-        // CHANGE TO HASH FOR FASTER LOOKUP
-        if (filterIDs.includes(oldRows[i][oldRows[i].length - 1])) {
-          newRows.push(oldRows[i]);
+      var newRows = [];
+      if (filterIDs.length !== 0) {
+        newRows = oldRows.slice(0, 1);
+        for (var i = 1; i < oldRows.length; i++) {
+          // CHANGE TO HASH FOR FASTER LOOKUP
+          if (filterIDs.includes(oldRows[i][oldRows[i].length - 1])) {
+            newRows.push(oldRows[i]);
+          }
         }
       }
-      if (filterIDs.length === 0) newRows = [];
 
-      debugger;
       newState["filteredRows"] = newRows;
       newState["filterDisplay"] = "none";
       newState["columnsToFilter"] = columnsToFilter;
