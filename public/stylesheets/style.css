@@ -1,10 +1,33 @@
+html {
+  height: 100%;
+}
+
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-image: url('background_image.jpg');
+  height: 71%;
 }
 
-a {
-  color: #00B7FF;
+#app {
+  height: 100%;
+}
+
+.app {
+  height: 100%;
+}
+
+h1 {
+  color: white;
+  width: 300px;
+  margin: 0 auto;
+  height: 10%;
+}
+
+.react-csv-input {
+  color: white;
+  margin: 0 auto;
+  width: 200px;
 }
 
 li {
@@ -14,15 +37,25 @@ li {
 }
 
 span {
-  border: 1px solid black;
+  border: 1px solid gray;
   width: 200px;
   display: flex;
   position: relative;
 }
 
+.table-parent {
+  height: 100%;
+}
+
+.table-div-container {
+  height: 100%;
+}
+
 .table-div {
   position: relative;
   width: 100%;
+  color: white;
+  height: 100%;
 }
 
 .filter-div {
@@ -38,11 +71,10 @@ span {
 }
 
 .table-ul {
-  height: 400px;
   overflow: auto;
   white-space: normal;
-  /* width: 1600px; */
   padding-left: 0;
+  height: 100%;
 }
 
 .col-header-cell {

@@ -169,7 +169,6 @@ class CSVTable extends React.Component {
       let newState = this.state;
 
       function createCheckbox(item) {
-        debugger
         if (this.state.currentlyAppliedFilters[this.state.filterColumn][item] === true) {
           return (
             <div className="checkbox-container">
@@ -556,7 +555,6 @@ class CSVTable extends React.Component {
     console.log(this.state);
     return (
       <div className="table-div">
-        <div>The Table</div>
         <button onClick={() => this.clearFilters()}>Clear Filters</button>
         <div>{this.createFilter()}</div>
         <ul className="table-ul">

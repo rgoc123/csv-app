@@ -16,13 +16,6 @@ class CSVTableParent extends React.Component {
     this.handleForce = this.handleForce.bind(this);
   }
 
-  reverseSortColumn(columnNum) {
-
-  }
-  // [[1, 4][2, 5][3, 6]]
-  // have variables that store info for each column
-  // sort a column
-
   handleForce(data) {
     this.setState({
       rows: data
@@ -36,20 +29,15 @@ class CSVTableParent extends React.Component {
     });
   };
 
-  // can create a hash with keys
-  // we can sort a column, and its elements will have keys
-  // we can then sort the other column by the key
-
   render() {
     return (
-      <div>
-        <h1>CSV Table</h1>
+      <div className="table-parent">
         <CSVReader
           cssClass="react-csv-input"
           label="Choose a CSV file to upload"
           onFileLoaded={this.handleForce}
         />
-        <div>
+        <div className="table-div-container">
           <CSVTable rows={this.state.rows}/>
         </div>
       </div>

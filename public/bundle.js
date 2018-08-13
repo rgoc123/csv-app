@@ -9947,7 +9947,7 @@ var App = function (_React$Component) {
         _react2.default.createElement(
           'h1',
           null,
-          'CSV App!'
+          'CSV Table Generator'
         ),
         _react2.default.createElement(_tableParent2.default, null)
       );
@@ -29437,13 +29437,6 @@ var CSVTableParent = function (_React$Component) {
   }
 
   _createClass(CSVTableParent, [{
-    key: 'reverseSortColumn',
-    value: function reverseSortColumn(columnNum) {}
-    // [[1, 4][2, 5][3, 6]]
-    // have variables that store info for each column
-    // sort a column
-
-  }, {
     key: 'handleForce',
     value: function handleForce(data) {
       this.setState({
@@ -29459,21 +29452,10 @@ var CSVTableParent = function (_React$Component) {
     }
   }, {
     key: 'render',
-
-
-    // can create a hash with keys
-    // we can sort a column, and its elements will have keys
-    // we can then sort the other column by the key
-
     value: function render() {
       return _react2.default.createElement(
         'div',
-        null,
-        _react2.default.createElement(
-          'h1',
-          null,
-          'CSV Table'
-        ),
+        { className: 'table-parent' },
         _react2.default.createElement(_reactCsvReader2.default, {
           cssClass: 'react-csv-input',
           label: 'Choose a CSV file to upload',
@@ -29481,7 +29463,7 @@ var CSVTableParent = function (_React$Component) {
         }),
         _react2.default.createElement(
           'div',
-          null,
+          { className: 'table-div-container' },
           _react2.default.createElement(_table2.default, { rows: this.state.rows })
         )
       );
@@ -30385,7 +30367,6 @@ var CSVTable = function (_React$Component) {
         return null;
       } else {
         var createCheckbox = function createCheckbox(item) {
-          debugger;
           if (this.state.currentlyAppliedFilters[this.state.filterColumn][item] === true) {
             return _react2.default.createElement(
               'div',
@@ -30924,11 +30905,6 @@ var CSVTable = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         { className: 'table-div' },
-        _react2.default.createElement(
-          'div',
-          null,
-          'The Table'
-        ),
         _react2.default.createElement(
           'button',
           { onClick: function onClick() {
