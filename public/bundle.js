@@ -30682,8 +30682,19 @@ var CSVTable = function (_React$Component) {
           _rows = this.props.rows;
         }
 
-        var _columnCount = _rows[0].length;
+        var _columnCount = this.state.rows[0].length;
 
+        // let cAF = this.state.currentlyAppliedFilters;
+        // let columnsWithAppliedFilter = Object.keys(cAF);
+        // let areAppliedFiltersEmpty = true;
+        // for (let i = 0; i < columnsWithAppliedFilter.length; i++) {
+        //   if (JSON.stringify(cAF[i]) !== {}) areAppliedFiltersEmpty = false;
+        // }
+        // if (areAppliedFiltersEmpty === true) rows = this.state.rows;
+        if (this.state.columnsToFilter.length === 0) {
+          _rows = this.state.rows;
+        }
+        debugger;
         var headers = [];
         var parsedType = void 0;
         var parsedTypeLength = void 0;

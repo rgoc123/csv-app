@@ -392,11 +392,23 @@ class CSVTable extends React.Component {
         rows = this.props.rows;
       }
 
-      let columnCount = rows[0].length;
+      let columnCount = this.state.rows[0].length;
 
+      // let cAF = this.state.currentlyAppliedFilters;
+      // let columnsWithAppliedFilter = Object.keys(cAF);
+      // let areAppliedFiltersEmpty = true;
+      // for (let i = 0; i < columnsWithAppliedFilter.length; i++) {
+      //   if (JSON.stringify(cAF[i]) !== {}) areAppliedFiltersEmpty = false;
+      // }
+      // if (areAppliedFiltersEmpty === true) rows = this.state.rows;
+      if (this.state.columnsToFilter.length === 0) {
+        rows = this.state.rows;
+      }
+      debugger
       let headers = [];
       let parsedType;
       let parsedTypeLength;
+
       for (let j = 0; j < columnCount; j++) {
         let colStats = [];
         parsedType = parseFloat(rows[1][j]);
