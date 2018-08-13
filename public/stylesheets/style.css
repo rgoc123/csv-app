@@ -21,6 +21,7 @@ h1 {
   color: white;
   width: 300px;
   margin: 0 auto;
+  margin-bottom: 20px;
   height: 10%;
 }
 
@@ -127,16 +128,17 @@ span {
 .col-data-type {
   display: none;
   position: absolute;
-  top: -36px;
+  z-index: 1;
+  top: 36px;
   right: -1px;
   width: 107px;
-  background: yellow;
+  background: gray;
 }
 
 .row-num {
   width: 92px;
   display: none;
-  background: yellow;
+  background: gray;
   position: absolute;
   top: -35px;
   left: -1px;
