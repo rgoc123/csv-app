@@ -30244,7 +30244,6 @@ var CSVTable = function (_React$Component) {
       } else {
         rowsToSort = this.props.rows;
       }
-      debugger;
 
       var columnCount = this.props.rows[0].length;
       for (var j = 0; j < columnCount; j++) {
@@ -30326,18 +30325,22 @@ var CSVTable = function (_React$Component) {
       // this.setState({
       //   rows: this.props.rows
       // });
-      if (this.state.filterDisplay === "none") {
-        this.setState({
-          filterDisplay: "block"
-        });
+      var newState = this.state;
+      if (newState.filterDisplay === "none") {
+        newState["filterDisplay"] = "block";
       } else {
-        this.setState({
-          filterDisplay: "none"
-        });
+        newState["filterDisplay"] = "none";
         // Add clear filter function here
       }
+
+      // if (newState["filterColumn"] !== columnNum) {
+      // newState["filterColumn"] = columnNum;
+      // newState["filterItems"] = {};
+      // newState["filterList"] = [];
+      // }
+
       var columnToCreateListFrom = [];
-      if (this.state.filteredRows.length === 0) {
+      if (newState.filteredRows.length === 0) {
         columnToCreateListFrom = this.state[columnNum];
       } else {
         for (var i = 1; i < this.state.filteredRows.length; i++) {
@@ -30365,12 +30368,12 @@ var CSVTable = function (_React$Component) {
       var newColumnsToFilter = this.state.columnsToFilter.slice(0);
       if (!newColumnsToFilter.includes(columnNum)) newColumnsToFilter.push(columnNum);
 
-      this.setState({
-        filterColumn: columnNum,
-        columnsToFilter: newColumnsToFilter,
-        filterList: Object.keys(filterHash).sort(),
-        filterItems: filterHash
-      });
+      newState["filterColumn"] = columnNum;
+      newState["columnsToFilter"] = newColumnsToFilter;
+      newState["filterList"] = Object.keys(filterHash).sort();
+      newState["filterItems"] = filterHash;
+
+      this.setState(newState);
     }
   }, {
     key: 'createFilter',
@@ -30527,10 +30530,15 @@ var CSVTable = function (_React$Component) {
           newRows.push(oldRows[i]);
         }
       }
+      if (filterIDs.length === 0) newRows = [];
 
+      debugger;
       newState["filteredRows"] = newRows;
       newState["filterDisplay"] = "none";
       newState["columnsToFilter"] = columnsToFilter;
+      newState["filterColumn"] = null;
+      newState["filterItems"] = {};
+      newState["filterList"] = [];
 
       this.setState(newState);
     }
@@ -30674,13 +30682,13 @@ var CSVTable = function (_React$Component) {
           return row;
         };
 
-        var _rows = void 0;
+        var _rows = ["placeholder"];
         if (this.state.filteredRows.length !== 0) {
-          _rows = this.state.filteredRows;
+          _rows = this.state.filteredRows.slice(0);
         } else if (this.state.rows.length !== 0) {
-          _rows = this.state.rows;
+          _rows = this.state.rows.slice(0);
         } else {
-          _rows = this.props.rows;
+          _rows = this.props.rows.slice(0);
         }
 
         var _columnCount = this.state.rows[0].length;
@@ -30698,6 +30706,7 @@ var CSVTable = function (_React$Component) {
 
         var _loop = function _loop(_j2) {
           var colStats = [];
+          if (_rows === undefined) _rows = _this5.state.rows;
           parsedType = parseFloat(_rows[1][_j2]);
           parsedTypeLength = parsedType.toString().length;
 
