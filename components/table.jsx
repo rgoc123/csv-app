@@ -551,11 +551,12 @@ class CSVTable extends React.Component {
   }
 
   render() {
-    console.log(this.props.rows);
     console.log(this.state);
+    let clearFiltersStyle = this.props.rows.length === 0 ? "none" : "inline-block";
+
     return (
       <div className="table-div">
-        <button onClick={() => this.clearFilters()}>Clear Filters</button>
+        <button style={{"display": clearFiltersStyle}} onClick={() => this.clearFilters()}>Clear Filters</button>
         <div>{this.createFilter()}</div>
         <ul className="table-ul">
           {this.createTable()}

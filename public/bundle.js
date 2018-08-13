@@ -30900,14 +30900,15 @@ var CSVTable = function (_React$Component) {
     value: function render() {
       var _this6 = this;
 
-      console.log(this.props.rows);
       console.log(this.state);
+      var clearFiltersStyle = this.props.rows.length === 0 ? "none" : "inline-block";
+
       return _react2.default.createElement(
         'div',
         { className: 'table-div' },
         _react2.default.createElement(
           'button',
-          { onClick: function onClick() {
+          { style: { "display": clearFiltersStyle }, onClick: function onClick() {
               return _this6.clearFilters();
             } },
           'Clear Filters'
