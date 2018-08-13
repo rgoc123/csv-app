@@ -20,7 +20,7 @@ class CSVTable extends React.Component {
     this.applyFilter = this.applyFilter.bind(this);
   }
 
-  sortColumn(columnNum) {
+  sortColumn(columnNum, sortType) {
     // sort column
     // create hash
     // sort other columns
@@ -65,6 +65,8 @@ class CSVTable extends React.Component {
       });
     }
 
+    if (sortType === 'reverse') sortedColumn = sortedColumn.reverse();
+
     columnsToAddToState[columnNum] = sortedColumn;
 
     let newState = Object.assign({}, this.state);
@@ -80,82 +82,6 @@ class CSVTable extends React.Component {
       sortingHash[newState[columnNum][i-1][newState[columnNum][i-1].length-1]] = i;
     }
     newState["sortingHash"] = sortingHash;
-
-    for (let i = 0; i < columnCount; i++) {
-      if (i !== columnNum) {
-        let newColumn = [];
-        for (let j = 1; j < rowsToSort.length; j++) {
-          let cell = columnsToAddToState[i][j-1];
-          let index = cell[1];
-          let value = cell[0];
-          newColumn[sortingHash[index]-1] = cell;
-          rowsToSort[sortingHash[index]][i] = value;
-          rowsToSort[sortingHash[index]][columnCount] = index;
-        }
-        newState[i] = newColumn;
-      }
-    }
-
-    this.setState(newState);
-  }
-
-  reverseSortColumn(columnNum) {
-    let columnsToAddToState = {};
-
-    let rowsToSort;
-    if (this.state.filteredRows.length > 0) {
-      rowsToSort = this.state.filteredRows;
-    } else {
-      rowsToSort = this.props.rows;
-    }
-
-    let columnCount = this.props.rows[0].length;
-    for (let j = 0; j < columnCount; j++) {
-      columnsToAddToState[j] = [];
-    }
-    
-    for (let k = 1; k < rowsToSort.length; k++) {
-      for (let l = 0; l < columnCount; l++) {
-        let parsedCell = parseFloat(rowsToSort[k][l]);
-        let parsedCellLength = parsedCell.toString().length;
-        let actualLength = rowsToSort[k][l].length;
-
-        let cellIndex = rowsToSort[k][rowsToSort[k].length-1];
-        if (isNaN(parsedCell) === false && parsedCellLength === actualLength) {
-          columnsToAddToState[l].push([parsedCell, cellIndex]);
-        } else {
-          columnsToAddToState[l].push([rowsToSort[k][l], cellIndex]);
-        }
-      }
-    }
-
-    let colDataType = parseInt(rowsToSort[1][columnNum]);
-    let sortedColumn;
-
-    if (isNaN(colDataType) === true) {
-      sortedColumn = columnsToAddToState[columnNum].slice(0).sort();
-      sortedColumn = sortedColumn.reverse();
-    } else {
-      sortedColumn = columnsToAddToState[columnNum].slice(0).sort(function(a,b) {
-        return a[0]-b[0];
-      });
-      sortedColumn = sortedColumn.reverse();
-    }
-
-    columnsToAddToState[columnNum] = sortedColumn;
-
-    let newState = Object.assign({}, this.state);
-
-    for (let i = 0; i < Object.keys(columnsToAddToState).length; i++) {
-      newState[i] = columnsToAddToState[i];
-    }
-
-    let sortingHash = {};
-    for (let i = 1; i < rowsToSort.length; i++) {
-      rowsToSort[i][columnNum] = newState[columnNum][i-1][0];
-      // Poss -1 change
-      sortingHash[newState[columnNum][i-1][newState[columnNum][i-1].length-1]] = i;
-    }
 
     for (let i = 0; i < columnCount; i++) {
       if (i !== columnNum) {
@@ -553,11 +479,11 @@ class CSVTable extends React.Component {
                 >Filter</div>
               <div
                 className="sort-button"
-                onClick={() => this.sortColumn(j)}
+                onClick={() => this.sortColumn(j, "sort")}
                 >Sort</div>
               <div
                 className="sort-button"
-                onClick={() => this.reverseSortColumn(j)}
+                onClick={() => this.sortColumn(j, "reverse")}
                 >Reverse</div>
               <div id={"colStats" + j.toString()} className="column-stats">
                 <span>Column Stats</span>

@@ -30231,7 +30231,7 @@ var CSVTable = function (_React$Component) {
 
   _createClass(CSVTable, [{
     key: 'sortColumn',
-    value: function sortColumn(columnNum) {
+    value: function sortColumn(columnNum, sortType) {
       // sort column
       // create hash
       // sort other columns
@@ -30276,6 +30276,8 @@ var CSVTable = function (_React$Component) {
         });
       }
 
+      if (sortType === 'reverse') sortedColumn = sortedColumn.reverse();
+
       columnsToAddToState[columnNum] = sortedColumn;
 
       var newState = Object.assign({}, this.state);
@@ -30304,83 +30306,6 @@ var CSVTable = function (_React$Component) {
             rowsToSort[sortingHash[index]][columnCount] = index;
           }
           newState[_i2] = newColumn;
-        }
-      }
-
-      this.setState(newState);
-    }
-  }, {
-    key: 'reverseSortColumn',
-    value: function reverseSortColumn(columnNum) {
-      var columnsToAddToState = {};
-
-      var rowsToSort = void 0;
-      if (this.state.filteredRows.length > 0) {
-        rowsToSort = this.state.filteredRows;
-      } else {
-        rowsToSort = this.props.rows;
-      }
-
-      var columnCount = this.props.rows[0].length;
-      for (var j = 0; j < columnCount; j++) {
-        columnsToAddToState[j] = [];
-      }
-
-      for (var k = 1; k < rowsToSort.length; k++) {
-        for (var l = 0; l < columnCount; l++) {
-          var parsedCell = parseFloat(rowsToSort[k][l]);
-          var parsedCellLength = parsedCell.toString().length;
-          var actualLength = rowsToSort[k][l].length;
-
-          var cellIndex = rowsToSort[k][rowsToSort[k].length - 1];
-          if (isNaN(parsedCell) === false && parsedCellLength === actualLength) {
-            columnsToAddToState[l].push([parsedCell, cellIndex]);
-          } else {
-            columnsToAddToState[l].push([rowsToSort[k][l], cellIndex]);
-          }
-        }
-      }
-
-      var colDataType = parseInt(rowsToSort[1][columnNum]);
-      var sortedColumn = void 0;
-
-      if (isNaN(colDataType) === true) {
-        sortedColumn = columnsToAddToState[columnNum].slice(0).sort();
-        sortedColumn = sortedColumn.reverse();
-      } else {
-        sortedColumn = columnsToAddToState[columnNum].slice(0).sort(function (a, b) {
-          return a[0] - b[0];
-        });
-        sortedColumn = sortedColumn.reverse();
-      }
-
-      columnsToAddToState[columnNum] = sortedColumn;
-
-      var newState = Object.assign({}, this.state);
-
-      for (var i = 0; i < Object.keys(columnsToAddToState).length; i++) {
-        newState[i] = columnsToAddToState[i];
-      }
-
-      var sortingHash = {};
-      for (var _i3 = 1; _i3 < rowsToSort.length; _i3++) {
-        rowsToSort[_i3][columnNum] = newState[columnNum][_i3 - 1][0];
-        // Poss -1 change
-        sortingHash[newState[columnNum][_i3 - 1][newState[columnNum][_i3 - 1].length - 1]] = _i3;
-      }
-
-      for (var _i4 = 0; _i4 < columnCount; _i4++) {
-        if (_i4 !== columnNum) {
-          var newColumn = [];
-          for (var _j2 = 1; _j2 < rowsToSort.length; _j2++) {
-            var cell = columnsToAddToState[_i4][_j2 - 1];
-            var index = cell[1];
-            var value = cell[0];
-            newColumn[sortingHash[index] - 1] = cell;
-            rowsToSort[sortingHash[index]][_i4] = value;
-            rowsToSort[sortingHash[index]][columnCount] = index;
-          }
-          newState[_i4] = newColumn;
         }
       }
 
@@ -30419,13 +30344,13 @@ var CSVTable = function (_React$Component) {
       }
 
       var filterHash = {};
-      for (var _i5 = 0; _i5 < columnToCreateListFrom.length; _i5++) {
+      for (var _i3 = 0; _i3 < columnToCreateListFrom.length; _i3++) {
         var val = void 0;
         var actualVal = void 0;
         if (this.state.filteredRows.length > 0) {
-          actualVal = columnToCreateListFrom[_i5];
+          actualVal = columnToCreateListFrom[_i3];
         } else {
-          val = columnToCreateListFrom[_i5];
+          val = columnToCreateListFrom[_i3];
           actualVal = val[0];
         }
         if (this.state.currentlyAppliedFilters[columnNum][actualVal] === true) {
@@ -30780,9 +30705,9 @@ var CSVTable = function (_React$Component) {
         var parsedType = void 0;
         var parsedTypeLength = void 0;
 
-        var _loop = function _loop(_j3) {
+        var _loop = function _loop(_j2) {
           var colStats = [];
-          parsedType = parseFloat(_rows[1][_j3]);
+          parsedType = parseFloat(_rows[1][_j2]);
           parsedTypeLength = parsedType.toString().length;
           // Poss -1 change
           var columnInfo = {
@@ -30793,20 +30718,20 @@ var CSVTable = function (_React$Component) {
             "mean": 0,
             "sum": 0
           };
-          var lengthToCheck = _rows[1][_j3].toString().length;
+          var lengthToCheck = _rows[1][_j2].toString().length;
 
           var columnNonBlankRowCount = 0;
           for (var q = 1; q < _rows.length; q++) {
-            if (_rows[q][_j3] !== "") columnNonBlankRowCount += 1;
+            if (_rows[q][_j2] !== "") columnNonBlankRowCount += 1;
           }
           columnInfo["nonBlankRows"] = columnNonBlankRowCount;
 
-          if (isNaN(parsedType) === false && parsedTypeLength === _rows[1][_j3].toString().length) {
+          if (isNaN(parsedType) === false && parsedTypeLength === _rows[1][_j2].toString().length) {
 
             for (var p = 1; p < _rows.length; p++) {
-              if (parseFloat(_rows[p][_j3]) < columnInfo["min"]) columnInfo["min"] = parseFloat(_rows[p][_j3]);
-              if (parseFloat(_rows[p][_j3]) > columnInfo["max"]) columnInfo["max"] = parseFloat(_rows[p][_j3]);
-              columnInfo["sum"] += parseFloat(_rows[p][_j3]);
+              if (parseFloat(_rows[p][_j2]) < columnInfo["min"]) columnInfo["min"] = parseFloat(_rows[p][_j2]);
+              if (parseFloat(_rows[p][_j2]) > columnInfo["max"]) columnInfo["max"] = parseFloat(_rows[p][_j2]);
+              columnInfo["sum"] += parseFloat(_rows[p][_j2]);
             }
             columnInfo["mean"] = columnInfo["sum"] / columnInfo["count"];
 
@@ -30841,7 +30766,7 @@ var CSVTable = function (_React$Component) {
           }
 
           var colHeaderDataType = void 0;
-          if (isNaN(parsedType) === false && parsedTypeLength === _rows[1][_j3].toString().length) {
+          if (isNaN(parsedType) === false && parsedTypeLength === _rows[1][_j2].toString().length) {
             colHeaderDataType = "Number";
           } else {
             colHeaderDataType = "String";
@@ -30851,16 +30776,16 @@ var CSVTable = function (_React$Component) {
           headers.push(_react2.default.createElement(
             'span',
             { onMouseOver: function onMouseOver() {
-                return _this5.showColDataType(_j3);
+                return _this5.showColDataType(_j2);
               },
               onMouseLeave: function onMouseLeave() {
-                return _this5.hideColDataType(_j3);
+                return _this5.hideColDataType(_j2);
               } },
-            _rows[0][_j3],
+            _rows[0][_j2],
             _react2.default.createElement(
               'span',
               { className: 'col-data-type',
-                id: "col-header-" + _j3.toString()
+                id: "col-header-" + _j2.toString()
               },
               'Column Data Type: ',
               colHeaderDataType
@@ -30872,7 +30797,7 @@ var CSVTable = function (_React$Component) {
                 'div',
                 { className: 'sort-button',
                   onClick: function onClick() {
-                    return _this5.toggleShowStats(_j3);
+                    return _this5.toggleShowStats(_j2);
                   }
                 },
                 'Stats'
@@ -30882,7 +30807,7 @@ var CSVTable = function (_React$Component) {
                 {
                   className: 'sort-button',
                   onClick: function onClick() {
-                    return _this5.createFilterList(_j3);
+                    return _this5.createFilterList(_j2);
                   }
                 },
                 'Filter'
@@ -30892,7 +30817,7 @@ var CSVTable = function (_React$Component) {
                 {
                   className: 'sort-button',
                   onClick: function onClick() {
-                    return _this5.sortColumn(_j3);
+                    return _this5.sortColumn(_j2, "sort");
                   }
                 },
                 'Sort'
@@ -30902,14 +30827,14 @@ var CSVTable = function (_React$Component) {
                 {
                   className: 'sort-button',
                   onClick: function onClick() {
-                    return _this5.reverseSortColumn(_j3);
+                    return _this5.sortColumn(_j2, "reverse");
                   }
                 },
                 'Reverse'
               ),
               _react2.default.createElement(
                 'div',
-                { id: "colStats" + _j3.toString(), className: 'column-stats' },
+                { id: "colStats" + _j2.toString(), className: 'column-stats' },
                 _react2.default.createElement(
                   'span',
                   null,
@@ -30933,8 +30858,8 @@ var CSVTable = function (_React$Component) {
           ));
         };
 
-        for (var _j3 = 0; _j3 < _columnCount; _j3++) {
-          _loop(_j3);
+        for (var _j2 = 0; _j2 < _columnCount; _j2++) {
+          _loop(_j2);
         }
 
         createRow = createRow.bind(this);
