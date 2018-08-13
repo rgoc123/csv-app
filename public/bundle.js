@@ -30321,9 +30321,10 @@ var CSVTable = function (_React$Component) {
   }, {
     key: 'createFilterList',
     value: function createFilterList(columnNum) {
-      this.setState({
-        rows: this.props.rows
-      });
+      // Pretty sure the below 3 lines are unnecessary
+      // this.setState({
+      //   rows: this.props.rows
+      // });
       if (this.state.filterDisplay === "none") {
         this.setState({
           filterDisplay: "block"
@@ -30366,7 +30367,7 @@ var CSVTable = function (_React$Component) {
       this.setState({
         filterColumn: columnNum,
         columnsToFilter: newColumnsToFilter,
-        filterList: Object.keys(filterHash),
+        filterList: Object.keys(filterHash).sort(),
         filterItems: filterHash
       });
     }

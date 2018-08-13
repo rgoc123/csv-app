@@ -107,9 +107,10 @@ class CSVTable extends React.Component {
     // Change state
     // Apply-close or close-clear modal
   createFilterList(columnNum) {
-    this.setState({
-      rows: this.props.rows
-    });
+    // Pretty sure the below 3 lines are unnecessary
+    // this.setState({
+    //   rows: this.props.rows
+    // });
     if (this.state.filterDisplay === "none") {
       this.setState({
         filterDisplay: "block"
@@ -150,7 +151,7 @@ class CSVTable extends React.Component {
     this.setState({
       filterColumn: columnNum,
       columnsToFilter: newColumnsToFilter,
-      filterList: Object.keys(filterHash),
+      filterList: Object.keys(filterHash).sort(),
       filterItems: filterHash
     });
   }
