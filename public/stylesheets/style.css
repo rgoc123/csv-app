@@ -45,10 +45,21 @@ span {
   padding-left: 0;
 }
 
+.col-header-cell {
+  display: block;
+  height: 40px;
+}
+
+.header-title {
+  border: 0;
+  width: 198px;
+}
+
 .sort-buttons-div {
-  right: 0;
+  left: 0;
   position: absolute;
   display: flex;
+  padding-right: 3px;
 }
 
 .column-stats {
@@ -62,6 +73,22 @@ span {
 
 .column-stats span {
   width: 198px;
+}
+
+.sort-button {
+  margin: 0 2px;
+}
+
+.fa-sort-down {
+  font-size: 20px;
+  position: relative;
+  top: -5px;
+}
+
+.fa-sort-up {
+  font-size: 20px;
+  position: relative;
+  top: 4px;
 }
 
 .col-data-type {

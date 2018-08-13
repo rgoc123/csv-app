@@ -30289,7 +30289,7 @@ var CSVTable = function (_React$Component) {
       var sortingHash = {};
       for (var _i = 1; _i < rowsToSort.length; _i++) {
         rowsToSort[_i][columnNum] = newState[columnNum][_i - 1][0];
-        // Poss -1 change
+
         sortingHash[newState[columnNum][_i - 1][newState[columnNum][_i - 1].length - 1]] = _i;
       }
       newState["sortingHash"] = sortingHash;
@@ -30453,18 +30453,6 @@ var CSVTable = function (_React$Component) {
         );
       }
     }
-
-    // (Complete) Have filter hash in state with values being true or false
-    // (Complete) Checking a checkbox makes filter value true, unchecking makes it false
-    // (Complete) Have a function that on change take e.target.value or something and changes
-    // filter hash in state
-    // (Complete) When apply is clicked it runs the function that goes through the column looking
-    // for values in the filter hash that have true
-    // Have a blank "column/columns" that we push values into, then set main columns with new
-    // columns
-    // Maybe preserve original
-    //
-
   }, {
     key: 'changeFilterItemValue',
     value: function changeFilterItemValue(e) {
@@ -30499,11 +30487,12 @@ var CSVTable = function (_React$Component) {
         });
       }
 
-      var filterIDs = void 0;
       var newState = this.state;
-
       var filteredColumnCount = columnsToFilter.length;
-      var newFilterIds = [];
+
+      // Finds the IDs of rows in the column being filtered that meet the
+      // filter criteria and puts those IDs in an array for later reference
+      var filterIDs = [];
       for (var k = 0; k < filteredColumnCount; k++) {
         var columnNum = columnsToFilter[k];
         var column = this.state[columnNum].slice(0);
@@ -30511,34 +30500,28 @@ var CSVTable = function (_React$Component) {
         if (k === 0) {
           for (var p = 0; p < column.length; p++) {
             if (this.state.currentlyAppliedFilters[columnNum][column[p][0]]) {
-              newFilterIds.push(column[p][1]);
+              filterIDs.push(column[p][1]);
             }
           }
         } else {
           var tempFilterIds = [];
           for (var _p = 0; _p < column.length; _p++) {
-            if (this.state.currentlyAppliedFilters[columnNum][column[_p][0]] && newFilterIds.includes(column[_p][1])) {
+            if (this.state.currentlyAppliedFilters[columnNum][column[_p][0]] && filterIDs.includes(column[_p][1])) {
               tempFilterIds.push(column[_p][1]);
             }
           }
-          newFilterIds = tempFilterIds;
+          filterIDs = tempFilterIds;
         }
-        console.log(newFilterIds);
       }
 
-      var oldRows = void 0;
-      // if (this.state.filteredRows.length !== 0) {
-      //   oldRows = this.state.filteredRows
-      // } else {
-      oldRows = newState.rows.slice(0);
-      // }
+      var oldRows = newState.rows.slice(0);
 
+      // Creates a new array of rows with only those who have an ID
+      // in the filterIDs array
       var newRows = oldRows.slice(0, 1);
-
       for (var i = 1; i < oldRows.length; i++) {
         // CHANGE TO HASH FOR FASTER LOOKUP
-        // Poss -1 change
-        if (newFilterIds.includes(oldRows[i][oldRows[i].length - 1])) {
+        if (filterIDs.includes(oldRows[i][oldRows[i].length - 1])) {
           newRows.push(oldRows[i]);
         }
       }
@@ -30606,16 +30589,19 @@ var CSVTable = function (_React$Component) {
       document.getElementById('col-header-' + colNum.toString()).style.display = "";
     }
   }, {
-    key: 'createRows',
-    value: function createRows() {
+    key: 'createTable',
+    value: function createTable() {
       var _this5 = this;
 
+      // If no CSV has been uploaded, don't create a table
       if (this.props.rows.length === 0) {
         return null;
+        // When the CSV has first been uploaded, create the rows that
+        // will be set in state
       } else if (this.state.rows.length === 0) {
         var newState = this.state;
-        // let columnsToAddToState = {};
 
+        // Add row numbers to the beginning of each row array
         var rows = this.props.rows.slice(0);
         rows[0].unshift("Rows");
         for (var t = 1; t < rows.length; t++) {
@@ -30624,16 +30610,17 @@ var CSVTable = function (_React$Component) {
 
         newState["rows"] = rows;
 
-        // Identify columns in CSV data
+        // Identify the number of columns in the CSV data
         var columnCount = rows[0].length;
-        // Create column arrays in state
+        // Create arrays for each column in state that will mimic columns
+        // in a table
         for (var j = 0; j < columnCount; j++) {
           newState[j] = [];
         }
-        // For each row, for each column, add cell data as an element in
+
+        // For each row in each column, add cell data as an element in
         // the state column's array. cellIndex is the cell's original
         // row number that is used later for sorting.
-
         for (var k = 1; k < this.props.rows.length; k++) {
           for (var l = 0; l < columnCount; l++) {
             var parsedCell = parseFloat(this.props.rows[k][l]);
@@ -30653,6 +30640,8 @@ var CSVTable = function (_React$Component) {
 
         this.setState(newState);
       } else {
+
+        // Function for creating individual non-header rows
         var createRow = function createRow(i) {
           var _this4 = this;
 
@@ -30683,11 +30672,7 @@ var CSVTable = function (_React$Component) {
           return row;
         };
 
-        // Have new rows
         var _rows = void 0;
-        // Maybe here the first if-else statement needs to be
-        // if this.state.filteredRows.length !== 0 for keeping
-        // separation between original rows and filtered ones
         if (this.state.filteredRows.length !== 0) {
           _rows = this.state.filteredRows;
         } else if (this.state.rows.length !== 0) {
@@ -30695,12 +30680,9 @@ var CSVTable = function (_React$Component) {
         } else {
           _rows = this.props.rows;
         }
-        // if (rows[0][0] !== "Row") rows[0].unshift("Row");
-        // if (!rows[1]) rows[1].unshift(1);
 
         var _columnCount = _rows[0].length;
-        debugger;
-        // Might have to come after rows are updated with key
+
         var headers = [];
         var parsedType = void 0;
         var parsedTypeLength = void 0;
@@ -30709,7 +30691,7 @@ var CSVTable = function (_React$Component) {
           var colStats = [];
           parsedType = parseFloat(_rows[1][_j2]);
           parsedTypeLength = parsedType.toString().length;
-          // Poss -1 change
+
           var columnInfo = {
             "count": _rows.length - 1,
             "nonBlankRows": 0,
@@ -30765,6 +30747,8 @@ var CSVTable = function (_React$Component) {
             ));
           }
 
+          // Determine the column's data type to display when hovering
+          // over the header cell
           var colHeaderDataType = void 0;
           if (isNaN(parsedType) === false && parsedTypeLength === _rows[1][_j2].toString().length) {
             colHeaderDataType = "Number";
@@ -30772,16 +30756,21 @@ var CSVTable = function (_React$Component) {
             colHeaderDataType = "String";
           }
 
-          // Create column header span with filter and sort buttons
+          // Create column header cell with filter and sort buttons
           headers.push(_react2.default.createElement(
             'span',
-            { onMouseOver: function onMouseOver() {
+            { className: 'col-header-cell',
+              onMouseOver: function onMouseOver() {
                 return _this5.showColDataType(_j2);
               },
               onMouseLeave: function onMouseLeave() {
                 return _this5.hideColDataType(_j2);
               } },
-            _rows[0][_j2],
+            _react2.default.createElement(
+              'span',
+              { className: 'header-title' },
+              _rows[0][_j2]
+            ),
             _react2.default.createElement(
               'span',
               { className: 'col-data-type',
@@ -30810,7 +30799,7 @@ var CSVTable = function (_React$Component) {
                     return _this5.createFilterList(_j2);
                   }
                 },
-                'Filter'
+                _react2.default.createElement('i', { 'class': 'fas fa-filter' })
               ),
               _react2.default.createElement(
                 'div',
@@ -30820,7 +30809,7 @@ var CSVTable = function (_React$Component) {
                     return _this5.sortColumn(_j2, "sort");
                   }
                 },
-                'Sort'
+                _react2.default.createElement('i', { 'class': 'fas fa-sort-down' })
               ),
               _react2.default.createElement(
                 'div',
@@ -30830,7 +30819,7 @@ var CSVTable = function (_React$Component) {
                     return _this5.sortColumn(_j2, "reverse");
                   }
                 },
-                'Reverse'
+                _react2.default.createElement('i', { 'class': 'fas fa-sort-up' })
               ),
               _react2.default.createElement(
                 'div',
@@ -30861,20 +30850,22 @@ var CSVTable = function (_React$Component) {
         for (var _j2 = 0; _j2 < _columnCount; _j2++) {
           _loop(_j2);
         }
-
         createRow = createRow.bind(this);
 
+        // Create rows
         var i = -1;
-        var lineWidth = (200 * _columnCount).toString() + "px";
+        var lineWidth = (200 * _columnCount).toString() + "px"; // Set width of li
         return _rows.map(function (row) {
           i += 1;
           if (i === 0) {
+            // Create column headers
             return _react2.default.createElement(
               'li',
               { key: i, style: { "width": lineWidth } },
               headers
             );
           } else {
+            // Create all regular rows
             return _react2.default.createElement(
               'li',
               { key: i, style: { "width": lineWidth } },
@@ -30914,7 +30905,7 @@ var CSVTable = function (_React$Component) {
         _react2.default.createElement(
           'ul',
           { className: 'table-ul' },
-          this.createRows()
+          this.createTable()
         )
       );
     }

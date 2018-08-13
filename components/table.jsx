@@ -78,7 +78,7 @@ class CSVTable extends React.Component {
     let sortingHash = {};
     for (let i = 1; i < rowsToSort.length; i++) {
       rowsToSort[i][columnNum] = newState[columnNum][i-1][0];
-      // Poss -1 change
+
       sortingHash[newState[columnNum][i-1][newState[columnNum][i-1].length-1]] = i;
     }
     newState["sortingHash"] = sortingHash;
@@ -211,17 +211,6 @@ class CSVTable extends React.Component {
     }
   }
 
-  // (Complete) Have filter hash in state with values being true or false
-  // (Complete) Checking a checkbox makes filter value true, unchecking makes it false
-  // (Complete) Have a function that on change take e.target.value or something and changes
-    // filter hash in state
-  // (Complete) When apply is clicked it runs the function that goes through the column looking
-    // for values in the filter hash that have true
-    // Have a blank "column/columns" that we push values into, then set main columns with new
-    // columns
-    // Maybe preserve original
-  //
-
   changeFilterItemValue(e) {
     let filterItem = e.target.value;
     let filterItems = this.state.filterItems;
@@ -249,11 +238,12 @@ class CSVTable extends React.Component {
       columnsToFilter = columnsToFilter.filter(col => col !== this.state.filterColumn);
     }
 
-    let filterIDs;
     let newState = this.state;
-
     let filteredColumnCount = columnsToFilter.length;
-    let newFilterIds = [];
+
+    // Finds the IDs of rows in the column being filtered that meet the
+    // filter criteria and puts those IDs in an array for later reference
+    let filterIDs = [];
     for (let k = 0; k < filteredColumnCount; k++) {
       let columnNum = columnsToFilter[k];
       let column = this.state[columnNum].slice(0);
@@ -261,34 +251,28 @@ class CSVTable extends React.Component {
       if (k === 0) {
         for (let p = 0; p < column.length; p++) {
           if (this.state.currentlyAppliedFilters[columnNum][column[p][0]]) {
-            newFilterIds.push(column[p][1]);
+            filterIDs.push(column[p][1]);
           }
         }
       } else {
         let tempFilterIds = [];
         for (let p = 0; p < column.length; p++) {
-          if (this.state.currentlyAppliedFilters[columnNum][column[p][0]] && newFilterIds.includes(column[p][1])) {
+          if (this.state.currentlyAppliedFilters[columnNum][column[p][0]] && filterIDs.includes(column[p][1])) {
             tempFilterIds.push(column[p][1]);
           }
         }
-        newFilterIds = tempFilterIds;
+        filterIDs = tempFilterIds;
       }
-      console.log(newFilterIds);
     }
 
-    let oldRows;
-    // if (this.state.filteredRows.length !== 0) {
-    //   oldRows = this.state.filteredRows
-    // } else {
-    oldRows = newState.rows.slice(0);
-    // }
+    let oldRows = newState.rows.slice(0);
 
+    // Creates a new array of rows with only those who have an ID
+    // in the filterIDs array
     let newRows = oldRows.slice(0,1);
-
     for (let i = 1; i < oldRows.length; i++) {
       // CHANGE TO HASH FOR FASTER LOOKUP
-      // Poss -1 change
-      if (newFilterIds.includes(oldRows[i][oldRows[i].length-1])) {
+      if (filterIDs.includes(oldRows[i][oldRows[i].length-1])) {
         newRows.push(oldRows[i]);
       }
     }
@@ -350,13 +334,16 @@ class CSVTable extends React.Component {
     document.getElementById('col-header-' + colNum.toString()).style.display = "";
   }
 
-  createRows() {
+  createTable() {
+    // If no CSV has been uploaded, don't create a table
     if (this.props.rows.length === 0) {
       return null;
+      // When the CSV has first been uploaded, create the rows that
+      // will be set in state
     } else if (this.state.rows.length === 0) {
       let newState = this.state;
-      // let columnsToAddToState = {};
 
+      // Add row numbers to the beginning of each row array
       let rows = this.props.rows.slice(0);
       rows[0].unshift("Rows");
       for (let t = 1; t < rows.length; t++) {
@@ -365,16 +352,17 @@ class CSVTable extends React.Component {
 
       newState["rows"] = rows;
 
-      // Identify columns in CSV data
+      // Identify the number of columns in the CSV data
       let columnCount = rows[0].length;
-      // Create column arrays in state
+      // Create arrays for each column in state that will mimic columns
+      // in a table
       for (let j = 0; j < columnCount; j++) {
         newState[j] = [];
       }
-      // For each row, for each column, add cell data as an element in
+
+      // For each row in each column, add cell data as an element in
       // the state column's array. cellIndex is the cell's original
       // row number that is used later for sorting.
-
       for (let k = 1; k < this.props.rows.length; k++) {
         for (let l = 0; l < columnCount; l++) {
           let parsedCell = parseFloat(this.props.rows[k][l]);
@@ -394,11 +382,7 @@ class CSVTable extends React.Component {
 
       this.setState(newState);
     } else {
-      // Have new rows
       let rows;
-      // Maybe here the first if-else statement needs to be
-      // if this.state.filteredRows.length !== 0 for keeping
-      // separation between original rows and filtered ones
       if (this.state.filteredRows.length !== 0) {
         rows = this.state.filteredRows
       } else if (this.state.rows.length !== 0) {
@@ -406,12 +390,9 @@ class CSVTable extends React.Component {
       } else {
         rows = this.props.rows;
       }
-      // if (rows[0][0] !== "Row") rows[0].unshift("Row");
-      // if (!rows[1]) rows[1].unshift(1);
 
       let columnCount = rows[0].length;
-      debugger
-      // Might have to come after rows are updated with key
+
       let headers = [];
       let parsedType;
       let parsedTypeLength;
@@ -419,7 +400,7 @@ class CSVTable extends React.Component {
         let colStats = [];
         parsedType = parseFloat(rows[1][j]);
         parsedTypeLength = parsedType.toString().length;
-        // Poss -1 change
+
         let columnInfo = {
           "count": rows.length-1,
           "nonBlankRows": 0,
@@ -455,6 +436,8 @@ class CSVTable extends React.Component {
           colStats.push(<span>Mean: {columnInfo["mean"]}</span>);
         }
 
+        // Determine the column's data type to display when hovering
+        // over the header cell
         let colHeaderDataType;
         if (isNaN(parsedType) === false && parsedTypeLength === rows[1][j].toString().length) {
           colHeaderDataType = "Number";
@@ -462,10 +445,12 @@ class CSVTable extends React.Component {
           colHeaderDataType = "String";
         }
 
-        // Create column header span with filter and sort buttons
+        // Create column header cell with filter and sort buttons
         headers.push(
-          <span onMouseOver={() => this.showColDataType(j)}
-          onMouseLeave={() => this.hideColDataType(j)}>{rows[0][j]}
+          <span className="col-header-cell"
+          onMouseOver={() => this.showColDataType(j)}
+          onMouseLeave={() => this.hideColDataType(j)}>
+            <span className="header-title">{rows[0][j]}</span>
             <span className="col-data-type"
               id={"col-header-" + j.toString()}
               >Column Data Type: {colHeaderDataType}</span>
@@ -476,15 +461,15 @@ class CSVTable extends React.Component {
               <div
                 className="sort-button"
                 onClick={() => this.createFilterList(j)}
-                >Filter</div>
+                ><i class="fas fa-filter"></i></div>
               <div
                 className="sort-button"
                 onClick={() => this.sortColumn(j, "sort")}
-                >Sort</div>
+                ><i class="fas fa-sort-down"></i></div>
               <div
                 className="sort-button"
                 onClick={() => this.sortColumn(j, "reverse")}
-                >Reverse</div>
+                ><i class="fas fa-sort-up"></i></div>
               <div id={"colStats" + j.toString()} className="column-stats">
                 <span>Column Stats</span>
                 <span>Rows: {columnInfo["count"]}</span>
@@ -496,6 +481,7 @@ class CSVTable extends React.Component {
         );
       }
 
+      // Function for creating individual non-header rows
       function createRow(i) {
         let row = [];
         for (let k = 0; k < columnCount; k++) {
@@ -510,16 +496,19 @@ class CSVTable extends React.Component {
       }
       createRow = createRow.bind(this);
 
+      // Create rows
       let i = -1;
-      let lineWidth = (200 * columnCount).toString() + "px";
+      let lineWidth = (200 * columnCount).toString() + "px"; // Set width of li
       return rows.map(row => {
         i += 1;
         if (i === 0) {
+          // Create column headers
           return (
             <li key={i} style={{"width": lineWidth}}>
               {headers}
             </li>);
         } else {
+          // Create all regular rows
           return (
             <li key={i} style={{"width": lineWidth}}>
               {createRow(i)}
@@ -538,7 +527,7 @@ class CSVTable extends React.Component {
         <button onClick={() => this.clearFilters()}>Clear Filters</button>
         <div>{this.createFilter()}</div>
         <ul className="table-ul">
-          {this.createRows()}
+          {this.createTable()}
         </ul>
       </div>
     );
