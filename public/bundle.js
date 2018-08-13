@@ -30226,6 +30226,7 @@ var CSVTable = function (_React$Component) {
     };
     _this.changeFilterItemValue = _this.changeFilterItemValue.bind(_this);
     _this.applyFilter = _this.applyFilter.bind(_this);
+    _this.clearFilter = _this.clearFilter.bind(_this);
     return _this;
   }
 
@@ -30384,6 +30385,7 @@ var CSVTable = function (_React$Component) {
         return null;
       } else {
         var createCheckbox = function createCheckbox(item) {
+          debugger;
           if (this.state.currentlyAppliedFilters[this.state.filterColumn][item] === true) {
             return _react2.default.createElement(
               'div',
@@ -30450,6 +30452,13 @@ var CSVTable = function (_React$Component) {
           _react2.default.createElement(
             'div',
             { onClick: function onClick() {
+                return _this2.clearFilter();
+              } },
+            'Clear Filter'
+          ),
+          _react2.default.createElement(
+            'div',
+            { onClick: function onClick() {
                 return cancelFilter();
               } },
             'Cancel'
@@ -30457,6 +30466,17 @@ var CSVTable = function (_React$Component) {
           checkboxes
         );
       }
+    }
+  }, {
+    key: 'clearFilter',
+    value: function clearFilter() {
+      var columnNum = this.state.filterColumn;
+      var newState = this.state;
+      newState["currentlyAppliedFilters"][columnNum] = {};
+      for (var i = 0; i < newState.filterList.length; i++) {
+        newState.filterItems[newState.filterList[i]] = false;
+      }
+      this.setState(newState);
     }
   }, {
     key: 'changeFilterItemValue',

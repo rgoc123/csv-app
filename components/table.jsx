@@ -18,6 +18,7 @@ class CSVTable extends React.Component {
     };
     this.changeFilterItemValue = this.changeFilterItemValue.bind(this);
     this.applyFilter = this.applyFilter.bind(this);
+    this.clearFilter = this.clearFilter.bind(this);
   }
 
   sortColumn(columnNum, sortType) {
@@ -168,6 +169,7 @@ class CSVTable extends React.Component {
       let newState = this.state;
 
       function createCheckbox(item) {
+        debugger
         if (this.state.currentlyAppliedFilters[this.state.filterColumn][item] === true) {
           return (
             <div className="checkbox-container">
@@ -209,11 +211,22 @@ class CSVTable extends React.Component {
       return (
         <div className="filter-div">
           <div onClick={() => this.applyFilter()}>Apply</div>
+          <div onClick={() => this.clearFilter()}>Clear Filter</div>
           <div onClick={() => cancelFilter()}>Cancel</div>
           {checkboxes}
         </div>
       );
     }
+  }
+
+  clearFilter() {
+    let columnNum = this.state.filterColumn;
+    let newState = this.state;
+    newState["currentlyAppliedFilters"][columnNum] = {};
+    for(let i = 0; i < newState.filterList.length; i++) {
+      newState.filterItems[newState.filterList[i]] = false;
+    }
+    this.setState(newState);
   }
 
   changeFilterItemValue(e) {
