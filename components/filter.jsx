@@ -10,7 +10,7 @@ class Filter extends React.Component {
       columnsToFilter: [],
       filterItems: {},
       filterList: [],
-      filterHash: this.props.columnFilterHash,
+      columnFilterHash: this.props.columnFilterHash,
       currentlyAppliedFilters: {},
       filteredRows: []
     }
@@ -19,14 +19,14 @@ class Filter extends React.Component {
 
   changeFilterItemValue(e) {
     let filterItem = e.target.value;
-    let filterHash = this.state.filterHash;
+    let filterHash = this.state.columnFilterHash;
     if (filterHash[filterItem] === true) {
       filterHash[filterItem] = false;
     } else {
       filterHash[filterItem] = true;
     }
     this.setState({
-      filterHash: filterHash
+      columnFilterHash: filterHash
     });
   }
 
@@ -51,14 +51,13 @@ class Filter extends React.Component {
     let checkboxes = this.props.columnFilterList.map(item => createCheckbox(item));
     return (
       <div className="filter-div">
-        <button onClick={() => this.props.newApply(this.props.columnNum, this.props.columnFilterList)}>New Appy</button>
+        <button onClick={() => this.props.newApply(this.props.columnNum, this.state.columnFilterHash)}>New Appy</button>
         {checkboxes}
       </div>
     );
   }
 
   render() {
-    console.log(this.state);
     return (
       <div style={{"display": this.props.filterDisplay}}>
         <h4>This works</h4>

@@ -572,15 +572,54 @@ class CSVTable extends React.Component {
     }
   }
 
-  newApply(colNum, colFilterList) {
-    let num = colNum;
-    let filterList = colFilterList;
+  newApply(colNum, colFilterHash) {
+    let col = colNum;
+    let filterHash = colFilterHash;
     console.log("Setting parent state");
-    debugger
-    this.setState({
-      test: 'YES',
-      rows: []
-    });
+
+    let newState = this.state;
+    newState[`column${col}FilterHash`] = filterHash;
+    newState['currentlyAppliedFilters'][col] = filterHash;
+
+    // Now collect IDs, then create new rows
+    // May need a check for if there are filteredRows, then rowsToFilter
+    // = filteredRows, else it = rows
+    let rowsToFilter = [];
+    if (newState.filteredRows.length > 0) {
+      rowsToFilter = newState.filteredRows;
+    } else {
+      rowsToFilter = newState.rows.slice(1);
+    }
+
+    let filterIDs = [];
+    for (let r = 0; r < rowsToFilter.length; r++) {
+      let columnFilterItem = rowsToFilter[r][col];
+      let rowID = rowsToFilter[r][0];
+      if (newState.currentlyAppliedFilters[col][columnFilterItem] === true) {
+        filterIDs.push(rowID);
+      }
+    }
+
+    let oldRows = newState.rows.slice(0);
+
+    // Creates a new array of rows with only those who have an ID
+    // in the filterIDs array
+    let newRows = [];
+    if (filterIDs.length !== 0) {
+      newRows = oldRows.slice(0,1);
+      for (let i = 1; i < oldRows.length; i++) {
+        // CHANGE TO HASH FOR FASTER LOOKUP
+        let row = oldRows[i]
+        let rowID = oldRows[i][oldRows[i].length-1];
+        if (filterIDs.includes(rowID)) {
+          newRows.push(row);
+        }
+      }
+    }
+
+    newState["filteredRows"] = newRows;
+
+    this.setState(newState);
   }
 
   render() {

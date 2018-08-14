@@ -30926,15 +30926,54 @@ var CSVTable = function (_React$Component) {
     }
   }, {
     key: 'newApply',
-    value: function newApply(colNum, colFilterList) {
-      var num = colNum;
-      var filterList = colFilterList;
+    value: function newApply(colNum, colFilterHash) {
+      var col = colNum;
+      var filterHash = colFilterHash;
       console.log("Setting parent state");
-      debugger;
-      this.setState({
-        test: 'YES',
-        rows: []
-      });
+
+      var newState = this.state;
+      newState['column' + col + 'FilterHash'] = filterHash;
+      newState['currentlyAppliedFilters'][col] = filterHash;
+
+      // Now collect IDs, then create new rows
+      // May need a check for if there are filteredRows, then rowsToFilter
+      // = filteredRows, else it = rows
+      var rowsToFilter = [];
+      if (newState.filteredRows.length > 0) {
+        rowsToFilter = newState.filteredRows;
+      } else {
+        rowsToFilter = newState.rows.slice(1);
+      }
+
+      var filterIDs = [];
+      for (var r = 0; r < rowsToFilter.length; r++) {
+        var columnFilterItem = rowsToFilter[r][col];
+        var rowID = rowsToFilter[r][0];
+        if (newState.currentlyAppliedFilters[col][columnFilterItem] === true) {
+          filterIDs.push(rowID);
+        }
+      }
+
+      var oldRows = newState.rows.slice(0);
+
+      // Creates a new array of rows with only those who have an ID
+      // in the filterIDs array
+      var newRows = [];
+      if (filterIDs.length !== 0) {
+        newRows = oldRows.slice(0, 1);
+        for (var i = 1; i < oldRows.length; i++) {
+          // CHANGE TO HASH FOR FASTER LOOKUP
+          var row = oldRows[i];
+          var _rowID = oldRows[i][oldRows[i].length - 1];
+          if (filterIDs.includes(_rowID)) {
+            newRows.push(row);
+          }
+        }
+      }
+
+      newState["filteredRows"] = newRows;
+
+      this.setState(newState);
     }
   }, {
     key: 'render',
@@ -31016,7 +31055,7 @@ var Filter = function (_React$Component) {
       columnsToFilter: [],
       filterItems: {},
       filterList: [],
-      filterHash: _this.props.columnFilterHash,
+      columnFilterHash: _this.props.columnFilterHash,
       currentlyAppliedFilters: {},
       filteredRows: []
     };
@@ -31028,14 +31067,14 @@ var Filter = function (_React$Component) {
     key: 'changeFilterItemValue',
     value: function changeFilterItemValue(e) {
       var filterItem = e.target.value;
-      var filterHash = this.state.filterHash;
+      var filterHash = this.state.columnFilterHash;
       if (filterHash[filterItem] === true) {
         filterHash[filterItem] = false;
       } else {
         filterHash[filterItem] = true;
       }
       this.setState({
-        filterHash: filterHash
+        columnFilterHash: filterHash
       });
     }
   }, {
@@ -31073,7 +31112,7 @@ var Filter = function (_React$Component) {
         _react2.default.createElement(
           'button',
           { onClick: function onClick() {
-              return _this2.props.newApply(_this2.props.columnNum, _this2.props.columnFilterList);
+              return _this2.props.newApply(_this2.props.columnNum, _this2.state.columnFilterHash);
             } },
           'New Appy'
         ),
@@ -31083,7 +31122,6 @@ var Filter = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      console.log(this.state);
       return _react2.default.createElement(
         'div',
         { style: { "display": this.props.filterDisplay } },
