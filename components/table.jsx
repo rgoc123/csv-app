@@ -425,13 +425,14 @@ class CSVTable extends React.Component {
 
       this.setState(newState);
     } else {
-      let rows = ["placeholder"];
+
+      let tempNewRows;
       if (this.state.filteredRows.length !== 0) {
-        rows = this.state.filteredRows.slice(0);
+        tempNewRows = this.state.filteredRows.slice(0);
       } else if (this.state.rows.length !== 0) {
-        rows = this.state.rows.slice(0);
+        tempNewRows = this.state.rows.slice(0);
       } else {
-        rows = this.props.rows.slice(0);
+        tempNewRows = this.props.rows.slice(0);
       }
 
       let columnCount = this.state.rows[0].length;
@@ -439,9 +440,9 @@ class CSVTable extends React.Component {
       // This check is required when removing filters manually. If all
       // filters are removed manually, this changes "rows" from filteredRows
       // back to this.state.rows, which has all of the original rows.
-      if (this.state.columnsToFilter.length === 0) {
-        rows = this.state.rows;
-      }
+      // if (this.state.columnsToFilter.length === 0) {
+      //   rows = this.state.rows;
+      // }
 
       let headers = [];
       let parsedType;
@@ -449,32 +450,32 @@ class CSVTable extends React.Component {
 
       for (let j = 0; j < columnCount; j++) {
         let colStats = [];
-        if (rows === undefined) rows = this.state.rows;
-        parsedType = parseFloat(rows[1][j]);
+        if (tempNewRows === undefined) rows = this.state.rows;
+        parsedType = parseFloat(tempNewRows[1][j]);
         parsedTypeLength = parsedType.toString().length;
 
         let columnInfo = {
-          "count": rows.length-1,
+          "count": tempNewRows.length-1,
           "nonBlankRows": 0,
           "min": 0,
           "max": 0,
           "mean": 0,
           "sum": 0
         };
-        let lengthToCheck = rows[1][j].toString().length;
+        let lengthToCheck = tempNewRows[1][j].toString().length;
 
         let columnNonBlankRowCount = 0;
-        for (let q = 1; q < rows.length; q++) {
-          if (rows[q][j] !== "") columnNonBlankRowCount += 1;
+        for (let q = 1; q < tempNewRows.length; q++) {
+          if (tempNewRows[q][j] !== "") columnNonBlankRowCount += 1;
         }
         columnInfo["nonBlankRows"] = columnNonBlankRowCount;
 
-        if (isNaN(parsedType) === false && parsedTypeLength === rows[1][j].toString().length) {
+        if (isNaN(parsedType) === false && parsedTypeLength === tempNewRows[1][j].toString().length) {
 
-          for (let p = 1; p < rows.length; p++) {
-            if (parseFloat(rows[p][j]) < columnInfo["min"]) columnInfo["min"] = parseFloat(rows[p][j])
-            if (parseFloat(rows[p][j]) > columnInfo["max"]) columnInfo["max"] = parseFloat(rows[p][j])
-            columnInfo["sum"] += parseFloat(rows[p][j]);
+          for (let p = 1; p < tempNewRows.length; p++) {
+            if (parseFloat(tempNewRows[p][j]) < columnInfo["min"]) columnInfo["min"] = parseFloat(tempNewRows[p][j])
+            if (parseFloat(tempNewRows[p][j]) > columnInfo["max"]) columnInfo["max"] = parseFloat(tempNewRows[p][j])
+            columnInfo["sum"] += parseFloat(tempNewRows[p][j]);
           }
           columnInfo["mean"] = (columnInfo["sum"] / columnInfo["count"]);
 
@@ -491,7 +492,7 @@ class CSVTable extends React.Component {
         // Determine the column's data type to display when hovering
         // over the header cell
         let colHeaderDataType;
-        if (isNaN(parsedType) === false && parsedTypeLength === rows[1][j].toString().length) {
+        if (isNaN(parsedType) === false && parsedTypeLength === tempNewRows[1][j].toString().length) {
           colHeaderDataType = "Number";
         } else {
           colHeaderDataType = "String";
@@ -502,7 +503,7 @@ class CSVTable extends React.Component {
           <span key={j} className="col-header-cell"
           onMouseOver={() => this.showColDataType(j)}
           onMouseLeave={() => this.hideColDataType(j)}>
-            <span className="header-title">{rows[0][j]}</span>
+            <span className="header-title">{tempNewRows[0][j]}</span>
             <span className="col-data-type"
               id={"col-header-" + j.toString()}
               >Column Data Type: {colHeaderDataType}</span>
@@ -515,6 +516,7 @@ class CSVTable extends React.Component {
                 column={this.state[j]}
                 columnFilterList={this.state[`column${j}FilterList`].sort()}
                 columnFilterHash={this.state[`column${j}FilterHash`]}
+                filterDisplay={this.state.filterDisplay}
                 filterColumn={this.state.filterColumn}
                 columnsToFilter={this.state.columnsToFilter}
                 filterItems={this.state.filterItems}
@@ -541,7 +543,7 @@ class CSVTable extends React.Component {
         for (let k = 0; k < columnCount; k++) {
           row.push(
             <span key={i.toString() + k.toString()} onMouseOver={() => this.showRow(i, k)}
-              onMouseLeave={() => this.hideRow(i, k)}>{rows[i][k]}
+              onMouseLeave={() => this.hideRow(i, k)}>{tempNewRows[i][k]}
               <span className="row-num" id={i.toString() + k.toString()}>Current Row: {i}</span>
             </span>
           );
@@ -553,7 +555,7 @@ class CSVTable extends React.Component {
       // Create rows
       let i = -1;
       let lineWidth = (200 * columnCount).toString() + "px"; // Set width of li
-      return rows.map(row => {
+      return tempNewRows.map(row => {
         i += 1;
         if (i === 0) {
           // Create column headers
@@ -617,6 +619,7 @@ class CSVTable extends React.Component {
       }
     }
 
+    newState["filterDisplay"] = "none";
     newState["filteredRows"] = newRows;
 
     this.setState(newState);

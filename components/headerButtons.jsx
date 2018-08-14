@@ -13,7 +13,7 @@ class HeaderButtons extends React.Component {
 
   openFilter() {
     let newState = this.state;
-
+    
     if (this.state.filterDisplay === "none") {
       this.setState({filterDisplay: "block"});
     } else {
