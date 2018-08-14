@@ -30179,6 +30179,10 @@ var _reactDom = __webpack_require__(98);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
+var _HeaderButtons = __webpack_require__(360);
+
+var _HeaderButtons2 = _interopRequireDefault(_HeaderButtons);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -30839,36 +30843,7 @@ var CSVTable = function (_React$Component) {
                 },
                 'Stats'
               ),
-              _react2.default.createElement(
-                'div',
-                {
-                  className: 'sort-button',
-                  onClick: function onClick() {
-                    return _this5.createFilterList(_j2);
-                  }
-                },
-                _react2.default.createElement('i', { 'class': 'fas fa-filter' })
-              ),
-              _react2.default.createElement(
-                'div',
-                {
-                  className: 'sort-button',
-                  onClick: function onClick() {
-                    return _this5.sortColumn(_j2, "sort");
-                  }
-                },
-                _react2.default.createElement('i', { 'class': 'fas fa-sort-down' })
-              ),
-              _react2.default.createElement(
-                'div',
-                {
-                  className: 'sort-button',
-                  onClick: function onClick() {
-                    return _this5.sortColumn(_j2, "reverse");
-                  }
-                },
-                _react2.default.createElement('i', { 'class': 'fas fa-sort-up' })
-              ),
+              _react2.default.createElement(_HeaderButtons2.default, null),
               _react2.default.createElement(
                 'div',
                 { id: "colStats" + _j2.toString(), className: 'column-stats' },
@@ -30924,11 +30899,13 @@ var CSVTable = function (_React$Component) {
       }
     }
   }, {
+    key: 'openFilter',
+    value: function openFilter() {}
+  }, {
     key: 'render',
     value: function render() {
       var _this6 = this;
 
-      console.log(this.state);
       var clearFiltersStyle = this.props.rows.length === 0 ? "none" : "inline-block";
 
       return _react2.default.createElement(
@@ -30959,6 +30936,179 @@ var CSVTable = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = CSVTable;
+
+/***/ }),
+/* 359 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(47);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = __webpack_require__(98);
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Filter = function (_React$Component) {
+  _inherits(Filter, _React$Component);
+
+  function Filter(props) {
+    _classCallCheck(this, Filter);
+
+    var _this = _possibleConstructorReturn(this, (Filter.__proto__ || Object.getPrototypeOf(Filter)).call(this, props));
+
+    _this.state = {
+      filterDisplay: _this.props.filterDisplay,
+      filterColumn: null,
+      columnsToFilter: [],
+      filterItems: {},
+      filterList: [],
+      currentlyAppliedFilters: {},
+      filteredRows: []
+    };
+    return _this;
+  }
+
+  _createClass(Filter, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { style: { "display": this.props.filterDisplay } },
+        _react2.default.createElement(
+          'h4',
+          null,
+          'This works'
+        )
+      );
+    }
+  }]);
+
+  return Filter;
+}(_react2.default.Component);
+
+exports.default = Filter;
+
+/***/ }),
+/* 360 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(47);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = __webpack_require__(98);
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _filter = __webpack_require__(359);
+
+var _filter2 = _interopRequireDefault(_filter);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var HeaderButtons = function (_React$Component) {
+  _inherits(HeaderButtons, _React$Component);
+
+  function HeaderButtons(props) {
+    _classCallCheck(this, HeaderButtons);
+
+    var _this = _possibleConstructorReturn(this, (HeaderButtons.__proto__ || Object.getPrototypeOf(HeaderButtons)).call(this, props));
+
+    _this.state = {
+      filterDisplay: "none"
+    };
+    return _this;
+  }
+
+  _createClass(HeaderButtons, [{
+    key: 'openFilter',
+    value: function openFilter() {
+      if (this.state.filterDisplay === "none") {
+        this.setState({ filterDisplay: "block" });
+      } else {
+        this.setState({ filterDisplay: "none" });
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      return _react2.default.createElement(
+        'div',
+        { className: 'header-buttons-div' },
+        _react2.default.createElement(
+          'div',
+          {
+            className: 'sort-button',
+            onClick: function onClick() {
+              return _this2.openFilter();
+            }
+          },
+          _react2.default.createElement('i', { className: 'fas fa-filter' })
+        ),
+        _react2.default.createElement(
+          'div',
+          {
+            className: 'sort-button',
+            onClick: function onClick() {
+              return _this2.sortColumn(j, "sort");
+            }
+          },
+          _react2.default.createElement('i', { className: 'fas fa-sort-down' })
+        ),
+        _react2.default.createElement(
+          'div',
+          {
+            className: 'sort-button',
+            onClick: function onClick() {
+              return _this2.sortColumn(j, "reverse");
+            }
+          },
+          _react2.default.createElement('i', { className: 'fas fa-sort-up' })
+        ),
+        _react2.default.createElement(_filter2.default, { filterDisplay: this.state.filterDisplay })
+      );
+    }
+  }]);
+
+  return HeaderButtons;
+}(_react2.default.Component);
+
+exports.default = HeaderButtons;
 
 /***/ })
 /******/ ]);

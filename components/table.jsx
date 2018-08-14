@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import HeaderButtons from './HeaderButtons';
+
 class CSVTable extends React.Component {
 
   constructor(props) {
@@ -495,18 +497,7 @@ class CSVTable extends React.Component {
               <div className="sort-button"
                 onClick={() => this.toggleShowStats(j)}
                 >Stats</div>
-              <div
-                className="sort-button"
-                onClick={() => this.createFilterList(j)}
-                ><i class="fas fa-filter"></i></div>
-              <div
-                className="sort-button"
-                onClick={() => this.sortColumn(j, "sort")}
-                ><i class="fas fa-sort-down"></i></div>
-              <div
-                className="sort-button"
-                onClick={() => this.sortColumn(j, "reverse")}
-                ><i class="fas fa-sort-up"></i></div>
+              <HeaderButtons />
               <div id={"colStats" + j.toString()} className="column-stats">
                 <span>Column Stats</span>
                 <span>Rows: {columnInfo["count"]}</span>
@@ -555,14 +546,20 @@ class CSVTable extends React.Component {
     }
   }
 
+  openFilter() {
+
+  }
+
   render() {
-    console.log(this.state);
     let clearFiltersStyle = this.props.rows.length === 0 ? "none" : "inline-block";
 
     return (
       <div className="table-div">
         <button style={{"display": clearFiltersStyle}} onClick={() => this.clearFilters()}>Clear Filters</button>
-        <div>{this.createFilterDiv()}</div>
+        <div>
+          {this.createFilterDiv()}
+
+        </div>
         <ul className="table-ul">
           {this.createTable()}
         </ul>
