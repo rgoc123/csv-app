@@ -411,14 +411,16 @@ class CSVTable extends React.Component {
       let newColumnCount = newState["rows"][0].length;
 
       for (let c = 0; c < newColumnCount; c++) {
-        let columnFilterName = "column" + c.toString() + "FilterList";
+        let columnFilterListName = "column" + c.toString() + "FilterList";
+        let columnFilterHashName = "column" + c.toString() + "FilterHash";
         let columnFilterHash = {};
 
         for (let r = 0; r < newState[c].length; r++) {
           let columnCellValue = newState[c][r][0];
-          columnFilterHash[columnCellValue] = true;
+          columnFilterHash[columnCellValue] = false;
         }
-        newState[columnFilterName] = Object.keys(columnFilterHash);
+        newState[columnFilterListName] = Object.keys(columnFilterHash);
+        newState[columnFilterHashName] = columnFilterHash;
       }
 
       this.setState(newState);
@@ -509,9 +511,10 @@ class CSVTable extends React.Component {
                 onClick={() => this.toggleShowStats(j)}
                 >Stats</div>
               <HeaderButtons
-                columnNumber={j}
+                columnNum={j}
                 column={this.state[j]}
                 columnFilterList={this.state[`column${j}FilterList`].sort()}
+                columnFilterHash={this.state[`column${j}FilterHash`]}
                 filterColumn={this.state.filterColumn}
                 columnsToFilter={this.state.columnsToFilter}
                 filterItems={this.state.filterItems}
@@ -569,8 +572,11 @@ class CSVTable extends React.Component {
     }
   }
 
-  newApply() {
+  newApply(colNum, colFilterList) {
+    let num = colNum;
+    let filterList = colFilterList;
     console.log("Setting parent state");
+    debugger
     this.setState({
       test: 'YES',
       rows: []

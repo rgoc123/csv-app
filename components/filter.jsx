@@ -10,9 +10,24 @@ class Filter extends React.Component {
       columnsToFilter: [],
       filterItems: {},
       filterList: [],
+      filterHash: this.props.columnFilterHash,
       currentlyAppliedFilters: {},
       filteredRows: []
     }
+    this.changeFilterItemValue = this.changeFilterItemValue.bind(this);
+  }
+
+  changeFilterItemValue(e) {
+    let filterItem = e.target.value;
+    let filterHash = this.state.filterHash;
+    if (filterHash[filterItem] === true) {
+      filterHash[filterItem] = false;
+    } else {
+      filterHash[filterItem] = true;
+    }
+    this.setState({
+      filterHash: filterHash
+    });
   }
 
   createFilterDiv() {
@@ -36,16 +51,17 @@ class Filter extends React.Component {
     let checkboxes = this.props.columnFilterList.map(item => createCheckbox(item));
     return (
       <div className="filter-div">
+        <button onClick={() => this.props.newApply(this.props.columnNum, this.props.columnFilterList)}>New Appy</button>
         {checkboxes}
       </div>
     );
   }
 
   render() {
+    console.log(this.state);
     return (
       <div style={{"display": this.props.filterDisplay}}>
         <h4>This works</h4>
-        <button onClick={() => this.props.newApply()}>New Appy</button>
         {this.createFilterDiv()}
       </div>
     );

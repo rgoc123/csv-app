@@ -30683,14 +30683,16 @@ var CSVTable = function (_React$Component) {
         var newColumnCount = newState["rows"][0].length;
 
         for (var c = 0; c < newColumnCount; c++) {
-          var columnFilterName = "column" + c.toString() + "FilterList";
+          var columnFilterListName = "column" + c.toString() + "FilterList";
+          var columnFilterHashName = "column" + c.toString() + "FilterHash";
           var columnFilterHash = {};
 
           for (var r = 0; r < newState[c].length; r++) {
             var columnCellValue = newState[c][r][0];
-            columnFilterHash[columnCellValue] = true;
+            columnFilterHash[columnCellValue] = false;
           }
-          newState[columnFilterName] = Object.keys(columnFilterHash);
+          newState[columnFilterListName] = Object.keys(columnFilterHash);
+          newState[columnFilterHashName] = columnFilterHash;
         }
 
         this.setState(newState);
@@ -30855,9 +30857,10 @@ var CSVTable = function (_React$Component) {
                 'Stats'
               ),
               _react2.default.createElement(_HeaderButtons2.default, {
-                columnNumber: _j2,
+                columnNum: _j2,
                 column: _this5.state[_j2],
                 columnFilterList: _this5.state['column' + _j2 + 'FilterList'].sort(),
+                columnFilterHash: _this5.state['column' + _j2 + 'FilterHash'],
                 filterColumn: _this5.state.filterColumn,
                 columnsToFilter: _this5.state.columnsToFilter,
                 filterItems: _this5.state.filterItems,
@@ -30923,8 +30926,11 @@ var CSVTable = function (_React$Component) {
     }
   }, {
     key: 'newApply',
-    value: function newApply() {
+    value: function newApply(colNum, colFilterList) {
+      var num = colNum;
+      var filterList = colFilterList;
       console.log("Setting parent state");
+      debugger;
       this.setState({
         test: 'YES',
         rows: []
@@ -31010,15 +31016,33 @@ var Filter = function (_React$Component) {
       columnsToFilter: [],
       filterItems: {},
       filterList: [],
+      filterHash: _this.props.columnFilterHash,
       currentlyAppliedFilters: {},
       filteredRows: []
     };
+    _this.changeFilterItemValue = _this.changeFilterItemValue.bind(_this);
     return _this;
   }
 
   _createClass(Filter, [{
+    key: 'changeFilterItemValue',
+    value: function changeFilterItemValue(e) {
+      var filterItem = e.target.value;
+      var filterHash = this.state.filterHash;
+      if (filterHash[filterItem] === true) {
+        filterHash[filterItem] = false;
+      } else {
+        filterHash[filterItem] = true;
+      }
+      this.setState({
+        filterHash: filterHash
+      });
+    }
+  }, {
     key: 'createFilterDiv',
     value: function createFilterDiv() {
+      var _this2 = this;
+
       function createCheckbox(item) {
         return _react2.default.createElement(
           'div',
@@ -31046,14 +31070,20 @@ var Filter = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         { className: 'filter-div' },
+        _react2.default.createElement(
+          'button',
+          { onClick: function onClick() {
+              return _this2.props.newApply(_this2.props.columnNum, _this2.props.columnFilterList);
+            } },
+          'New Appy'
+        ),
         checkboxes
       );
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
-
+      console.log(this.state);
       return _react2.default.createElement(
         'div',
         { style: { "display": this.props.filterDisplay } },
@@ -31061,13 +31091,6 @@ var Filter = function (_React$Component) {
           'h4',
           null,
           'This works'
-        ),
-        _react2.default.createElement(
-          'button',
-          { onClick: function onClick() {
-              return _this2.props.newApply();
-            } },
-          'New Appy'
         ),
         this.createFilterDiv()
       );
@@ -31176,8 +31199,10 @@ var HeaderButtons = function (_React$Component) {
           _react2.default.createElement('i', { className: 'fas fa-sort-up' })
         ),
         _react2.default.createElement(_filter2.default, {
+          columnNum: this.props.columnNum,
           column: this.props.column,
           columnFilterList: this.props.columnFilterList,
+          columnFilterHash: this.props.columnFilterHash,
           newApply: this.props.newApply,
           filterDisplay: this.state.filterDisplay,
           filterColumn: this.props.filterColumn,
