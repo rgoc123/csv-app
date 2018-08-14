@@ -8,6 +8,7 @@ class CSVTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      test: "No",
       rows: [],
       filterDisplay: "none",
       filterColumn: null,
@@ -21,6 +22,7 @@ class CSVTable extends React.Component {
     this.changeFilterItemValue = this.changeFilterItemValue.bind(this);
     this.applyFilter = this.applyFilter.bind(this);
     this.clearFilter = this.clearFilter.bind(this);
+    this.newApply = this.newApply.bind(this);
   }
 
   // Sorts or reverse sorts all the rows based on a column's data type
@@ -108,23 +110,14 @@ class CSVTable extends React.Component {
   // Creates the list of filter options that will populate a column's
   // filter div
   createFilterList(columnNum) {
-    // Pretty sure the below 3 lines are unnecessary
-    // this.setState({
-    //   rows: this.props.rows
-    // });
     let newState = this.state;
+
     if (newState.filterDisplay === "none") {
       newState["filterDisplay"] = "block";
     } else {
       newState["filterDisplay"] = "none";
       // Add clear filter function here
     }
-
-    // if (newState["filterColumn"] !== columnNum) {
-      // newState["filterColumn"] = columnNum;
-      // newState["filterItems"] = {};
-      // newState["filterList"] = [];
-    // }
 
     let columnToCreateListFrom = [];
     if (newState.filteredRows.length === 0) {
@@ -172,7 +165,8 @@ class CSVTable extends React.Component {
       function createCheckbox(item) {
         if (this.state.currentlyAppliedFilters[this.state.filterColumn][item] === true) {
           return (
-            <div className="checkbox-container">
+            <div className="checkbox-container"
+              key={item}>
               <input id={item}
                 className="checkbox"
                 type="checkbox"
@@ -185,7 +179,8 @@ class CSVTable extends React.Component {
           );
         } else {
           return (
-            <div className="checkbox-container">
+            <div className="checkbox-container"
+              key={item}>
               <input id={item}
                 className="checkbox"
                 type="checkbox"
@@ -410,6 +405,22 @@ class CSVTable extends React.Component {
         }
       }
 
+      // Create each columns list of filter items if they don't already
+      // exist. Doing this here allows for creating the list only once
+      // instead of each time a column's filter button is clicked.
+      let newColumnCount = newState["rows"][0].length;
+
+      for (let c = 0; c < newColumnCount; c++) {
+        let columnFilterName = "column" + c.toString() + "FilterList";
+        let columnFilterHash = {};
+
+        for (let r = 0; r < newState[c].length; r++) {
+          let columnCellValue = newState[c][r][0];
+          columnFilterHash[columnCellValue] = true;
+        }
+        newState[columnFilterName] = Object.keys(columnFilterHash);
+      }
+
       this.setState(newState);
     } else {
       let rows = ["placeholder"];
@@ -469,10 +480,10 @@ class CSVTable extends React.Component {
           columnInfo["min"] = columnInfo["min"].toFixed(2);
           columnInfo["max"] = columnInfo["max"].toFixed(2);
           columnInfo["mean"] = columnInfo["mean"].toFixed(2);
-          colStats.push(<span>Min: {columnInfo["min"]}</span>);
-          colStats.push(<span>Max: {columnInfo["max"]}</span>);
-          colStats.push(<span>Sum: {columnInfo["sum"]}</span>);
-          colStats.push(<span>Mean: {columnInfo["mean"]}</span>);
+          colStats.push(<span key='min'>Min: {columnInfo["min"]}</span>);
+          colStats.push(<span key='max'>Max: {columnInfo["max"]}</span>);
+          colStats.push(<span key='sum'>Sum: {columnInfo["sum"]}</span>);
+          colStats.push(<span key='mean'>Mean: {columnInfo["mean"]}</span>);
         }
 
         // Determine the column's data type to display when hovering
@@ -486,7 +497,7 @@ class CSVTable extends React.Component {
 
         // Create column header cell with filter and sort buttons
         headers.push(
-          <span className="col-header-cell"
+          <span key={j} className="col-header-cell"
           onMouseOver={() => this.showColDataType(j)}
           onMouseLeave={() => this.hideColDataType(j)}>
             <span className="header-title">{rows[0][j]}</span>
@@ -497,11 +508,23 @@ class CSVTable extends React.Component {
               <div className="sort-button"
                 onClick={() => this.toggleShowStats(j)}
                 >Stats</div>
-              <HeaderButtons />
+              <HeaderButtons
+                columnNumber={j}
+                column={this.state[j]}
+                columnFilterList={this.state[`column${j}FilterList`].sort()}
+                filterColumn={this.state.filterColumn}
+                columnsToFilter={this.state.columnsToFilter}
+                filterItems={this.state.filterItems}
+                filterList={this.state.filterList}
+                currentlyAppliedFilters={this.state.currentlyAppliedFilters}
+                filteredRows={this.state.filteredRows}
+                rows={this.state.rows}
+                newApply={this.newApply}
+                />
               <div id={"colStats" + j.toString()} className="column-stats">
-                <span>Column Stats</span>
-                <span>Rows: {columnInfo["count"]}</span>
-                <span>Non Empty Rows: {columnInfo["nonBlankRows"]}</span>
+                <span key={j.toString()}>Column Stats</span>
+                <span key={j.toString() + 'rows'}>Rows: {columnInfo["count"]}</span>
+                <span key={j.toString() + 'nERows'}>Non Empty Rows: {columnInfo["nonBlankRows"]}</span>
                 {colStats}
               </div>
             </div>
@@ -514,7 +537,7 @@ class CSVTable extends React.Component {
         let row = [];
         for (let k = 0; k < columnCount; k++) {
           row.push(
-            <span onMouseOver={() => this.showRow(i, k)}
+            <span key={i.toString() + k.toString()} onMouseOver={() => this.showRow(i, k)}
               onMouseLeave={() => this.hideRow(i, k)}>{rows[i][k]}
               <span className="row-num" id={i.toString() + k.toString()}>Current Row: {i}</span>
             </span>
@@ -546,11 +569,16 @@ class CSVTable extends React.Component {
     }
   }
 
-  openFilter() {
-
+  newApply() {
+    console.log("Setting parent state");
+    this.setState({
+      test: 'YES',
+      rows: []
+    });
   }
 
   render() {
+    console.log(this.state);
     let clearFiltersStyle = this.props.rows.length === 0 ? "none" : "inline-block";
 
     return (

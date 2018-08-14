@@ -30200,6 +30200,7 @@ var CSVTable = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (CSVTable.__proto__ || Object.getPrototypeOf(CSVTable)).call(this, props));
 
     _this.state = {
+      test: "No",
       rows: [],
       filterDisplay: "none",
       filterColumn: null,
@@ -30213,6 +30214,7 @@ var CSVTable = function (_React$Component) {
     _this.changeFilterItemValue = _this.changeFilterItemValue.bind(_this);
     _this.applyFilter = _this.applyFilter.bind(_this);
     _this.clearFilter = _this.clearFilter.bind(_this);
+    _this.newApply = _this.newApply.bind(_this);
     return _this;
   }
 
@@ -30308,23 +30310,14 @@ var CSVTable = function (_React$Component) {
   }, {
     key: 'createFilterList',
     value: function createFilterList(columnNum) {
-      // Pretty sure the below 3 lines are unnecessary
-      // this.setState({
-      //   rows: this.props.rows
-      // });
       var newState = this.state;
+
       if (newState.filterDisplay === "none") {
         newState["filterDisplay"] = "block";
       } else {
         newState["filterDisplay"] = "none";
         // Add clear filter function here
       }
-
-      // if (newState["filterColumn"] !== columnNum) {
-      // newState["filterColumn"] = columnNum;
-      // newState["filterItems"] = {};
-      // newState["filterList"] = [];
-      // }
 
       var columnToCreateListFrom = [];
       if (newState.filteredRows.length === 0) {
@@ -30378,7 +30371,8 @@ var CSVTable = function (_React$Component) {
           if (this.state.currentlyAppliedFilters[this.state.filterColumn][item] === true) {
             return _react2.default.createElement(
               'div',
-              { className: 'checkbox-container' },
+              { className: 'checkbox-container',
+                key: item },
               _react2.default.createElement('input', { id: item,
                 className: 'checkbox',
                 type: 'checkbox',
@@ -30395,7 +30389,8 @@ var CSVTable = function (_React$Component) {
           } else {
             return _react2.default.createElement(
               'div',
-              { className: 'checkbox-container' },
+              { className: 'checkbox-container',
+                key: item },
               _react2.default.createElement('input', { id: item,
                 className: 'checkbox',
                 type: 'checkbox',
@@ -30682,6 +30677,22 @@ var CSVTable = function (_React$Component) {
           }
         }
 
+        // Create each columns list of filter items if they don't already
+        // exist. Doing this here allows for creating the list only once
+        // instead of each time a column's filter button is clicked.
+        var newColumnCount = newState["rows"][0].length;
+
+        for (var c = 0; c < newColumnCount; c++) {
+          var columnFilterName = "column" + c.toString() + "FilterList";
+          var columnFilterHash = {};
+
+          for (var r = 0; r < newState[c].length; r++) {
+            var columnCellValue = newState[c][r][0];
+            columnFilterHash[columnCellValue] = true;
+          }
+          newState[columnFilterName] = Object.keys(columnFilterHash);
+        }
+
         this.setState(newState);
       } else {
 
@@ -30694,7 +30705,7 @@ var CSVTable = function (_React$Component) {
           var _loop2 = function _loop2(_k) {
             row.push(_react2.default.createElement(
               'span',
-              { onMouseOver: function onMouseOver() {
+              { key: i.toString() + _k.toString(), onMouseOver: function onMouseOver() {
                   return _this4.showRow(i, _k);
                 },
                 onMouseLeave: function onMouseLeave() {
@@ -30775,25 +30786,25 @@ var CSVTable = function (_React$Component) {
             columnInfo["mean"] = columnInfo["mean"].toFixed(2);
             colStats.push(_react2.default.createElement(
               'span',
-              null,
+              { key: 'min' },
               'Min: ',
               columnInfo["min"]
             ));
             colStats.push(_react2.default.createElement(
               'span',
-              null,
+              { key: 'max' },
               'Max: ',
               columnInfo["max"]
             ));
             colStats.push(_react2.default.createElement(
               'span',
-              null,
+              { key: 'sum' },
               'Sum: ',
               columnInfo["sum"]
             ));
             colStats.push(_react2.default.createElement(
               'span',
-              null,
+              { key: 'mean' },
               'Mean: ',
               columnInfo["mean"]
             ));
@@ -30811,7 +30822,7 @@ var CSVTable = function (_React$Component) {
           // Create column header cell with filter and sort buttons
           headers.push(_react2.default.createElement(
             'span',
-            { className: 'col-header-cell',
+            { key: _j2, className: 'col-header-cell',
               onMouseOver: function onMouseOver() {
                 return _this5.showColDataType(_j2);
               },
@@ -30843,24 +30854,36 @@ var CSVTable = function (_React$Component) {
                 },
                 'Stats'
               ),
-              _react2.default.createElement(_HeaderButtons2.default, null),
+              _react2.default.createElement(_HeaderButtons2.default, {
+                columnNumber: _j2,
+                column: _this5.state[_j2],
+                columnFilterList: _this5.state['column' + _j2 + 'FilterList'].sort(),
+                filterColumn: _this5.state.filterColumn,
+                columnsToFilter: _this5.state.columnsToFilter,
+                filterItems: _this5.state.filterItems,
+                filterList: _this5.state.filterList,
+                currentlyAppliedFilters: _this5.state.currentlyAppliedFilters,
+                filteredRows: _this5.state.filteredRows,
+                rows: _this5.state.rows,
+                newApply: _this5.newApply
+              }),
               _react2.default.createElement(
                 'div',
                 { id: "colStats" + _j2.toString(), className: 'column-stats' },
                 _react2.default.createElement(
                   'span',
-                  null,
+                  { key: _j2.toString() },
                   'Column Stats'
                 ),
                 _react2.default.createElement(
                   'span',
-                  null,
+                  { key: _j2.toString() + 'rows' },
                   'Rows: ',
                   columnInfo["count"]
                 ),
                 _react2.default.createElement(
                   'span',
-                  null,
+                  { key: _j2.toString() + 'nERows' },
                   'Non Empty Rows: ',
                   columnInfo["nonBlankRows"]
                 ),
@@ -30899,13 +30922,20 @@ var CSVTable = function (_React$Component) {
       }
     }
   }, {
-    key: 'openFilter',
-    value: function openFilter() {}
+    key: 'newApply',
+    value: function newApply() {
+      console.log("Setting parent state");
+      this.setState({
+        test: 'YES',
+        rows: []
+      });
+    }
   }, {
     key: 'render',
     value: function render() {
       var _this6 = this;
 
+      console.log(this.state);
       var clearFiltersStyle = this.props.rows.length === 0 ? "none" : "inline-block";
 
       return _react2.default.createElement(
@@ -30987,8 +31017,43 @@ var Filter = function (_React$Component) {
   }
 
   _createClass(Filter, [{
+    key: 'createFilterDiv',
+    value: function createFilterDiv() {
+      function createCheckbox(item) {
+        return _react2.default.createElement(
+          'div',
+          {
+            className: 'checkbox-container',
+            key: item },
+          _react2.default.createElement('input', { id: item,
+            className: 'checkbox',
+            type: 'checkbox',
+            value: item,
+            onChange: this.changeFilterItemValue
+          }),
+          _react2.default.createElement(
+            'label',
+            null,
+            item
+          )
+        );
+      }
+      createCheckbox = createCheckbox.bind(this);
+
+      var checkboxes = this.props.columnFilterList.map(function (item) {
+        return createCheckbox(item);
+      });
+      return _react2.default.createElement(
+        'div',
+        { className: 'filter-div' },
+        checkboxes
+      );
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       return _react2.default.createElement(
         'div',
         { style: { "display": this.props.filterDisplay } },
@@ -30996,7 +31061,15 @@ var Filter = function (_React$Component) {
           'h4',
           null,
           'This works'
-        )
+        ),
+        _react2.default.createElement(
+          'button',
+          { onClick: function onClick() {
+              return _this2.props.newApply();
+            } },
+          'New Appy'
+        ),
+        this.createFilterDiv()
       );
     }
   }]);
@@ -31056,6 +31129,8 @@ var HeaderButtons = function (_React$Component) {
   _createClass(HeaderButtons, [{
     key: 'openFilter',
     value: function openFilter() {
+      var newState = this.state;
+
       if (this.state.filterDisplay === "none") {
         this.setState({ filterDisplay: "block" });
       } else {
@@ -31069,7 +31144,7 @@ var HeaderButtons = function (_React$Component) {
 
       return _react2.default.createElement(
         'div',
-        { className: 'header-buttons-div' },
+        { style: { 'zIndex': '2' } },
         _react2.default.createElement(
           'div',
           {
@@ -31100,7 +31175,19 @@ var HeaderButtons = function (_React$Component) {
           },
           _react2.default.createElement('i', { className: 'fas fa-sort-up' })
         ),
-        _react2.default.createElement(_filter2.default, { filterDisplay: this.state.filterDisplay })
+        _react2.default.createElement(_filter2.default, {
+          column: this.props.column,
+          columnFilterList: this.props.columnFilterList,
+          newApply: this.props.newApply,
+          filterDisplay: this.state.filterDisplay,
+          filterColumn: this.props.filterColumn,
+          columnsToFilter: this.props.columnsToFilter,
+          filterItems: this.props.filterItems,
+          filterList: this.props.filterList,
+          currentlyAppliedFilters: this.props.currentlyAppliedFilters,
+          filteredRows: this.props.filteredRows,
+          rows: this.props.rows
+        })
       );
     }
   }]);

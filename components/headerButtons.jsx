@@ -12,6 +12,8 @@ class HeaderButtons extends React.Component {
   }
 
   openFilter() {
+    let newState = this.state;
+
     if (this.state.filterDisplay === "none") {
       this.setState({filterDisplay: "block"});
     } else {
@@ -21,7 +23,7 @@ class HeaderButtons extends React.Component {
 
   render() {
     return (
-      <div className="header-buttons-div">
+      <div style={{'zIndex': '2'}}>
         <div
           className="sort-button"
           onClick={() => this.openFilter()}
@@ -34,7 +36,19 @@ class HeaderButtons extends React.Component {
           className="sort-button"
           onClick={() => this.sortColumn(j, "reverse")}
           ><i className="fas fa-sort-up"></i></div>
-        <Filter filterDisplay={this.state.filterDisplay} />
+        <Filter
+          column={this.props.column}
+          columnFilterList={this.props.columnFilterList}
+          newApply={this.props.newApply}
+          filterDisplay={this.state.filterDisplay}
+          filterColumn={this.props.filterColumn}
+          columnsToFilter={this.props.columnsToFilter}
+          filterItems={this.props.filterItems}
+          filterList={this.props.filterList}
+          currentlyAppliedFilters={this.props.currentlyAppliedFilters}
+          filteredRows={this.props.filteredRows}
+          rows={this.props.rows}
+          />
       </div>
     );
   }
