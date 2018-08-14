@@ -30212,6 +30212,9 @@ var CSVTable = function (_React$Component) {
     return _this;
   }
 
+  // Sorts or reverse sorts all the rows based on a column's data type
+
+
   _createClass(CSVTable, [{
     key: 'sortColumn',
     value: function sortColumn(columnNum, sortType) {
@@ -30295,11 +30298,8 @@ var CSVTable = function (_React$Component) {
       this.setState(newState);
     }
 
-    // May need to separate functions out and have a parent function
-    // Open modal
-    // Create list
-    // Change state
-    // Apply-close or close-clear modal
+    // Creates the list of filter options that will populate a column's
+    // filter div
 
   }, {
     key: 'createFilterList',
@@ -30358,9 +30358,13 @@ var CSVTable = function (_React$Component) {
 
       this.setState(newState);
     }
+
+    // Creates the div with the list of available options for a column's
+    // filter
+
   }, {
-    key: 'createFilter',
-    value: function createFilter() {
+    key: 'createFilterDiv',
+    value: function createFilterDiv() {
       var _this2 = this;
 
       if (this.state.filterDisplay === "none") {
@@ -30448,17 +30452,10 @@ var CSVTable = function (_React$Component) {
         );
       }
     }
-  }, {
-    key: 'clearFilter',
-    value: function clearFilter() {
-      var columnNum = this.state.filterColumn;
-      var newState = this.state;
-      newState["currentlyAppliedFilters"][columnNum] = {};
-      for (var i = 0; i < newState.filterList.length; i++) {
-        newState.filterItems[newState.filterList[i]] = false;
-      }
-      this.setState(newState);
-    }
+
+    // Changes the value of whether a filter will be applied based on
+    // whether it is checked or not
+
   }, {
     key: 'changeFilterItemValue',
     value: function changeFilterItemValue(e) {
@@ -30480,6 +30477,9 @@ var CSVTable = function (_React$Component) {
         currentlyAppliedFilters: currentlyAppliedFilters
       });
     }
+
+    // Applies a filter to a column
+
   }, {
     key: 'applyFilter',
     value: function applyFilter() {
@@ -30544,12 +30544,23 @@ var CSVTable = function (_React$Component) {
 
       this.setState(newState);
     }
-    // filterItems in state might need to have more content, i.e. a row for each column already
-    // so that as filters are removed the apply filter function can look at remaining filters and
-    // keep those in place
-    // might need to reference an array of which filters are in place, i.e. that thought I had
-    // of having this.state.filterColumn be an array
-    // applyFilter would push column into array, removeFilter would remove it
+
+    // Clears a single column's filter for easier removal of filters
+    // (enhance UX)
+
+  }, {
+    key: 'clearFilter',
+    value: function clearFilter() {
+      var columnNum = this.state.filterColumn;
+      var newState = this.state;
+      newState["currentlyAppliedFilters"][columnNum] = {};
+      for (var i = 0; i < newState.filterList.length; i++) {
+        newState.filterItems[newState.filterList[i]] = false;
+      }
+      this.setState(newState);
+    }
+
+    // Clears all filters from all columns
 
   }, {
     key: 'clearFilters',
@@ -30566,6 +30577,9 @@ var CSVTable = function (_React$Component) {
       }
       this.setState(newState);
     }
+
+    // Changes the display for the column's stats box
+
   }, {
     key: 'toggleShowStats',
     value: function toggleShowStats(colNum) {
@@ -30576,6 +30590,9 @@ var CSVTable = function (_React$Component) {
         document.getElementById('colStats' + colNum.toString()).style.display = "";
       }
     }
+
+    // Show the box for the cell's row number on mouse over
+
   }, {
     key: 'showRow',
     value: function showRow(rowNum, rowCol) {
@@ -30583,6 +30600,9 @@ var CSVTable = function (_React$Component) {
         document.getElementById(rowNum.toString() + rowCol.toString()).style.display = "block";
       }
     }
+
+    // Hides the box for the cell's row number on mouse out
+
   }, {
     key: 'hideRow',
     value: function hideRow(rowNum, rowCol) {
@@ -30590,16 +30610,25 @@ var CSVTable = function (_React$Component) {
         document.getElementById(rowNum.toString() + rowCol.toString()).style.display = "";
       }
     }
+
+    // Shows the box for the column's data type on mouse over
+
   }, {
     key: 'showColDataType',
     value: function showColDataType(colNum) {
       document.getElementById('col-header-' + colNum.toString()).style.display = "block";
     }
+
+    // Hides the box for the column's data type on mouse out
+
   }, {
     key: 'hideColDataType',
     value: function hideColDataType(colNum) {
       document.getElementById('col-header-' + colNum.toString()).style.display = "";
     }
+
+    // Create the table of cells with data from the CSV
+
   }, {
     key: 'createTable',
     value: function createTable() {
@@ -30916,7 +30945,7 @@ var CSVTable = function (_React$Component) {
         _react2.default.createElement(
           'div',
           null,
-          this.createFilter()
+          this.createFilterDiv()
         ),
         _react2.default.createElement(
           'ul',

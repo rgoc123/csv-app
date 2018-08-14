@@ -21,6 +21,7 @@ class CSVTable extends React.Component {
     this.clearFilter = this.clearFilter.bind(this);
   }
 
+  // Sorts or reverse sorts all the rows based on a column's data type
   sortColumn(columnNum, sortType) {
     // sort column
     // create hash
@@ -102,11 +103,8 @@ class CSVTable extends React.Component {
     this.setState(newState);
   }
 
-  // May need to separate functions out and have a parent function
-    // Open modal
-    // Create list
-    // Change state
-    // Apply-close or close-clear modal
+  // Creates the list of filter options that will populate a column's
+  // filter div
   createFilterList(columnNum) {
     // Pretty sure the below 3 lines are unnecessary
     // this.setState({
@@ -161,7 +159,9 @@ class CSVTable extends React.Component {
     this.setState(newState);
   }
 
-  createFilter() {
+  // Creates the div with the list of available options for a column's
+  // filter
+  createFilterDiv() {
     if (this.state.filterDisplay === "none") {
       return null;
     } else {
@@ -218,16 +218,8 @@ class CSVTable extends React.Component {
     }
   }
 
-  clearFilter() {
-    let columnNum = this.state.filterColumn;
-    let newState = this.state;
-    newState["currentlyAppliedFilters"][columnNum] = {};
-    for(let i = 0; i < newState.filterList.length; i++) {
-      newState.filterItems[newState.filterList[i]] = false;
-    }
-    this.setState(newState);
-  }
-
+  // Changes the value of whether a filter will be applied based on
+  // whether it is checked or not
   changeFilterItemValue(e) {
     let filterItem = e.target.value;
     let filterItems = this.state.filterItems;
@@ -248,6 +240,7 @@ class CSVTable extends React.Component {
     });
   }
 
+  // Applies a filter to a column
   applyFilter() {
     let columnsToFilter = this.state.columnsToFilter.slice(0);
     if (Object.keys(this.state.currentlyAppliedFilters[this.state.filterColumn]).length === 0) {
@@ -307,13 +300,20 @@ class CSVTable extends React.Component {
     this.setState(newState);
 
   }
-  // filterItems in state might need to have more content, i.e. a row for each column already
-  // so that as filters are removed the apply filter function can look at remaining filters and
-  // keep those in place
-    // might need to reference an array of which filters are in place, i.e. that thought I had
-    // of having this.state.filterColumn be an array
-    // applyFilter would push column into array, removeFilter would remove it
 
+  // Clears a single column's filter for easier removal of filters
+  // (enhance UX)
+  clearFilter() {
+    let columnNum = this.state.filterColumn;
+    let newState = this.state;
+    newState["currentlyAppliedFilters"][columnNum] = {};
+    for(let i = 0; i < newState.filterList.length; i++) {
+      newState.filterItems[newState.filterList[i]] = false;
+    }
+    this.setState(newState);
+  }
+
+  // Clears all filters from all columns
   clearFilters() {
     let newState = this.state;
     newState["columnsToFilter"] = [];
@@ -328,6 +328,7 @@ class CSVTable extends React.Component {
     this.setState(newState);
   }
 
+  // Changes the display for the column's stats box
   toggleShowStats(colNum) {
     let colStatsDisplay = document.getElementById('colStats' + colNum.toString()).style.display;
     if (colStatsDisplay === "") {
@@ -337,26 +338,31 @@ class CSVTable extends React.Component {
     }
   }
 
+  // Show the box for the cell's row number on mouse over
   showRow(rowNum, rowCol) {
     if (this.state.sortingHash !== {}) {
       document.getElementById(rowNum.toString() + rowCol.toString()).style.display = "block";
     }
   }
 
+  // Hides the box for the cell's row number on mouse out
   hideRow(rowNum, rowCol) {
     if (this.state.sortingHash !== {}) {
       document.getElementById(rowNum.toString() + rowCol.toString()).style.display = "";
     }
   }
 
+  // Shows the box for the column's data type on mouse over
   showColDataType(colNum) {
     document.getElementById('col-header-' + colNum.toString()).style.display = "block";
   }
 
+  // Hides the box for the column's data type on mouse out
   hideColDataType(colNum) {
     document.getElementById('col-header-' + colNum.toString()).style.display = "";
   }
 
+  // Create the table of cells with data from the CSV
   createTable() {
     // If no CSV has been uploaded, don't create a table
     if (this.props.rows.length === 0) {
@@ -557,7 +563,7 @@ class CSVTable extends React.Component {
     return (
       <div className="table-div">
         <button style={{"display": clearFiltersStyle}} onClick={() => this.clearFilters()}>Clear Filters</button>
-        <div>{this.createFilter()}</div>
+        <div>{this.createFilterDiv()}</div>
         <ul className="table-ul">
           {this.createTable()}
         </ul>
