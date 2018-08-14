@@ -165,7 +165,6 @@ class CSVTable extends React.Component {
     if (this.state.filterDisplay === "none") {
       return null;
     } else {
-      // can change below line to this.state.filterList[colNum].map
       let newState = this.state;
 
       function createCheckbox(item) {

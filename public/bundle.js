@@ -30413,7 +30413,6 @@ var CSVTable = function (_React$Component) {
           });
         };
 
-        // can change below line to this.state.filterList[colNum].map
         var newState = this.state;
 
         createCheckbox = createCheckbox.bind(this);
