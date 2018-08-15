@@ -30211,8 +30211,6 @@ var CSVTable = function (_React$Component) {
       filteredRows: [],
       sortingHash: {}
     };
-    _this.changeFilterItemValue = _this.changeFilterItemValue.bind(_this);
-    _this.applyFilter = _this.applyFilter.bind(_this);
     _this.clearFilter = _this.clearFilter.bind(_this);
     _this.newApply = _this.newApply.bind(_this);
     return _this;
@@ -30304,245 +30302,6 @@ var CSVTable = function (_React$Component) {
       this.setState(newState);
     }
 
-    // Creates the list of filter options that will populate a column's
-    // filter div
-
-  }, {
-    key: 'createFilterList',
-    value: function createFilterList(columnNum) {
-      var newState = this.state;
-
-      if (newState.filterDisplay === "none") {
-        newState["filterDisplay"] = "block";
-      } else {
-        newState["filterDisplay"] = "none";
-        // Add clear filter function here
-      }
-
-      var columnToCreateListFrom = [];
-      if (newState.filteredRows.length === 0) {
-        columnToCreateListFrom = this.state[columnNum];
-      } else {
-        for (var i = 1; i < this.state.filteredRows.length; i++) {
-          columnToCreateListFrom.push(this.state.filteredRows[i][columnNum]);
-        }
-      }
-
-      var filterHash = {};
-      for (var _i3 = 0; _i3 < columnToCreateListFrom.length; _i3++) {
-        var val = void 0;
-        var actualVal = void 0;
-        if (this.state.filteredRows.length > 0) {
-          actualVal = columnToCreateListFrom[_i3];
-        } else {
-          val = columnToCreateListFrom[_i3];
-          actualVal = val[0];
-        }
-        if (this.state.currentlyAppliedFilters[columnNum][actualVal] === true) {
-          filterHash[actualVal] = true;
-        } else {
-          filterHash[actualVal] = false;
-        }
-      }
-
-      var newColumnsToFilter = this.state.columnsToFilter.slice(0);
-      if (!newColumnsToFilter.includes(columnNum)) newColumnsToFilter.push(columnNum);
-
-      newState["filterColumn"] = columnNum;
-      newState["columnsToFilter"] = newColumnsToFilter;
-      newState["filterList"] = Object.keys(filterHash).sort();
-      newState["filterItems"] = filterHash;
-
-      this.setState(newState);
-    }
-
-    // Creates the div with the list of available options for a column's
-    // filter
-
-  }, {
-    key: 'createFilterDiv',
-    value: function createFilterDiv() {
-      var _this2 = this;
-
-      if (this.state.filterDisplay === "none") {
-        return null;
-      } else {
-        var createCheckbox = function createCheckbox(item) {
-          if (this.state.currentlyAppliedFilters[this.state.filterColumn][item] === true) {
-            return _react2.default.createElement(
-              'div',
-              { className: 'checkbox-container',
-                key: item },
-              _react2.default.createElement('input', { id: item,
-                className: 'checkbox',
-                type: 'checkbox',
-                value: item,
-                onChange: this.changeFilterItemValue,
-                checked: true
-              }),
-              _react2.default.createElement(
-                'label',
-                null,
-                item
-              )
-            );
-          } else {
-            return _react2.default.createElement(
-              'div',
-              { className: 'checkbox-container',
-                key: item },
-              _react2.default.createElement('input', { id: item,
-                className: 'checkbox',
-                type: 'checkbox',
-                value: item,
-                onChange: this.changeFilterItemValue
-              }),
-              _react2.default.createElement(
-                'label',
-                null,
-                item
-              )
-            );
-          }
-        };
-
-        var cancelFilter = function cancelFilter() {
-          this.setState({
-            filterDisplay: "none"
-          });
-        };
-
-        var newState = this.state;
-
-        createCheckbox = createCheckbox.bind(this);
-
-        var checkboxes = this.state.filterList.map(function (item) {
-          return createCheckbox(item);
-        });
-
-        cancelFilter = cancelFilter.bind(this);
-
-        return _react2.default.createElement(
-          'div',
-          { className: 'filter-div' },
-          _react2.default.createElement(
-            'div',
-            { onClick: function onClick() {
-                return _this2.applyFilter();
-              } },
-            'Apply'
-          ),
-          _react2.default.createElement(
-            'div',
-            { onClick: function onClick() {
-                return _this2.clearFilter();
-              } },
-            'Clear Filter'
-          ),
-          _react2.default.createElement(
-            'div',
-            { onClick: function onClick() {
-                return cancelFilter();
-              } },
-            'Cancel'
-          ),
-          checkboxes
-        );
-      }
-    }
-
-    // Changes the value of whether a filter will be applied based on
-    // whether it is checked or not
-
-  }, {
-    key: 'changeFilterItemValue',
-    value: function changeFilterItemValue(e) {
-      var filterItem = e.target.value;
-      var filterItems = this.state.filterItems;
-      var filterColumn = this.state.filterColumn;
-      var currentlyAppliedFiltersCol = this.state.currentlyAppliedFilters[filterColumn];
-      if (filterItems[filterItem] === true) {
-        filterItems[filterItem] = false;
-        delete currentlyAppliedFiltersCol[filterItem];
-      } else {
-        filterItems[filterItem] = true;
-        currentlyAppliedFiltersCol[filterItem] = true;
-      }
-      var currentlyAppliedFilters = this.state.currentlyAppliedFilters;
-      currentlyAppliedFilters[filterColumn] = currentlyAppliedFiltersCol;
-      this.setState({
-        filterItems: filterItems,
-        currentlyAppliedFilters: currentlyAppliedFilters
-      });
-    }
-
-    // Applies a filter to a column
-
-  }, {
-    key: 'applyFilter',
-    value: function applyFilter() {
-      var _this3 = this;
-
-      var columnsToFilter = this.state.columnsToFilter.slice(0);
-      if (Object.keys(this.state.currentlyAppliedFilters[this.state.filterColumn]).length === 0) {
-        // remove column number from columnsToFilter
-        columnsToFilter = columnsToFilter.filter(function (col) {
-          return col !== _this3.state.filterColumn;
-        });
-      }
-
-      var newState = this.state;
-      var filteredColumnCount = columnsToFilter.length;
-
-      // Finds the IDs of rows in the column being filtered that meet the
-      // filter criteria and puts those IDs in an array for later reference
-      var filterIDs = [];
-      for (var k = 0; k < filteredColumnCount; k++) {
-        var columnNum = columnsToFilter[k];
-        var column = this.state[columnNum].slice(0);
-
-        if (k === 0) {
-          for (var p = 0; p < column.length; p++) {
-            if (this.state.currentlyAppliedFilters[columnNum][column[p][0]]) {
-              filterIDs.push(column[p][1]);
-            }
-          }
-        } else {
-          var tempFilterIds = [];
-          for (var _p = 0; _p < column.length; _p++) {
-            if (this.state.currentlyAppliedFilters[columnNum][column[_p][0]] && filterIDs.includes(column[_p][1])) {
-              tempFilterIds.push(column[_p][1]);
-            }
-          }
-          filterIDs = tempFilterIds;
-        }
-      }
-
-      var oldRows = newState.rows.slice(0);
-
-      // Creates a new array of rows with only those who have an ID
-      // in the filterIDs array
-      var newRows = [];
-      if (filterIDs.length !== 0) {
-        newRows = oldRows.slice(0, 1);
-        for (var i = 1; i < oldRows.length; i++) {
-          // CHANGE TO HASH FOR FASTER LOOKUP
-          if (filterIDs.includes(oldRows[i][oldRows[i].length - 1])) {
-            newRows.push(oldRows[i]);
-          }
-        }
-      }
-
-      newState["filteredRows"] = newRows;
-      newState["filterDisplay"] = "none";
-      newState["columnsToFilter"] = columnsToFilter;
-      newState["filterColumn"] = null;
-      newState["filterItems"] = {};
-      newState["filterList"] = [];
-
-      this.setState(newState);
-    }
-
     // Clears a single column's filter for easier removal of filters
     // (enhance UX)
 
@@ -30630,7 +30389,7 @@ var CSVTable = function (_React$Component) {
   }, {
     key: 'createTable',
     value: function createTable() {
-      var _this5 = this;
+      var _this3 = this;
 
       // If no CSV has been uploaded, don't create a table
       if (this.props.rows.length === 0) {
@@ -30700,7 +30459,7 @@ var CSVTable = function (_React$Component) {
 
         // Function for creating individual non-header rows
         var createRow = function createRow(i) {
-          var _this4 = this;
+          var _this2 = this;
 
           var row = [];
 
@@ -30708,10 +30467,10 @@ var CSVTable = function (_React$Component) {
             row.push(_react2.default.createElement(
               'span',
               { key: i.toString() + _k.toString(), onMouseOver: function onMouseOver() {
-                  return _this4.showRow(i, _k);
+                  return _this2.showRow(i, _k);
                 },
                 onMouseLeave: function onMouseLeave() {
-                  return _this4.hideRow(i, _k);
+                  return _this2.hideRow(i, _k);
                 } },
               tempNewRows[i][_k],
               _react2.default.createElement(
@@ -30753,7 +30512,7 @@ var CSVTable = function (_React$Component) {
 
         var _loop = function _loop(_j2) {
           var colStats = [];
-          if (tempNewRows === undefined) rows = _this5.state.rows;
+          if (tempNewRows === undefined) rows = _this3.state.rows;
           parsedType = parseFloat(tempNewRows[1][_j2]);
           parsedTypeLength = parsedType.toString().length;
 
@@ -30826,10 +30585,10 @@ var CSVTable = function (_React$Component) {
             'span',
             { key: _j2, className: 'col-header-cell',
               onMouseOver: function onMouseOver() {
-                return _this5.showColDataType(_j2);
+                return _this3.showColDataType(_j2);
               },
               onMouseLeave: function onMouseLeave() {
-                return _this5.hideColDataType(_j2);
+                return _this3.hideColDataType(_j2);
               } },
             _react2.default.createElement(
               'span',
@@ -30851,25 +30610,25 @@ var CSVTable = function (_React$Component) {
                 'div',
                 { className: 'sort-button',
                   onClick: function onClick() {
-                    return _this5.toggleShowStats(_j2);
+                    return _this3.toggleShowStats(_j2);
                   }
                 },
                 'Stats'
               ),
               _react2.default.createElement(_HeaderButtons2.default, {
                 columnNum: _j2,
-                column: _this5.state[_j2],
-                columnFilterList: _this5.state['column' + _j2 + 'FilterList'].sort(),
-                columnFilterHash: _this5.state['column' + _j2 + 'FilterHash'],
-                filterDisplay: _this5.state.filterDisplay,
-                filterColumn: _this5.state.filterColumn,
-                columnsToFilter: _this5.state.columnsToFilter,
-                filterItems: _this5.state.filterItems,
-                filterList: _this5.state.filterList,
-                currentlyAppliedFilters: _this5.state.currentlyAppliedFilters,
-                filteredRows: _this5.state.filteredRows,
-                rows: _this5.state.rows,
-                newApply: _this5.newApply
+                column: _this3.state[_j2],
+                columnFilterList: _this3.state['column' + _j2 + 'FilterList'].sort(),
+                columnFilterHash: _this3.state['column' + _j2 + 'FilterHash'],
+                filterDisplay: _this3.state.filterDisplay,
+                filterColumn: _this3.state.filterColumn,
+                columnsToFilter: _this3.state.columnsToFilter,
+                filterItems: _this3.state.filterItems,
+                filterList: _this3.state.filterList,
+                currentlyAppliedFilters: _this3.state.currentlyAppliedFilters,
+                filteredRows: _this3.state.filteredRows,
+                rows: _this3.state.rows,
+                newApply: _this3.newApply
               }),
               _react2.default.createElement(
                 'div',
@@ -30980,7 +30739,7 @@ var CSVTable = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this6 = this;
+      var _this4 = this;
 
       console.log(this.state);
       var clearFiltersStyle = this.props.rows.length === 0 ? "none" : "inline-block";
@@ -30991,14 +30750,9 @@ var CSVTable = function (_React$Component) {
         _react2.default.createElement(
           'button',
           { style: { "display": clearFiltersStyle }, onClick: function onClick() {
-              return _this6.clearFilters();
+              return _this4.clearFilters();
             } },
           'Clear Filters'
-        ),
-        _react2.default.createElement(
-          'div',
-          null,
-          this.createFilterDiv()
         ),
         _react2.default.createElement(
           'ul',
