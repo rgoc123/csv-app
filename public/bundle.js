@@ -29430,25 +29430,51 @@ var CSVTableParent = function (_React$Component) {
 
     _this.state = {
       rows: [],
-      newCol: []
+      newCol: [],
+      loading: ''
     };
     _this.handleForce = _this.handleForce.bind(_this);
+    _this.createTable2 = _this.createTable2.bind(_this);
     return _this;
   }
 
   _createClass(CSVTableParent, [{
     key: 'handleForce',
     value: function handleForce(data) {
-      this.setState({
-        rows: data
-      });
-      var newRows = this.state.rows;
+      // this.setState({
+      //   rows: data
+      // });
+      var newRows = data;
       for (var i = 1; i < newRows.length; i++) {
         newRows[i].push(i);
       }
       this.setState({
-        rows: newRows
+        rows: newRows,
+        loading: 'loading'
       });
+    }
+  }, {
+    key: 'createTable2',
+    value: function createTable2() {
+      if (this.state.rows.length === 0) {
+        return null;
+      } else if (this.state.loading === 'loading') {
+        return _react2.default.createElement(
+          'div',
+          { id: 'loading' },
+          'Loading'
+        );
+      } else {
+        return _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'div',
+            { className: 'table-div-container' },
+            _react2.default.createElement(_table2.default, { rows: this.state.rows })
+          )
+        );
+      }
     }
   }, {
     key: 'render',
@@ -29461,12 +29487,19 @@ var CSVTableParent = function (_React$Component) {
           label: 'Choose a CSV file to upload',
           onFileLoaded: this.handleForce
         }),
-        _react2.default.createElement(
-          'div',
-          { className: 'table-div-container' },
-          _react2.default.createElement(_table2.default, { rows: this.state.rows })
-        )
+        this.createTable2()
       );
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      var _this2 = this;
+
+      if (this.state.loading === 'loading') {
+        setTimeout(function () {
+          return _this2.setState({ loading: 'not-loading' });
+        }, 1000);
+      }
     }
   }]);
 
