@@ -145,3 +145,10 @@ span {
   left: -1px;
   z-index: 1;
 }
+
+#loading {
+  color: white;
+  background-image: url('loading.gif');
+  height: 300px;
+  width: 300px;
+}
