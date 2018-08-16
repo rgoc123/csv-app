@@ -29457,10 +29457,8 @@ var CSVTableParent = function (_React$Component) {
     key: 'createTable2',
     value: function createTable2() {
       if (this.state.rows.length === 0) {
-        console.log("First render");
         return null;
       } else if (this.state.loading === 'loading') {
-        console.log("Data loading");
         return _react2.default.createElement(
           'div',
           { id: 'loading' },
@@ -29481,8 +29479,6 @@ var CSVTableParent = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      console.log("Rendering table parent");
-      console.log(this.state);
       return _react2.default.createElement(
         'div',
         { className: 'table-parent' },
@@ -29499,7 +29495,6 @@ var CSVTableParent = function (_React$Component) {
     value: function componentDidUpdate() {
       var _this2 = this;
 
-      console.log("Table parent updated");
       if (this.state.loading === 'loading') {
         setTimeout(function () {
           return _this2.setState({ loading: 'not-loading' });
@@ -30727,7 +30722,6 @@ var CSVTable = function (_React$Component) {
     value: function newApply(colNum, colFilterHash) {
       var col = colNum;
       var filterHash = colFilterHash;
-      console.log("Setting parent state");
 
       var newState = this.state;
       newState['column' + col + 'FilterHash'] = filterHash;
@@ -30779,7 +30773,6 @@ var CSVTable = function (_React$Component) {
     value: function render() {
       var _this4 = this;
 
-      console.log(this.state);
       var clearFiltersStyle = this.props.rows.length === 0 ? "none" : "inline-block";
 
       return _react2.default.createElement(

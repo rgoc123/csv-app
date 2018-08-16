@@ -34,10 +34,8 @@ class CSVTableParent extends React.Component {
 
   createTable2() {
     if (this.state.rows.length === 0) {
-      console.log("First render");
       return null;
     } else if (this.state.loading === 'loading') {
-      console.log("Data loading");
       return (<div id="loading">Loading</div>);
     } else {
       return (
@@ -51,8 +49,6 @@ class CSVTableParent extends React.Component {
   }
 
   render() {
-    console.log("Rendering table parent");
-    console.log(this.state);
     return (
       <div className="table-parent">
         <CSVReader
@@ -66,7 +62,6 @@ class CSVTableParent extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log("Table parent updated");
     if (this.state.loading === 'loading') {
       setTimeout(() => this.setState({loading: 'not-loading'}), 1000);
     }

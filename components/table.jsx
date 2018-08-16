@@ -385,7 +385,6 @@ class CSVTable extends React.Component {
   newApply(colNum, colFilterHash) {
     let col = colNum;
     let filterHash = colFilterHash;
-    console.log("Setting parent state");
 
     let newState = this.state;
     newState[`column${col}FilterHash`] = filterHash;
@@ -434,7 +433,6 @@ class CSVTable extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     let clearFiltersStyle = this.props.rows.length === 0 ? "none" : "inline-block";
 
     return (
