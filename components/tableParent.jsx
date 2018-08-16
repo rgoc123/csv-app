@@ -19,9 +19,6 @@ class CSVTableParent extends React.Component {
   }
 
   handleForce(data) {
-    // this.setState({
-    //   rows: data
-    // });
     let newRows = data;
     for (let i = 1; i < newRows.length; i++) {
       newRows[i].push(i);

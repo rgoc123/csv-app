@@ -29441,9 +29441,6 @@ var CSVTableParent = function (_React$Component) {
   _createClass(CSVTableParent, [{
     key: 'handleForce',
     value: function handleForce(data) {
-      // this.setState({
-      //   rows: data
-      // });
       var newRows = data;
       for (var i = 1; i < newRows.length; i++) {
         newRows[i].push(i);

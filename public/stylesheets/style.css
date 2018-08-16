@@ -151,4 +151,5 @@ span {
   background-image: url('loading.gif');
   height: 300px;
   width: 300px;
+  margin: 30px auto 0 auto;
 }
