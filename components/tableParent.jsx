@@ -39,10 +39,8 @@ class CSVTableParent extends React.Component {
       return (<div id="loading">Loading</div>);
     } else {
       return (
-        <div>
-          <div className="table-div-container">
-            <CSVTable rows={this.state.rows}/>
-          </div>
+        <div className="table-div-container">
+          <CSVTable rows={this.state.rows}/>
         </div>
       );
     }
