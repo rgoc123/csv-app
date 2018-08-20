@@ -30462,22 +30462,36 @@ var CSVTable = function (_React$Component) {
           }
         }
 
-        // Create each columns list of filter items if they don't already
+        // Create each column's list of filter items if they don't already
         // exist. Doing this here allows for creating the list only once
         // instead of each time a column's filter button is clicked.
         var newColumnCount = newState["rows"][0].length;
 
         for (var c = 0; c < newColumnCount; c++) {
+          // For each column create the below table state structures
           var columnFilterListName = "column" + c.toString() + "FilterList";
           var columnFilterHashName = "column" + c.toString() + "FilterHash";
+          var columnFilterListIDsName = "column" + c.toString() + "FilterListIDs";
           var columnFilterHash = {};
+          var columnFilterListIDsHash = {};
 
+          // For each row create a key in the column's filter hash
           for (var r = 0; r < newState[c].length; r++) {
+            // newState[1][1] could be ["Bobby", 1]
             var columnCellValue = newState[c][r][0];
+            var columnCellID = newState[c][r][1];
             columnFilterHash[columnCellValue] = false;
+            // Create an array of IDs for each item in a columns filter list.
+            // This will allow for faster lookup of matching rows later.
+            if (columnFilterListIDsHash[columnCellValue]) {
+              columnFilterListIDsHash[columnCellValue].push(columnCellID);
+            } else {
+              columnFilterListIDsHash[columnCellValue] = [columnCellID];
+            }
           }
           newState[columnFilterListName] = Object.keys(columnFilterHash);
           newState[columnFilterHashName] = columnFilterHash;
+          newState[columnFilterListIDsName] = columnFilterListIDsHash;
         }
 
         this.setState(newState);
