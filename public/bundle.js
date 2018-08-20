@@ -30766,6 +30766,7 @@ var CSVTable = function (_React$Component) {
     value: function render() {
       var _this4 = this;
 
+      console.log(this.state);
       var clearFiltersStyle = this.props.rows.length === 0 ? "none" : "inline-block";
 
       return _react2.default.createElement(
@@ -31025,11 +31026,6 @@ var Filter = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         { style: { "display": this.props.filterDisplay } },
-        _react2.default.createElement(
-          'h4',
-          null,
-          'This works'
-        ),
         this.createFilterDiv()
       );
     }

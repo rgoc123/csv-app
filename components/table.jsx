@@ -433,6 +433,7 @@ class CSVTable extends React.Component {
   }
 
   render() {
+    console.log(this.state);
     let clearFiltersStyle = this.props.rows.length === 0 ? "none" : "inline-block";
 
     return (

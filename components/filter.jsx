@@ -60,7 +60,6 @@ class Filter extends React.Component {
   render() {
     return (
       <div style={{"display": this.props.filterDisplay}}>
-        <h4>This works</h4>
         {this.createFilterDiv()}
       </div>
     );
