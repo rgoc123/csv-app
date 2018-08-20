@@ -89,6 +89,10 @@ span {
   width: 198px;
 }
 
+.sort-buttons-container {
+  display: flex;
+}
+
 .sort-buttons-div {
   left: 0;
   position: absolute;

@@ -23,7 +23,7 @@ class HeaderButtons extends React.Component {
 
   render() {
     return (
-      <div style={{'zIndex': '2'}}>
+      <div className="sort-buttons-container"  style={{'zIndex': '2'}}>
         <div
           className="sort-button"
           onClick={() => this.openFilter()}
