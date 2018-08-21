@@ -30859,8 +30859,8 @@ var CSVTable = function (_React$Component) {
       }
       return nums.map(function (num) {
         return _react2.default.createElement(
-          'button',
-          { onClick: function onClick() {
+          'div',
+          { className: 'page-button', onClick: function onClick() {
               return _this4.changePage(num);
             } },
           num

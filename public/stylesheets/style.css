@@ -157,3 +157,17 @@ span {
   width: 300px;
   margin: 30px auto 0 auto;
 }
+
+.page-buttons-container {
+  height: 36px;
+  overflow: auto;
+  display: flex;
+}
+
+.page-button {
+  background: white;
+  color: black;
+  padding: 0 5px;
+  margin: 0 2px;
+  border-radius: 4px;
+}
