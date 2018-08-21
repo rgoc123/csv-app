@@ -12,9 +12,11 @@ class Filter extends React.Component {
       filterList: [],
       columnFilterHash: this.props.columnFilterHash,
       currentlyAppliedFilters: {},
-      filteredRows: []
+      filteredRows: [],
+      itemsToFilterBy: []
     }
     this.changeFilterItemValue = this.changeFilterItemValue.bind(this);
+    this.newChangeFilterItemValue = this.newChangeFilterItemValue.bind(this);
   }
 
   changeFilterItemValue(e) {
@@ -30,6 +32,26 @@ class Filter extends React.Component {
     });
   }
 
+  newChangeFilterItemValue(e) {
+    let filterItem = e.target.value;
+    let filterHash = this.state.columnFilterHash;
+    let itemsToFilterBy = this.state.itemsToFilterBy;
+    // Deselecting a filter option
+    if (filterHash[filterItem] === true) {
+      filterHash[filterItem] = false;
+      let itemIndex = itemsToFilterBy.indexOf(filterItem);
+      itemsToFilterBy.splice(itemIndex, 1);
+    } else {
+      // Selecting a filter option
+      filterHash[filterItem] = true;
+      itemsToFilterBy.push(filterItem);
+    }
+    this.setState({
+      columnFilterHash: filterHash,
+      itemsToFilterBy: itemsToFilterBy
+    });
+  }
+
   createFilterDiv() {
     function createCheckbox(item) {
       return (
@@ -40,7 +62,7 @@ class Filter extends React.Component {
             className="checkbox"
             type="checkbox"
             value={item}
-            onChange={this.changeFilterItemValue}
+            onChange={this.newChangeFilterItemValue}
           />
           <label>{item}</label>
         </div>
@@ -51,7 +73,7 @@ class Filter extends React.Component {
     let checkboxes = this.props.columnFilterList.map(item => createCheckbox(item));
     return (
       <div className="filter-div">
-        <button onClick={() => this.props.newApply(this.props.columnNum, this.state.columnFilterHash)}>New Appy</button>
+        <button onClick={() => this.props.newNewApply(this.props.columnNum, this.state.columnFilterHash, this.state.itemsToFilterBy)}>New Appy</button>
         {checkboxes}
       </div>
     );

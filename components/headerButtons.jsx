@@ -42,6 +42,7 @@ class HeaderButtons extends React.Component {
           columnFilterList={this.props.columnFilterList}
           columnFilterHash={this.props.columnFilterHash}
           newApply={this.props.newApply}
+          newNewApply={this.props.newNewApply}
           filterDisplay={this.state.filterDisplay}
           filterColumn={this.props.filterColumn}
           columnsToFilter={this.props.columnsToFilter}

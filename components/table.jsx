@@ -21,6 +21,7 @@ class CSVTable extends React.Component {
     };
     this.clearFilter = this.clearFilter.bind(this);
     this.newApply = this.newApply.bind(this);
+    this.newNewApply = this.newNewApply.bind(this);
   }
 
   // Sorts or reverse sorts all the rows based on a column's data type
@@ -347,6 +348,7 @@ class CSVTable extends React.Component {
                 filteredRows={this.state.filteredRows}
                 rows={this.state.rows}
                 newApply={this.newApply}
+                newNewApply={this.newNewApply}
                 />
               <div id={"colStats" + j.toString()} className="column-stats">
                 <span key={j.toString()}>Column Stats</span>
@@ -394,6 +396,25 @@ class CSVTable extends React.Component {
         }
       });
     }
+  }
+
+  newNewApply(colNum, colFilterHash, itemsToFilterBy) {
+    // get columnsToFilter from state, push colNum if it's not in there
+    // have a new array of IDs
+    // for each column in columnsToFilter
+      // find true filters
+      // find their IDs
+      // compare IDs to newIDs
+      // push matches into new array
+      // set new IDs to new array
+    // reset filteredRows to []
+    // for each id in new IDs, add that row to filteredRows
+    // set new state
+    let newState = this.state;
+    let columnsToFilter = newState.columnsToFilter.slice(0);
+    console.log(colFilterHash);
+    console.log(itemsToFilterBy);
+
   }
 
   newApply(colNum, colFilterHash) {

@@ -30239,6 +30239,7 @@ var CSVTable = function (_React$Component) {
     };
     _this.clearFilter = _this.clearFilter.bind(_this);
     _this.newApply = _this.newApply.bind(_this);
+    _this.newNewApply = _this.newNewApply.bind(_this);
     return _this;
   }
 
@@ -30668,7 +30669,8 @@ var CSVTable = function (_React$Component) {
                 currentlyAppliedFilters: _this3.state.currentlyAppliedFilters,
                 filteredRows: _this3.state.filteredRows,
                 rows: _this3.state.rows,
-                newApply: _this3.newApply
+                newApply: _this3.newApply,
+                newNewApply: _this3.newNewApply
               }),
               _react2.default.createElement(
                 'div',
@@ -30723,6 +30725,25 @@ var CSVTable = function (_React$Component) {
           }
         });
       }
+    }
+  }, {
+    key: 'newNewApply',
+    value: function newNewApply(colNum, colFilterHash, itemsToFilterBy) {
+      // get columnsToFilter from state, push colNum if it's not in there
+      // have a new array of IDs
+      // for each column in columnsToFilter
+      // find true filters
+      // find their IDs
+      // compare IDs to newIDs
+      // push matches into new array
+      // set new IDs to new array
+      // reset filteredRows to []
+      // for each id in new IDs, add that row to filteredRows
+      // set new state
+      var newState = this.state;
+      var columnsToFilter = newState.columnsToFilter.slice(0);
+      console.log(colFilterHash);
+      console.log(itemsToFilterBy);
     }
   }, {
     key: 'newApply',
@@ -30909,6 +30930,7 @@ var HeaderButtons = function (_React$Component) {
           columnFilterList: this.props.columnFilterList,
           columnFilterHash: this.props.columnFilterHash,
           newApply: this.props.newApply,
+          newNewApply: this.props.newNewApply,
           filterDisplay: this.state.filterDisplay,
           filterColumn: this.props.filterColumn,
           columnsToFilter: this.props.columnsToFilter,
@@ -30972,9 +30994,11 @@ var Filter = function (_React$Component) {
       filterList: [],
       columnFilterHash: _this.props.columnFilterHash,
       currentlyAppliedFilters: {},
-      filteredRows: []
+      filteredRows: [],
+      itemsToFilterBy: []
     };
     _this.changeFilterItemValue = _this.changeFilterItemValue.bind(_this);
+    _this.newChangeFilterItemValue = _this.newChangeFilterItemValue.bind(_this);
     return _this;
   }
 
@@ -30993,6 +31017,27 @@ var Filter = function (_React$Component) {
       });
     }
   }, {
+    key: 'newChangeFilterItemValue',
+    value: function newChangeFilterItemValue(e) {
+      var filterItem = e.target.value;
+      var filterHash = this.state.columnFilterHash;
+      var itemsToFilterBy = this.state.itemsToFilterBy;
+      // Deselecting a filter option
+      if (filterHash[filterItem] === true) {
+        filterHash[filterItem] = false;
+        var itemIndex = itemsToFilterBy.indexOf(filterItem);
+        itemsToFilterBy.splice(itemIndex, 1);
+      } else {
+        // Selecting a filter option
+        filterHash[filterItem] = true;
+        itemsToFilterBy.push(filterItem);
+      }
+      this.setState({
+        columnFilterHash: filterHash,
+        itemsToFilterBy: itemsToFilterBy
+      });
+    }
+  }, {
     key: 'createFilterDiv',
     value: function createFilterDiv() {
       var _this2 = this;
@@ -31007,7 +31052,7 @@ var Filter = function (_React$Component) {
             className: 'checkbox',
             type: 'checkbox',
             value: item,
-            onChange: this.changeFilterItemValue
+            onChange: this.newChangeFilterItemValue
           }),
           _react2.default.createElement(
             'label',
@@ -31027,7 +31072,7 @@ var Filter = function (_React$Component) {
         _react2.default.createElement(
           'button',
           { onClick: function onClick() {
-              return _this2.props.newApply(_this2.props.columnNum, _this2.state.columnFilterHash);
+              return _this2.props.newNewApply(_this2.props.columnNum, _this2.state.columnFilterHash, _this2.state.itemsToFilterBy);
             } },
           'New Appy'
         ),
