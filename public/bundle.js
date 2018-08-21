@@ -30533,7 +30533,7 @@ var CSVTable = function (_React$Component) {
 
         var tempNewRows = void 0;
         var pageRowCountBegin = this.state.currentPage * 100 + 1 - 100;
-        var pageRowCountEnd = this.state.currentPage * 100;
+        var pageRowCountEnd = this.state.currentPage * 100 + 1;
         if (this.state.filteredRows.length !== 0) {
           tempNewRows = this.state.filteredRows.slice(0, 1);
           tempNewRows = tempNewRows.concat(this.state.filteredRows.slice(pageRowCountBegin, pageRowCountEnd));
@@ -30836,6 +30836,13 @@ var CSVTable = function (_React$Component) {
       this.setState(newState);
     }
   }, {
+    key: 'changePage',
+    value: function changePage(num) {
+      this.setState({
+        currentPage: num
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this4 = this;
@@ -30860,17 +30867,23 @@ var CSVTable = function (_React$Component) {
         ),
         _react2.default.createElement(
           'button',
-          null,
+          { onClick: function onClick() {
+              return _this4.changePage(1);
+            } },
           '1'
         ),
         _react2.default.createElement(
           'button',
-          null,
+          { onClick: function onClick() {
+              return _this4.changePage(2);
+            } },
           '2'
         ),
         _react2.default.createElement(
           'button',
-          null,
+          { onClick: function onClick() {
+              return _this4.changePage(3);
+            } },
           '3'
         )
       );

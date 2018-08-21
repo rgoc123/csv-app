@@ -253,7 +253,7 @@ class CSVTable extends React.Component {
 
       let tempNewRows;
       let pageRowCountBegin = (this.state.currentPage * 100 + 1) - 100;
-      let pageRowCountEnd = this.state.currentPage * 100;
+      let pageRowCountEnd = this.state.currentPage * 100 + 1;
       if (this.state.filteredRows.length !== 0) {
         tempNewRows = this.state.filteredRows.slice(0,1);
         tempNewRows = tempNewRows.concat(this.state.filteredRows.slice(pageRowCountBegin,pageRowCountEnd))
@@ -264,7 +264,7 @@ class CSVTable extends React.Component {
         tempNewRows = this.props.rows.slice(0,1);
         tempNewRows = tempNewRows.concat(this.props.rows.slice(pageRowCountBegin,pageRowCountEnd))
       }
-      
+
       let columnCount = this.state.rows[0].length;
 
       // This check is required when removing filters manually. If all
@@ -506,6 +506,12 @@ class CSVTable extends React.Component {
     this.setState(newState);
   }
 
+  changePage(num) {
+    this.setState({
+      currentPage: num
+    });
+  }
+
   render() {
     console.log(this.state);
     let clearFiltersStyle = this.props.rows.length === 0 ? "none" : "inline-block";
@@ -516,9 +522,9 @@ class CSVTable extends React.Component {
         <ul className="table-ul">
           {this.createTable()}
         </ul>
-        <button>1</button>
-        <button>2</button>
-        <button>3</button>
+        <button onClick={() => this.changePage(1)}>1</button>
+        <button onClick={() => this.changePage(2)}>2</button>
+        <button onClick={() => this.changePage(3)}>3</button>
       </div>
     );
   }
