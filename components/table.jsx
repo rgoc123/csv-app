@@ -524,7 +524,7 @@ class CSVTable extends React.Component {
       nums.push(i);
     }
     return nums.map(num => {
-      return (<div className="page-button" onClick={() => this.changePage(num)}>{num}</div>);
+      return (<div key={num} className="page-button" onClick={() => this.changePage(num)}>{num}</div>);
     });
   }
 
