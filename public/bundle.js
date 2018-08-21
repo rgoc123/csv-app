@@ -30781,6 +30781,7 @@ var CSVTable = function (_React$Component) {
       newState["filterIDs"] = newFilterIDs;
       newState['column' + colNum + 'FilterHash'] = colFilterHash;
       newState['currentlyAppliedFilters'][colNum] = colFilterHash;
+      newState['currentPage'] = 1;
 
       this.setState(newState);
     }
