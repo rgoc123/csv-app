@@ -512,6 +512,22 @@ class CSVTable extends React.Component {
     });
   }
 
+  createPageButtons() {
+    let pageNum;
+    if (this.state.filteredRows.length > 0) {
+      pageNum = Math.ceil(this.state.filteredRows.length / 100);
+    } else {
+      pageNum = Math.ceil(this.state.rows.length / 100);
+    }
+    let nums = [];
+    for (let i = 1; i < pageNum+1; i++) {
+      nums.push(i);
+    }
+    return nums.map(num => {
+      return (<button onClick={() => this.changePage(num)}>{num}</button>);
+    });
+  }
+
   render() {
     console.log(this.state);
     let clearFiltersStyle = this.props.rows.length === 0 ? "none" : "inline-block";
@@ -522,9 +538,9 @@ class CSVTable extends React.Component {
         <ul className="table-ul">
           {this.createTable()}
         </ul>
-        <button onClick={() => this.changePage(1)}>1</button>
-        <button onClick={() => this.changePage(2)}>2</button>
-        <button onClick={() => this.changePage(3)}>3</button>
+        <div className="page-buttons-container">
+          {this.createPageButtons()}
+        </div>
       </div>
     );
   }

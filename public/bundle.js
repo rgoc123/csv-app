@@ -30843,9 +30843,34 @@ var CSVTable = function (_React$Component) {
       });
     }
   }, {
+    key: 'createPageButtons',
+    value: function createPageButtons() {
+      var _this4 = this;
+
+      var pageNum = void 0;
+      if (this.state.filteredRows.length > 0) {
+        pageNum = Math.ceil(this.state.filteredRows.length / 100);
+      } else {
+        pageNum = Math.ceil(this.state.rows.length / 100);
+      }
+      var nums = [];
+      for (var i = 1; i < pageNum + 1; i++) {
+        nums.push(i);
+      }
+      return nums.map(function (num) {
+        return _react2.default.createElement(
+          'button',
+          { onClick: function onClick() {
+              return _this4.changePage(num);
+            } },
+          num
+        );
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
-      var _this4 = this;
+      var _this5 = this;
 
       console.log(this.state);
       var clearFiltersStyle = this.props.rows.length === 0 ? "none" : "inline-block";
@@ -30856,7 +30881,7 @@ var CSVTable = function (_React$Component) {
         _react2.default.createElement(
           'button',
           { style: { "display": clearFiltersStyle }, onClick: function onClick() {
-              return _this4.clearFilters();
+              return _this5.clearFilters();
             } },
           'Clear Filters'
         ),
@@ -30866,25 +30891,9 @@ var CSVTable = function (_React$Component) {
           this.createTable()
         ),
         _react2.default.createElement(
-          'button',
-          { onClick: function onClick() {
-              return _this4.changePage(1);
-            } },
-          '1'
-        ),
-        _react2.default.createElement(
-          'button',
-          { onClick: function onClick() {
-              return _this4.changePage(2);
-            } },
-          '2'
-        ),
-        _react2.default.createElement(
-          'button',
-          { onClick: function onClick() {
-              return _this4.changePage(3);
-            } },
-          '3'
+          'div',
+          { className: 'page-buttons-container' },
+          this.createPageButtons()
         )
       );
     }
