@@ -30236,7 +30236,8 @@ var CSVTable = function (_React$Component) {
       currentlyAppliedFilters: {},
       filteredRows: [],
       sortingHash: {},
-      filterIDs: []
+      filterIDs: [],
+      currentPage: 1
     };
     _this.clearFilter = _this.clearFilter.bind(_this);
     _this.newApply = _this.newApply.bind(_this);
@@ -30531,12 +30532,17 @@ var CSVTable = function (_React$Component) {
         };
 
         var tempNewRows = void 0;
+        var pageRowCountBegin = this.state.currentPage * 100 + 1 - 100;
+        var pageRowCountEnd = this.state.currentPage * 100;
         if (this.state.filteredRows.length !== 0) {
-          tempNewRows = this.state.filteredRows.slice(0);
+          tempNewRows = this.state.filteredRows.slice(0, 1);
+          tempNewRows = tempNewRows.concat(this.state.filteredRows.slice(pageRowCountBegin, pageRowCountEnd));
         } else if (this.state.rows.length !== 0) {
-          tempNewRows = this.state.rows.slice(0);
+          tempNewRows = this.state.rows.slice(0, 1);
+          tempNewRows = tempNewRows.concat(this.state.rows.slice(pageRowCountBegin, pageRowCountEnd));
         } else {
-          tempNewRows = this.props.rows.slice(0);
+          tempNewRows = this.props.rows.slice(0, 1);
+          tempNewRows = tempNewRows.concat(this.props.rows.slice(pageRowCountBegin, pageRowCountEnd));
         }
 
         var _columnCount = this.state.rows[0].length;
@@ -30775,7 +30781,6 @@ var CSVTable = function (_React$Component) {
       newState["filterIDs"] = newFilterIDs;
       newState['column' + colNum + 'FilterHash'] = colFilterHash;
       newState['currentlyAppliedFilters'][colNum] = colFilterHash;
-      // Don't forget to add new column filter hash to two places
 
       this.setState(newState);
     }
@@ -30852,6 +30857,21 @@ var CSVTable = function (_React$Component) {
           'ul',
           { className: 'table-ul' },
           this.createTable()
+        ),
+        _react2.default.createElement(
+          'button',
+          null,
+          '1'
+        ),
+        _react2.default.createElement(
+          'button',
+          null,
+          '2'
+        ),
+        _react2.default.createElement(
+          'button',
+          null,
+          '3'
         )
       );
     }

@@ -18,7 +18,8 @@ class CSVTable extends React.Component {
       currentlyAppliedFilters: {},
       filteredRows: [],
       sortingHash: {},
-      filterIDs: []
+      filterIDs: [],
+      currentPage: 1
     };
     this.clearFilter = this.clearFilter.bind(this);
     this.newApply = this.newApply.bind(this);
@@ -251,14 +252,19 @@ class CSVTable extends React.Component {
     } else {
 
       let tempNewRows;
+      let pageRowCountBegin = (this.state.currentPage * 100 + 1) - 100;
+      let pageRowCountEnd = this.state.currentPage * 100;
       if (this.state.filteredRows.length !== 0) {
-        tempNewRows = this.state.filteredRows.slice(0);
+        tempNewRows = this.state.filteredRows.slice(0,1);
+        tempNewRows = tempNewRows.concat(this.state.filteredRows.slice(pageRowCountBegin,pageRowCountEnd))
       } else if (this.state.rows.length !== 0) {
-        tempNewRows = this.state.rows.slice(0);
+        tempNewRows = this.state.rows.slice(0,1);
+        tempNewRows = tempNewRows.concat(this.state.rows.slice(pageRowCountBegin,pageRowCountEnd))
       } else {
-        tempNewRows = this.props.rows.slice(0);
+        tempNewRows = this.props.rows.slice(0,1);
+        tempNewRows = tempNewRows.concat(this.props.rows.slice(pageRowCountBegin,pageRowCountEnd))
       }
-
+      
       let columnCount = this.state.rows[0].length;
 
       // This check is required when removing filters manually. If all
@@ -445,7 +451,6 @@ class CSVTable extends React.Component {
     newState["filterIDs"] = newFilterIDs;
     newState[`column${colNum}FilterHash`] = colFilterHash;
     newState['currentlyAppliedFilters'][colNum] = colFilterHash;
-    // Don't forget to add new column filter hash to two places
 
     this.setState(newState);
 
@@ -511,6 +516,9 @@ class CSVTable extends React.Component {
         <ul className="table-ul">
           {this.createTable()}
         </ul>
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
       </div>
     );
   }
