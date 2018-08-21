@@ -30242,6 +30242,7 @@ var CSVTable = function (_React$Component) {
     _this.clearFilter = _this.clearFilter.bind(_this);
     _this.newApply = _this.newApply.bind(_this);
     _this.newNewApply = _this.newNewApply.bind(_this);
+    _this.sortColumn = _this.sortColumn.bind(_this);
     return _this;
   }
 
@@ -30677,7 +30678,8 @@ var CSVTable = function (_React$Component) {
                 filteredRows: _this3.state.filteredRows,
                 rows: _this3.state.rows,
                 newApply: _this3.newApply,
-                newNewApply: _this3.newNewApply
+                newNewApply: _this3.newNewApply,
+                sortColumn: _this3.sortColumn
               }),
               _react2.default.createElement(
                 'div',
@@ -30986,7 +30988,7 @@ var HeaderButtons = function (_React$Component) {
           {
             className: 'sort-button',
             onClick: function onClick() {
-              return _this2.sortColumn(j, "sort");
+              return _this2.props.sortColumn(_this2.props.columnNum, "sort");
             }
           },
           _react2.default.createElement('i', { className: 'fas fa-sort-down' })
@@ -30996,7 +30998,7 @@ var HeaderButtons = function (_React$Component) {
           {
             className: 'sort-button',
             onClick: function onClick() {
-              return _this2.sortColumn(j, "reverse");
+              return _this2.props.sortColumn(_this2.props.columnNum, "reverse");
             }
           },
           _react2.default.createElement('i', { className: 'fas fa-sort-up' })

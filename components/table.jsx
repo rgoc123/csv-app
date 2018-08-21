@@ -24,6 +24,7 @@ class CSVTable extends React.Component {
     this.clearFilter = this.clearFilter.bind(this);
     this.newApply = this.newApply.bind(this);
     this.newNewApply = this.newNewApply.bind(this);
+    this.sortColumn = this.sortColumn.bind(this);
   }
 
   // Sorts or reverse sorts all the rows based on a column's data type
@@ -356,6 +357,7 @@ class CSVTable extends React.Component {
                 rows={this.state.rows}
                 newApply={this.newApply}
                 newNewApply={this.newNewApply}
+                sortColumn={this.sortColumn}
                 />
               <div id={"colStats" + j.toString()} className="column-stats">
                 <span key={j.toString()}>Column Stats</span>

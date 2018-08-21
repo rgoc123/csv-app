@@ -30,11 +30,11 @@ class HeaderButtons extends React.Component {
           ><i className="fas fa-filter"></i></div>
         <div
           className="sort-button"
-          onClick={() => this.sortColumn(j, "sort")}
+          onClick={() => this.props.sortColumn(this.props.columnNum, "sort")}
           ><i className="fas fa-sort-down"></i></div>
         <div
           className="sort-button"
-          onClick={() => this.sortColumn(j, "reverse")}
+          onClick={() => this.props.sortColumn(this.props.columnNum, "reverse")}
           ><i className="fas fa-sort-up"></i></div>
         <Filter
           columnNum={this.props.columnNum}
