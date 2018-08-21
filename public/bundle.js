@@ -30235,7 +30235,8 @@ var CSVTable = function (_React$Component) {
       filterList: [],
       currentlyAppliedFilters: {},
       filteredRows: [],
-      sortingHash: {}
+      sortingHash: {},
+      filterIDs: []
     };
     _this.clearFilter = _this.clearFilter.bind(_this);
     _this.newApply = _this.newApply.bind(_this);
@@ -30742,8 +30743,41 @@ var CSVTable = function (_React$Component) {
       // set new state
       var newState = this.state;
       var columnsToFilter = newState.columnsToFilter.slice(0);
-      console.log(colFilterHash);
-      console.log(itemsToFilterBy);
+      // console.log(columnsToFilter);
+      // console.log(colFilterHash);
+      // console.log(itemsToFilterBy);
+      if (itemsToFilterBy.length > 0 && !columnsToFilter.includes(colNum)) {
+        columnsToFilter.push(colNum);
+      } else if (itemsToFilterBy.length === 0 && columnsToFilter.includes(colNum)) {
+        var indexToRemove = columnsToFilter.indexOf(colNum);
+        columnsToFilter.splice(indexToRemove, 1);
+      }
+      // console.log(columnsToFilter);
+
+      var currentFilterIDs = this.state.filterIDs.slice(0);
+      var newFilterIDs = [];
+      for (var i = 0; i < itemsToFilterBy.length; i++) {
+        var item = itemsToFilterBy[i];
+        var itemIDs = newState['column' + colNum + 'FilterListIDs'][item].slice(0);
+        // console.log(itemIDs);
+        newFilterIDs = newFilterIDs.concat(itemIDs);
+      }
+
+      // console.log(newFilterIDs);
+      var oldRows = newState.rows.slice(0);
+      var newRows = oldRows.slice(0, 1);
+      for (var _i3 = 0; _i3 < newFilterIDs.length; _i3++) {
+        var rowID = newFilterIDs[_i3];
+        newRows.push(oldRows[rowID]);
+      }
+
+      newState["filteredRows"] = newRows;
+      newState["filterIDs"] = newFilterIDs;
+      newState['column' + colNum + 'FilterHash'] = colFilterHash;
+      newState['currentlyAppliedFilters'][colNum] = colFilterHash;
+      // Don't forget to add new column filter hash to two places
+
+      this.setState(newState);
     }
   }, {
     key: 'newApply',

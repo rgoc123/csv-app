@@ -17,7 +17,8 @@ class CSVTable extends React.Component {
       filterList: [],
       currentlyAppliedFilters: {},
       filteredRows: [],
-      sortingHash: {}
+      sortingHash: {},
+      filterIDs: []
     };
     this.clearFilter = this.clearFilter.bind(this);
     this.newApply = this.newApply.bind(this);
@@ -412,8 +413,41 @@ class CSVTable extends React.Component {
     // set new state
     let newState = this.state;
     let columnsToFilter = newState.columnsToFilter.slice(0);
-    console.log(colFilterHash);
-    console.log(itemsToFilterBy);
+    // console.log(columnsToFilter);
+    // console.log(colFilterHash);
+    // console.log(itemsToFilterBy);
+    if (itemsToFilterBy.length > 0 && !columnsToFilter.includes(colNum)) {
+      columnsToFilter.push(colNum);
+    } else if (itemsToFilterBy.length === 0 && columnsToFilter.includes(colNum)) {
+      let indexToRemove = columnsToFilter.indexOf(colNum);
+      columnsToFilter.splice(indexToRemove, 1);
+    }
+    // console.log(columnsToFilter);
+
+    let currentFilterIDs = this.state.filterIDs.slice(0);
+    let newFilterIDs = [];
+    for (let i = 0; i < itemsToFilterBy.length; i++) {
+      let item = itemsToFilterBy[i];
+      let itemIDs = newState[`column${colNum}FilterListIDs`][item].slice(0);
+      // console.log(itemIDs);
+      newFilterIDs = newFilterIDs.concat(itemIDs);
+    }
+
+    // console.log(newFilterIDs);
+    let oldRows = newState.rows.slice(0);
+    let newRows = oldRows.slice(0,1);
+    for (let i = 0; i < newFilterIDs.length; i++) {
+      let rowID = newFilterIDs[i];
+      newRows.push(oldRows[rowID]);
+    }
+
+    newState["filteredRows"] = newRows;
+    newState["filterIDs"] = newFilterIDs;
+    newState[`column${colNum}FilterHash`] = colFilterHash;
+    newState['currentlyAppliedFilters'][colNum] = colFilterHash;
+    // Don't forget to add new column filter hash to two places
+
+    this.setState(newState);
 
   }
 
