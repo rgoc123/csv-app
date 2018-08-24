@@ -30949,16 +30949,15 @@ var HeaderButtons = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (HeaderButtons.__proto__ || Object.getPrototypeOf(HeaderButtons)).call(this, props));
 
     _this.state = {
-      filterDisplay: "none"
+      filterDisplay: _this.props.filterDisplay
     };
+    _this.closeFilter = _this.closeFilter.bind(_this);
     return _this;
   }
 
   _createClass(HeaderButtons, [{
     key: 'openFilter',
     value: function openFilter() {
-      var newState = this.state;
-
       if (this.state.filterDisplay === "none") {
         this.setState({ filterDisplay: "block" });
       } else {
@@ -30966,10 +30965,16 @@ var HeaderButtons = function (_React$Component) {
       }
     }
   }, {
+    key: 'closeFilter',
+    value: function closeFilter() {
+      this.setState({ filterDisplay: "none" });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
 
+      console.log("Buttons filDis:" + this.state.filterDisplay);
       return _react2.default.createElement(
         'div',
         { className: 'sort-buttons-container', style: { 'zIndex': '2' } },
@@ -31008,6 +31013,7 @@ var HeaderButtons = function (_React$Component) {
           column: this.props.column,
           columnFilterList: this.props.columnFilterList,
           columnFilterHash: this.props.columnFilterHash,
+          closeFilter: this.closeFilter,
           newApply: this.props.newApply,
           newNewApply: this.props.newNewApply,
           filterDisplay: this.state.filterDisplay,
@@ -31065,8 +31071,8 @@ var Filter = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (Filter.__proto__ || Object.getPrototypeOf(Filter)).call(this, props));
 
+    console.log(_this.props);
     _this.state = {
-      filterDisplay: _this.props.filterDisplay,
       filterColumn: null,
       columnsToFilter: [],
       filterItems: {},
@@ -31117,6 +31123,12 @@ var Filter = function (_React$Component) {
       });
     }
   }, {
+    key: 'executeApply',
+    value: function executeApply() {
+      this.props.closeFilter();
+      this.props.newNewApply(this.props.columnNum, this.state.columnFilterHash, this.state.itemsToFilterBy);
+    }
+  }, {
     key: 'createFilterDiv',
     value: function createFilterDiv() {
       var _this2 = this;
@@ -31151,7 +31163,7 @@ var Filter = function (_React$Component) {
         _react2.default.createElement(
           'button',
           { onClick: function onClick() {
-              return _this2.props.newNewApply(_this2.props.columnNum, _this2.state.columnFilterHash, _this2.state.itemsToFilterBy);
+              return _this2.executeApply();
             } },
           'New Appy'
         ),
@@ -31161,6 +31173,7 @@ var Filter = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      console.log("Filter filDis:" + this.props.filterDisplay);
       return _react2.default.createElement(
         'div',
         { style: { "display": this.props.filterDisplay } },

@@ -4,8 +4,8 @@ import ReactDOM from 'react-dom';
 class Filter extends React.Component {
   constructor(props) {
     super(props);
+    console.log(this.props);
     this.state = {
-      filterDisplay: this.props.filterDisplay,
       filterColumn: null,
       columnsToFilter: [],
       filterItems: {},
@@ -52,6 +52,11 @@ class Filter extends React.Component {
     });
   }
 
+  executeApply() {
+    this.props.closeFilter();
+    this.props.newNewApply(this.props.columnNum, this.state.columnFilterHash, this.state.itemsToFilterBy)
+  }
+
   createFilterDiv() {
     function createCheckbox(item) {
       return (
@@ -73,13 +78,14 @@ class Filter extends React.Component {
     let checkboxes = this.props.columnFilterList.map(item => createCheckbox(item));
     return (
       <div className="filter-div">
-        <button onClick={() => this.props.newNewApply(this.props.columnNum, this.state.columnFilterHash, this.state.itemsToFilterBy)}>New Appy</button>
+        <button onClick={() => this.executeApply()}>New Appy</button>
         {checkboxes}
       </div>
     );
   }
 
   render() {
+    console.log("Filter filDis:" + this.props.filterDisplay);
     return (
       <div style={{"display": this.props.filterDisplay}}>
         {this.createFilterDiv()}
